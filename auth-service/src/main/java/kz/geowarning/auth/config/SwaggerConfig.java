@@ -1,4 +1,4 @@
-package kz.geowarning.auth.api;
+package kz.geowarning.auth.config;
 
 import io.swagger.annotations.ApiParam;
 import lombok.Getter;
