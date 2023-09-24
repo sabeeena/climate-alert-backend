@@ -24,6 +24,8 @@
 	<modules>
 		<module>discovery-service</module>
 		<module>auth-service</module>
+		<module>gateway-service</module>
+		<module>common</module>
 	</modules>
 
 	<dependencies>
