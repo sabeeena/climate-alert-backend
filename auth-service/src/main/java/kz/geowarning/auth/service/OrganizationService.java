@@ -2,6 +2,7 @@ package kz.geowarning.auth.service;
 
 import kz.geowarning.auth.entity.Organization;
 import kz.geowarning.auth.repository.OrganizationRepository;
+import kz.geowarning.common.dto.OrganizationDto;
 import kz.geowarning.common.exceptions.GeneralException;
 import kz.geowarning.common.exceptions.NotFoundException;
 import lombok.SneakyThrows;
@@ -55,6 +56,22 @@ public class OrganizationService {
     public Organization getOrganizationByBin(String bin) {
         return organizationRepository.findByBin(bin)
                 .orElseThrow(() -> new NotFoundException("Organization Not Found"));
+    }
+
+    @SneakyThrows
+    public OrganizationDto getOrganizationDtoById(Long id) {
+        return organizationRepository.findById(id).map(this::mapToOrganizationDto).orElseThrow(() -> new NotFoundException("Organization Not Found"));
+    }
+
+    private OrganizationDto mapToOrganizationDto(Organization organization) {
+        return OrganizationDto.builder()
+                .id(organization.getId())
+                .fullName(organization.getFullName())
+                .bin(organization.getBin())
+                .address(organization.getAddress())
+                .email(organization.getEmail())
+                .phone(organization.getPhone())
+                .build();
     }
 
 }
