@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import kz.geowarning.auth.util.DateUtils;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ResultCheckStyle;
@@ -19,10 +21,12 @@ import java.util.Collection;
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
-@Where(clause = "isDeleted=false")
-@SQLDelete(sql = "UPDATE accounts SET isDeleted = TRUE WHERE id = ?", check = ResultCheckStyle.COUNT)
-@Table(name = "user")
+@AllArgsConstructor
+//@Where(clause = "isDeleted=false")
+//@SQLDelete(sql = "UPDATE accounts SET isDeleted = TRUE WHERE id = ?", check = ResultCheckStyle.COUNT)
+@Table(name = "\"user\"")
 public class User implements UserDetails {
 
     @Id

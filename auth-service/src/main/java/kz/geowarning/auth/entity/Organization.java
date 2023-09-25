@@ -37,4 +37,9 @@ public class Organization {
     @JsonFormat(pattern = DateUtils.ZONED_DATE_TIME_PATTERN)
     private ZonedDateTime modified;
 
+    public Organization setId(Long id) {
+        this.id = id;
+        return this;
+    }
+
 }

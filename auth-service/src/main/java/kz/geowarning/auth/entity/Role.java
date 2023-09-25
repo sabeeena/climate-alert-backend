@@ -31,4 +31,8 @@ public class Role {
     )
     private Set<Privilege> privileges = new HashSet<>();
 
+    public Role setId(Long id) {
+        this.id = id;
+        return this;
+    }
 }
