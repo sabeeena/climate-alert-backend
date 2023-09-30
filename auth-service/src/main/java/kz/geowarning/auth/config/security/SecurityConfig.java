@@ -25,10 +25,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/user/auth/**",
+                .antMatchers("/api/auth/authorize/**",
                             "/swagger-ui/**", "/webjars/",  "/swagger-resources/**",
-                        "/swagger-ui.html",
-                        "/v2/api-docs", "/error")
+                            "/swagger-ui.html",
+                            "/v2/api-docs", "/error")
                 .permitAll()
                 .anyRequest().authenticated() // Authenticate all other requests
                 .and()
@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout()
-                .logoutUrl("/api/v1/auth/logout");
+                .logoutUrl("/api/auth/logout");
         return http.build();
     }
 }

@@ -16,13 +16,9 @@ import java.time.LocalDate;
 public class UserRegisterRequest {
     private String username;
     private String password;
-    private Long role;
-    private Long organization;
-    private String jobTitle;
     private String firstName;
     private String lastName;
     private String middleName;
-    private String fullName;
     private LocalDate birthDate;
     private String email;
     private String phone;

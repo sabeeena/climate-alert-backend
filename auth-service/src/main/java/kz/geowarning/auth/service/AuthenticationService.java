@@ -9,7 +9,4 @@ public interface AuthenticationService {
     AuthenticationResponse registerUser(UserRegisterRequest request);
     AuthenticationResponse authenticate(AuthenticationRequest request);
 
-
-
-
 }

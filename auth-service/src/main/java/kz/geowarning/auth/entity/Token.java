@@ -15,8 +15,9 @@ import javax.persistence.*;
 public class Token {
 
     @Id
-    @GeneratedValue
-    public Integer id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "token_seq")
+    @SequenceGenerator(name = "token_seq", allocationSize = 1, sequenceName = "token_seq")
+    public Long id;
 
     @Column(unique = true)
     public String token;
@@ -31,4 +32,5 @@ public class Token {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     public User user;
+
 }

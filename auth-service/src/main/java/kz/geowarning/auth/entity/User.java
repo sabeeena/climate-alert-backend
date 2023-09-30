@@ -25,7 +25,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 @Where(clause = "is_deleted=false")
-//@SQLDelete(sql = "UPDATE"+  "\"user\""+ " SET isDeleted = TRUE WHERE id = ?", check = ResultCheckStyle.COUNT)
+@SQLDelete(sql = "UPDATE \"user\" SET isDeleted = TRUE WHERE id = ?", check = ResultCheckStyle.COUNT)
 @Table(name = "\"user\"")
 public class User implements UserDetails {
 
@@ -74,6 +74,7 @@ public class User implements UserDetails {
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
+    @Column(unique = true)
     private String email;
 
     private String phone;
@@ -104,11 +105,6 @@ public class User implements UserDetails {
     }
 
     @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
     public boolean isAccountNonExpired() {
         return true;
     }
@@ -125,6 +121,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isEnabled;
     }
 }

@@ -4,6 +4,7 @@ import kz.geowarning.auth.dto.AuthenticationRequest;
 import kz.geowarning.auth.dto.AuthenticationResponse;
 import kz.geowarning.auth.dto.user.UserRegisterRequest;
 import kz.geowarning.auth.service.AuthenticationService;
+import kz.geowarning.auth.util.RestConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/api/user/auth")
+@RequestMapping(RestConstants.BASE_REST + "/authorize")
 @RequiredArgsConstructor
 public class UserAuthController {
     private final AuthenticationService service;
@@ -24,6 +25,7 @@ public class UserAuthController {
     ) {
         return ResponseEntity.ok(service.registerUser(request));
     }
+
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest request

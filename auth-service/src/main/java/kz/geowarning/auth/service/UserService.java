@@ -1,5 +1,6 @@
 package kz.geowarning.auth.service;
 
+import kz.geowarning.auth.entity.Organization;
 import kz.geowarning.auth.entity.User;
 import kz.geowarning.auth.repository.UserRepository;
 import kz.geowarning.common.dto.UserDto;
@@ -38,13 +39,17 @@ public class UserService {
     }
 
     private UserDto userToDTO(User user) {
+        Long organizationId = null;
+        if (user.getOrganization() != null) {
+            organizationId = user.getOrganization().getId();
+        }
         return new UserDto(
                 user.getId(),
                 user.getUsername(),
                 user.getFullName(),
                 user.getEmail(),
                 user.getPhone(),
-                user.getOrganization().getId(),
+                organizationId,
                 user.getJobTitle(),
                 user.getBirthDate()
         );

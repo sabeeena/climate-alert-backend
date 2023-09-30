@@ -9,14 +9,17 @@ import kz.geowarning.auth.repository.UserRepository;
 import kz.geowarning.auth.service.AuthenticationService;
 import kz.geowarning.auth.service.JwtService;
 import kz.geowarning.auth.service.OrganizationService;
+import kz.geowarning.auth.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +32,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     @Autowired
-    OrganizationService organizationService;
+    private RoleService roleService;
 
     @Override
     public AuthenticationResponse registerUser(UserRegisterRequest request) {
@@ -54,19 +57,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .isEnabled(true)
                 .isDeleted(false)
-                .role(new Role().setId(request.getRole()))
-                .organization(organizationService.getOrganizationById(request.getOrganization()))
-             //   .organization(new Organization(request.getOrganization()).setId(request.getOrganization()))
-                .jobTitle(request.getJobTitle())
+                .role(roleService.getRoleByRoleCode("USER"))
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .middleName(request.getMiddleName())
-                .fullName(request.getFullName())
+                .fullName(String.format("%s %s %s",
+                        Optional.ofNullable(request.getLastName()).orElse(""),
+                        Optional.ofNullable(request.getFirstName()).orElse(""),
+                        Optional.ofNullable(request.getMiddleName()).orElse("")
+                ))
                 .birthDate(request.getBirthDate())
                 .email(request.getEmail())
                 .phone(request.getPhone())
                 .created(ZonedDateTime.now())
-                .modified(ZonedDateTime.now())
                 .isEmailVerified(false)
                 .isPhoneVerified(false)
                 .build();
@@ -84,11 +87,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
+                        repository.findByEmail(request.getEmail()).get().getUsername(),
                         request.getPassword()
                 )
         );
-        var user = repository.findByEmail(request.getEmail()).orElseThrow();
+        var user = repository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         var jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
@@ -107,6 +111,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
         tokenRepository.save(token);
     }
+
     private void revokeAllUserTokens(User user) {
         var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
         if (validUserTokens.isEmpty())

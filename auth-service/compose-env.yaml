@@ -9,3 +9,5 @@ services:
       POSTGRES_PASSWORD: 123
       POSTGRES_USER: postgres
       POSTGRES_DB: geowarning
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
