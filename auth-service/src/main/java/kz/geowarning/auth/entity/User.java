@@ -24,8 +24,8 @@ import java.util.Collection;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-//@Where(clause = "isDeleted=false")
-//@SQLDelete(sql = "UPDATE accounts SET isDeleted = TRUE WHERE id = ?", check = ResultCheckStyle.COUNT)
+@Where(clause = "is_deleted=false")
+//@SQLDelete(sql = "UPDATE"+  "\"user\""+ " SET isDeleted = TRUE WHERE id = ?", check = ResultCheckStyle.COUNT)
 @Table(name = "\"user\"")
 public class User implements UserDetails {
 
@@ -92,34 +92,39 @@ public class User implements UserDetails {
     @Column(name = "is_phone_verified")
     private boolean isPhoneVerified;
 
-    @JsonIgnore
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return role.getAuthorities();
     }
 
     @Override
-    @JsonIgnore
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
-    @JsonIgnore
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
-    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
-    @JsonIgnore
     public boolean isEnabled() {
-        return isEnabled;
+        return true;
     }
-
 }

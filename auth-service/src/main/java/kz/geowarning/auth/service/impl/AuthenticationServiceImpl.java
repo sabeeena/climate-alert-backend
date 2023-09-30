@@ -8,7 +8,9 @@ import kz.geowarning.auth.repository.TokenRepository;
 import kz.geowarning.auth.repository.UserRepository;
 import kz.geowarning.auth.service.AuthenticationService;
 import kz.geowarning.auth.service.JwtService;
+import kz.geowarning.auth.service.OrganizationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,15 +28,35 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final TokenRepository tokenRepository;
     private final AuthenticationManager authenticationManager;
 
+    @Autowired
+    OrganizationService organizationService;
+
     @Override
     public AuthenticationResponse registerUser(UserRegisterRequest request) {
+        if (repository.existsByUsername(request.getUsername())) {
+            return AuthenticationResponse.builder()
+                    .status("fail")
+                    .message("username exists")
+                    .accessToken(null)
+                    .build();
+        }
+
+        if (repository.existsByEmail(request.getEmail())) {
+            return AuthenticationResponse.builder()
+                    .status("fail")
+                    .message("email exists")
+                    .accessToken(null)
+                    .build();
+        }
+
         User user = User.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .isEnabled(true)
                 .isDeleted(false)
                 .role(new Role().setId(request.getRole()))
-                .organization(new Organization().setId(request.getOrganization()))
+                .organization(organizationService.getOrganizationById(request.getOrganization()))
+             //   .organization(new Organization(request.getOrganization()).setId(request.getOrganization()))
                 .jobTitle(request.getJobTitle())
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
@@ -52,6 +74,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var jwtToken = jwtService.generateToken(user);
         saveUserToken(savedUser, jwtToken);
         return AuthenticationResponse.builder()
+                .status("success")
+                .message("ok")
                 .accessToken(jwtToken)
                 .build();
     }

@@ -28,7 +28,7 @@ public class SecurityConfig {
                 .antMatchers("/api/user/auth/**",
                             "/swagger-ui/**", "/webjars/",  "/swagger-resources/**",
                         "/swagger-ui.html",
-                        "/v2/api-docs")
+                        "/v2/api-docs", "/error")
                 .permitAll()
                 .anyRequest().authenticated() // Authenticate all other requests
                 .and()

@@ -2,10 +2,13 @@ package kz.geowarning.auth.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -34,5 +37,13 @@ public class Role {
     public Role setId(Long id) {
         this.id = id;
         return this;
+    }
+    public List<SimpleGrantedAuthority> getAuthorities() {
+        var authorities = getPrivileges()
+                .stream()
+                .map(permission -> new SimpleGrantedAuthority(permission.getPrivilegeCode()))
+                .collect(Collectors.toList());
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + this.name));
+        return authorities;
     }
 }

@@ -18,7 +18,7 @@ public class Privilege {
 
     private String name;
 
-    @Column(name = "priviledge_code", unique = true)
+    @Column(name = "privilege_code", unique = true)
     private String privilegeCode;
 
 }

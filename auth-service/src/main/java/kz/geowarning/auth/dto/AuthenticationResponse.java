@@ -11,6 +11,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthenticationResponse {
+    @JsonProperty("status")
+    private String status;
+
+    @JsonProperty("message")
+    private String message;
+
     @JsonProperty("access_token")
     private String accessToken;
 }
