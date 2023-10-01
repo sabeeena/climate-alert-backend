@@ -25,7 +25,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 @Where(clause = "is_deleted=false")
-@SQLDelete(sql = "UPDATE \"user\" SET isDeleted = TRUE WHERE id = ?", check = ResultCheckStyle.COUNT)
+@SQLDelete(sql = "UPDATE \"user\" SET is_deleted = TRUE WHERE id = ?", check = ResultCheckStyle.COUNT)
 @Table(name = "\"user\"")
 public class User implements UserDetails {
 
@@ -92,7 +92,6 @@ public class User implements UserDetails {
     @JsonIgnore
     @Column(name = "is_phone_verified")
     private boolean isPhoneVerified;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
