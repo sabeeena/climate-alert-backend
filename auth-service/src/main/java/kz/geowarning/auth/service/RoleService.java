@@ -21,7 +21,7 @@ public class RoleService {
     @SneakyThrows
     public Role createRole(@RequestBody Role role) {
         if(roleRepository.existsByRoleCode(role.getRoleCode())) {
-            throw new GeneralException("Role Already Exists");
+            throw new RuntimeException("Role Already Exists");
         }
         return roleRepository.save(role);
     }

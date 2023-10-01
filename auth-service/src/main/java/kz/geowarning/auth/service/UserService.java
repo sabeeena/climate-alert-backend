@@ -1,9 +1,10 @@
 package kz.geowarning.auth.service;
 
+import kz.geowarning.auth.entity.Organization;
+import kz.geowarning.auth.entity.Role;
 import kz.geowarning.auth.entity.User;
 import kz.geowarning.auth.repository.UserRepository;
 import kz.geowarning.common.dto.UserDto;
-import kz.geowarning.common.exceptions.GeneralException;
 import kz.geowarning.common.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,6 +23,12 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RoleService roleService;
+
+    @Autowired
+    private OrganizationService organizationService;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -37,6 +45,10 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException("User Not Found"));
     }
 
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
     public Optional<User> findUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
@@ -47,36 +59,69 @@ public class UserService {
     }
 
     @SneakyThrows
-    public User createUser(User user) {
+    public User createUser(UserDto user) {
         if (userRepository.existsByUsername(user.getUsername()) ||
                 userRepository.existsByEmail(user.getEmail())) {
-            throw new GeneralException("User Already Exists");
+            throw new RuntimeException("User Already Exists");
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setEnabled(true);
-        user.setCreated(ZonedDateTime.now());
-        user.setFullName(String.format("%s %s %s",
-                Optional.ofNullable(user.getLastName()).orElse(""),
-                Optional.ofNullable(user.getFirstName()).orElse(""),
-                Optional.ofNullable(user.getMiddleName()).orElse("")
-        ));
-        user.setEmailVerified(false);
-        user.setPhoneVerified(false);
-        user.setDeleted(false);
+        Role role = null;
+        Organization organization = null;
 
-        return userRepository.save(user);
+        if (user.getRoleId() != null) {
+            role = roleService.getRoleById(user.getRoleId());
+        }
+
+        if (user.getOrganizationId() != null) {
+            organization = organizationService.getOrganizationById(user.getOrganizationId());
+        }
+
+        User newUser = User.builder()
+                .username(user.getUsername())
+                .password(passwordEncoder.encode(user.getPassword()))
+                .isEnabled(true)
+                .isDeleted(false)
+                .role(role)
+                .organization(organization)
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .middleName(user.getMiddleName())
+                .fullName(String.format("%s %s %s",
+                        Optional.ofNullable(user.getLastName()).orElse(""),
+                        Optional.ofNullable(user.getFirstName()).orElse(""),
+                        Optional.ofNullable(user.getMiddleName()).orElse("")
+                                .trim()
+                ))
+                .birthDate(user.getBirthDate())
+                .email(user.getEmail())
+                .phone(user.getPhone())
+                .created(ZonedDateTime.now())
+                .isEmailVerified(false)
+                .isPhoneVerified(false)
+                .build();
+
+        return userRepository.save(newUser);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @SneakyThrows
-    public User updateUser(User user) {
+    public User updateUser(UserDto user) {
         User formerUser = getUserById(user.getId());
+        Role role = null;
+        Organization organization = null;
+
+        if (user.getRoleId() != null) {
+            role = roleService.getRoleById(user.getRoleId());
+        }
+
+        if (user.getOrganizationId() != null) {
+            organization = organizationService.getOrganizationById(user.getOrganizationId());
+        }
 
         formerUser.setUsername(user.getUsername());
         formerUser.setPassword(passwordEncoder.encode(user.getPassword()));
-        formerUser.setRole(user.getRole());
-        formerUser.setOrganization(user.getOrganization());
+        formerUser.setRole(role);
+        formerUser.setOrganization(organization);
         formerUser.setJobTitle(user.getJobTitle());
         formerUser.setFirstName(user.getFirstName());
         formerUser.setLastName(user.getLastName());
@@ -85,6 +130,7 @@ public class UserService {
                 Optional.ofNullable(user.getLastName()).orElse(""),
                 Optional.ofNullable(user.getFirstName()).orElse(""),
                 Optional.ofNullable(user.getMiddleName()).orElse("")
+                        .trim()
         ));
         formerUser.setBirthDate(user.getBirthDate());
         formerUser.setEmail(user.getEmail());
@@ -99,13 +145,21 @@ public class UserService {
         if (user.getOrganization() != null) {
             organizationId = user.getOrganization().getId();
         }
+        Long roleId = null;
+        if (user.getRole() != null) {
+            roleId = user.getRole().getId();
+        }
         return new UserDto(
                 user.getId(),
                 user.getUsername(),
-                user.getFullName(),
+                user.getPassword(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getMiddleName(),
                 user.getEmail(),
                 user.getPhone(),
                 organizationId,
+                roleId,
                 user.getJobTitle(),
                 user.getBirthDate()
         );

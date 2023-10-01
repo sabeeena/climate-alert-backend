@@ -65,6 +65,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         Optional.ofNullable(request.getLastName()).orElse(""),
                         Optional.ofNullable(request.getFirstName()).orElse(""),
                         Optional.ofNullable(request.getMiddleName()).orElse("")
+                                .trim()
                 ))
                 .birthDate(request.getBirthDate())
                 .email(request.getEmail())

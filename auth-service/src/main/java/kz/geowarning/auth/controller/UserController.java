@@ -3,10 +3,13 @@ package kz.geowarning.auth.controller;
 import kz.geowarning.auth.entity.User;
 import kz.geowarning.auth.service.UserService;
 import kz.geowarning.auth.util.RestConstants;
+import kz.geowarning.common.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class UserController {
@@ -23,13 +26,13 @@ public class UserController {
 
     @PostMapping(RestConstants.REST_USER)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public User createUser(@RequestBody User user) {
+    public User createUser(@RequestBody UserDto user) {
         return userService.createUser(user);
     }
 
     @PutMapping(RestConstants.REST_USER)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public User updateUser(@RequestBody User user) {
+    public User updateUser(@RequestBody UserDto user) {
         return userService.updateUser(user);
     }
 
@@ -37,6 +40,12 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('ADMIN_PRIVILEGE', 'BASIC_PRIVILEGE')")
     public User getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
+    }
+
+    @GetMapping(RestConstants.REST_USER + "/list")
+    @PreAuthorize("hasAnyAuthority('ADMIN_PRIVILEGE', 'BASIC_PRIVILEGE')")
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
     }
 
 }

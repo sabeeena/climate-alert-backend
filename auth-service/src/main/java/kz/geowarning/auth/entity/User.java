@@ -8,13 +8,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ResultCheckStyle;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.Collection;
@@ -79,9 +79,11 @@ public class User implements UserDetails {
 
     private String phone;
 
+    @CreationTimestamp
     @JsonFormat(pattern = DateUtils.ZONED_DATE_TIME_PATTERN)
     private ZonedDateTime created;
 
+    @UpdateTimestamp
     @JsonFormat(pattern = DateUtils.ZONED_DATE_TIME_PATTERN)
     private ZonedDateTime modified;
 
