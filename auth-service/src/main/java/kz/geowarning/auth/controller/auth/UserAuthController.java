@@ -7,10 +7,8 @@ import kz.geowarning.auth.service.AuthenticationService;
 import kz.geowarning.auth.util.RestConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 
 @RestController
@@ -31,6 +29,11 @@ public class UserAuthController {
             @RequestBody AuthenticationRequest request
     ) {
         return ResponseEntity.ok(service.authenticate(request));
+    }
+
+    @GetMapping("/confirm/{email}")
+    public RedirectView confirmRegistration(@PathVariable("email") String email) {
+        return ResponseEntity.ok(service.confirmRegistration(email)).getBody();
     }
 
 }
