@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "AuthClient", url = "${app.gateway.url}", path = "/auth/service")
+@FeignClient(name = "AuthClient", url = "${app.gateway.url}", path = "/api/auth/service")
 public interface AuthClient {
 
     static final String REST_USER = "/user";

@@ -4,25 +4,29 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import kz.geowarning.auth.util.DateUtils;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ResultCheckStyle;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.Collection;
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
-@Where(clause = "isDeleted=false")
-@SQLDelete(sql = "UPDATE accounts SET isDeleted = TRUE WHERE id = ?", check = ResultCheckStyle.COUNT)
-@Table(name = "user")
+@AllArgsConstructor
+@Where(clause = "is_deleted=false")
+@SQLDelete(sql = "UPDATE \"user\" SET is_deleted = TRUE WHERE id = ?", check = ResultCheckStyle.COUNT)
+@Table(name = "\"user\"")
 public class User implements UserDetails {
 
     @Id
@@ -70,13 +74,16 @@ public class User implements UserDetails {
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
+    @Column(unique = true)
     private String email;
 
     private String phone;
 
+    @CreationTimestamp
     @JsonFormat(pattern = DateUtils.ZONED_DATE_TIME_PATTERN)
     private ZonedDateTime created;
 
+    @UpdateTimestamp
     @JsonFormat(pattern = DateUtils.ZONED_DATE_TIME_PATTERN)
     private ZonedDateTime modified;
 
@@ -88,34 +95,33 @@ public class User implements UserDetails {
     @Column(name = "is_phone_verified")
     private boolean isPhoneVerified;
 
-    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return role.getAuthorities();
     }
 
     @Override
-    @JsonIgnore
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
-    @JsonIgnore
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
-    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
-    @JsonIgnore
     public boolean isEnabled() {
         return isEnabled;
     }
-
 }

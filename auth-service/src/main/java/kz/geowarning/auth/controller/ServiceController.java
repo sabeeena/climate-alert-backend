@@ -2,6 +2,7 @@ package kz.geowarning.auth.controller;
 
 import kz.geowarning.auth.service.OrganizationService;
 import kz.geowarning.auth.service.UserService;
+import kz.geowarning.auth.util.RestConstants;
 import kz.geowarning.common.api.AuthClient;
 import kz.geowarning.common.dto.OrganizationDto;
 import kz.geowarning.common.dto.UserDto;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/service")
+@RequestMapping(RestConstants.BASE_REST + "/service")
 public class ServiceController implements AuthClient {
 
     @Autowired
@@ -20,7 +21,7 @@ public class ServiceController implements AuthClient {
     @Autowired
     private OrganizationService organizationService;
 
-    @GetMapping(path = REST_USER, params = "username")
+    @Override
     public UserDto getUserByUsername(String username) {
         return userService.getUserDtoByUsername(username);
     }
