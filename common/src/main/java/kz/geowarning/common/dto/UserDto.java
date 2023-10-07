@@ -28,13 +28,19 @@ public class UserDto {
     private String email;
     private String phone;
 
-    public UserDto(Long id, String username, String fullName, String email, String phone, Long organizationId, String jobTitle, LocalDate birthDate){
+    public UserDto(Long id, String username, String password, String firstName,
+                   String lastName, String middleName, String email, String phone,
+                   Long organizationId, Long roleId, String jobTitle, LocalDate birthDate){
         this.id = id;
         this.username = username;
-        this.fullName = fullName;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.middleName = middleName;
         this.email = email;
         this.phone = phone;
         this.organizationId = organizationId;
+        this.roleId = roleId;
         this.jobTitle = jobTitle;
         this.birthDate = birthDate;
     }

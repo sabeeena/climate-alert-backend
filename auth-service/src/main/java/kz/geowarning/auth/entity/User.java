@@ -4,14 +4,17 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import kz.geowarning.auth.util.DateUtils;
-import lombok.*;
-import org.hibernate.annotations.ResultCheckStyle;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.Collection;
@@ -19,12 +22,10 @@ import java.util.Collection;
 @Entity
 @Data
 @Builder
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Where(clause = "is_deleted=false")
-@SQLDelete(sql = "UPDATE \"user\" SET isDeleted = TRUE WHERE id = ?", check = ResultCheckStyle.COUNT)
+@SQLDelete(sql = "UPDATE \"user\" SET is_deleted = TRUE WHERE id = ?", check = ResultCheckStyle.COUNT)
 @Table(name = "\"user\"")
 public class User implements UserDetails {
 
@@ -78,9 +79,11 @@ public class User implements UserDetails {
 
     private String phone;
 
+    @CreationTimestamp
     @JsonFormat(pattern = DateUtils.ZONED_DATE_TIME_PATTERN)
     private ZonedDateTime created;
 
+    @UpdateTimestamp
     @JsonFormat(pattern = DateUtils.ZONED_DATE_TIME_PATTERN)
     private ZonedDateTime modified;
 
@@ -91,7 +94,6 @@ public class User implements UserDetails {
     @JsonIgnore
     @Column(name = "is_phone_verified")
     private boolean isPhoneVerified;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
