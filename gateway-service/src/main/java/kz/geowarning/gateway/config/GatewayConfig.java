@@ -22,7 +22,7 @@ public class GatewayConfig {
                 .route("auth_route", r -> r.path("/auth/**")
                         .filters(f -> f.circuitBreaker(c -> c.setFallbackUri("forward:/fallback")))
                         .uri(authUrl))
-                .route("notification_route", r -> r.path("/notification/**")
+                .route("notification_route", r -> r.path("/api/notification/**")
                         .filters(f -> f.circuitBreaker(c -> c.setFallbackUri("forward:/fallback")))
                         .uri(notificationUrl))
                 .build();

@@ -44,6 +44,6 @@ app:
   gateway:
     url=${GATEWAY_URL:http://localhost:8080}:
 
-#application:
-#  link:
-#    verification-link: http://localhost:8080/api/auth/service/authorize/confirm/
+application:
+  link:
+    verification-link: http://localhost:8080/api/auth/service/authorize/confirm/
