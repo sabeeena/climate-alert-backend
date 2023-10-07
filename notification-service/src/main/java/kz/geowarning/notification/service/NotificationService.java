@@ -1,4 +1,4 @@
-package kz.geowarning.notification.notificationservice.service;
+package kz.geowarning.notification.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,8 +14,6 @@ public class NotificationService {
 
     @Value("${application.link.verification-link}")
     private String verificationLink;
-
-
 
     public void notifyWarning(String warningType, String userEmail, String region, String dangerPossibility) throws MessagingException {
         iEmailService.sendMail(userEmail, generateWarningSubject(region, dangerPossibility), generateWarningMessage(userEmail, warningType, dangerPossibility));

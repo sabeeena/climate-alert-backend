@@ -8,21 +8,24 @@ import kz.geowarning.auth.repository.TokenRepository;
 import kz.geowarning.auth.repository.UserRepository;
 import kz.geowarning.auth.service.AuthenticationService;
 import kz.geowarning.auth.service.JwtService;
-import kz.geowarning.auth.service.OrganizationService;
 import kz.geowarning.auth.service.RoleService;
+import kz.geowarning.auth.validator.EmailValidator;
+import kz.geowarning.common.api.NotificationClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final UserRepository repository;
@@ -30,16 +33,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtService jwtService;
     private final TokenRepository tokenRepository;
     private final AuthenticationManager authenticationManager;
+    private final RoleService roleService;
+    private final NotificationClient notificationClient;
 
-    @Autowired
-    private RoleService roleService;
+    @Async
+    public void verifyEmailAsync(String email) {
+        notificationClient.verifyEmail(email);
+    }
 
     @Override
     public AuthenticationResponse registerUser(UserRegisterRequest request) {
         if (repository.existsByUsername(request.getUsername())) {
             return AuthenticationResponse.builder()
                     .status("fail")
-                    .message("username exists")
+                    .message("Username exists")
                     .accessToken(null)
                     .build();
         }
@@ -47,7 +54,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (repository.existsByEmail(request.getEmail())) {
             return AuthenticationResponse.builder()
                     .status("fail")
-                    .message("email exists")
+                    .message("Email exists")
+                    .accessToken(null)
+                    .build();
+        }
+
+        EmailValidator emailValidator = new EmailValidator();
+        if (!emailValidator.validate(request.getEmail())) {
+            return AuthenticationResponse.builder()
+                    .status("fail")
+                    .message("Invalid email format")
                     .accessToken(null)
                     .build();
         }
@@ -75,7 +91,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .isPhoneVerified(false)
                 .build();
         var savedUser = repository.save(user);
-        var jwtToken = jwtService.generateToken(user);
+//        notificationClient.verifyEmail(request.getEmail());
+        verifyEmailAsync(request.getEmail());
+        var jwtToken = "signupToken";
         saveUserToken(savedUser, jwtToken);
         return AuthenticationResponse.builder()
                 .status("success")
@@ -98,8 +116,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
         return AuthenticationResponse.builder()
+                .status("success")
+                .message("user authenticated")
                 .accessToken(jwtToken)
                 .build();
+    }
+
+    @Override
+    public RedirectView confirmRegistration(String email) {
+        User user = repository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        user.setEmailVerified(true);
+        repository.save(user);
+        RedirectView redirectView = new RedirectView();
+        String redirectUrl = "https://localhost/#/authentication/signin";
+        redirectView.setUrl(redirectUrl);
+        return redirectView;
     }
 
     private void saveUserToken(User user, String jwtToken) {

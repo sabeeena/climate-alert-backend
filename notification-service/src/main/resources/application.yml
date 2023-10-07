@@ -1,6 +1,5 @@
-
 server:
-  port: 8088
+  port: 8083
 
 spring:
   cloud:
@@ -42,7 +41,7 @@ logging:
 
 app:
   gateway:
-    url=${GATEWAY_URL:http://localhost:8080}:
+    url: ${GATEWAY_URL:http://localhost:8080}
 
 application:
   link:

@@ -7,6 +7,7 @@ import kz.geowarning.auth.service.AuthenticationService;
 import kz.geowarning.auth.util.RestConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.view.RedirectView;
 public class UserAuthController {
     private final AuthenticationService service;
 
+    @Transactional(rollbackFor = Exception.class)
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody UserRegisterRequest request

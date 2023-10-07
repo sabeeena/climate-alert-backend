@@ -1,4 +1,4 @@
-package kz.geowarning.auth.config.security;
+package kz.geowarning.notification.config;
 
 import feign.Request;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -19,3 +19,4 @@ public class FeignConfig extends FeignClientsConfiguration {
     }
 
 }
+
