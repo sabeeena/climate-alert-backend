@@ -13,7 +13,7 @@ spring:
     host: smtp.yandex.ru
     port: 587
     username: warningkz@yandex.ru
-    password: rprexghjrsigmhhu
+    password: clxjseltcthofcka
     from: warningkz@yandex.ru
     protocol: smtp
     tls: true
@@ -46,4 +46,4 @@ app:
 
 application:
   link:
-    verification-link: http://localhost:8080/api/auth/service/authorize/confirm/
+    verification-link: http://localhost:8083/api/auth/authorize/confirm/
