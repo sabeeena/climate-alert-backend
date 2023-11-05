@@ -21,7 +21,7 @@ public class SMTPService {
     @Value( "${spring.mail.from}" )
     private String fromEmail;
 
-    public void sendMail(String email, String head, String msg) throws MessagingException {
+    public synchronized void sendMail(String email, String head, String msg) throws MessagingException {
         try {
             System.out.println("SMTP STARTED");
             MimeMessage message = emailSender.createMimeMessage();

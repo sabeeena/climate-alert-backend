@@ -12,7 +12,7 @@ spring:
     host: smtp.yandex.ru
     port: 587
     username: warningkz@yandex.ru
-    password: rprexghjrsigmhhu
+    password: clxjseltcthofcka
     from: warningkz@yandex.ru
     protocol: smtp
     tls: true
@@ -30,7 +30,7 @@ eureka:
     leaseRenewalIntervalInSeconds: 0
   client:
     serviceUrl:
-      defaultZone: http://localhost:8081/eureka
+      defaultZone: http://localhost:8761/eureka
       registerWithEureka: true
     enabled: true
 
@@ -42,6 +42,7 @@ logging:
 app:
   gateway:
     url: ${GATEWAY_URL:http://localhost:8080}
+  secretKey: ${JWT_SECRET:357538782F413F442}
 
 application:
   link:

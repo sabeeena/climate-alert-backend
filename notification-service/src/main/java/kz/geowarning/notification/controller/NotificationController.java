@@ -4,6 +4,8 @@ import kz.geowarning.common.api.NotificationClient;
 import kz.geowarning.notification.service.NotificationService;
 import kz.geowarning.notification.util.RestConstants;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.mail.MessagingException;
 
 @RestController
+@Slf4j
 @RequestMapping(RestConstants.BASE_REST + "/service")
 public class NotificationController implements NotificationClient {
 
@@ -35,12 +38,13 @@ public class NotificationController implements NotificationClient {
 
     @SneakyThrows
     @PostMapping("/verify-email")
-    public ResponseEntity verifyEmail(@RequestParam String userEmail) {
+    public ResponseEntity<String> verifyEmail(@RequestParam String userEmail) {
         try {
             service.verifyEmail(userEmail);
+            return ResponseEntity.ok("Email verification initiated successfully.");
         } catch (MessagingException e) {
-            throw new RuntimeException(e);
+            log.error("Error occurred while verifying email: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Email verification failed.");
         }
-        return ResponseEntity.ok().build();
     }
 }

@@ -1,7 +1,6 @@
 package kz.geowarning.auth;
 
 import kz.geowarning.auth.service.TestDataService;
-import kz.geowarning.common.exceptions.GeneralException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;

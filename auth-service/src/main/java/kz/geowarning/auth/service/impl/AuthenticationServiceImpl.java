@@ -23,6 +23,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.time.ZonedDateTime;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -36,9 +37,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final RoleService roleService;
     private final NotificationClient notificationClient;
 
-    @Async
-    public void verifyEmailAsync(String email) {
+    @Async("taskExecutor")
+    public CompletableFuture<Void> verifyEmailAsync(String email) {
         notificationClient.verifyEmail(email);
+        return CompletableFuture.completedFuture(null);
     }
 
     @Override

@@ -6,20 +6,20 @@ import java.util.Collections;
 import java.util.Map;
 
 @Getter
-public class GeneralException extends Exception {
+public class CommonException extends Exception {
 
     private Map<String, String> errors;
 
-    public GeneralException(String message) {
+    public CommonException(String message) {
         super(message);
     }
 
-    public GeneralException(String message, String errorData) {
+    public CommonException(String message, String errorData) {
         super(message);
         this.errors = Collections.singletonMap("err", errorData);
     }
 
-    public GeneralException(String message, Throwable cause) {
+    public CommonException(String message, Throwable cause) {
         super(message, cause);
     }
 }
