@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "AuthClient", url = "${app.gateway.url}", path = "/api/auth/service")
 public interface AuthClient {
 
-    static final String REST_USER = "/user";
-    static final String REST_ORGANIZATION = "/organization";
+    String REST_USER = "/user";
+    String REST_ORGANIZATION = "/organization";
 
     @GetMapping(path = REST_USER, params = "username")
     UserDto getUserByUsername(@RequestParam String username);

@@ -2,7 +2,6 @@ package kz.geowarning.auth.service;
 
 import kz.geowarning.auth.entity.Role;
 import kz.geowarning.auth.repository.RoleRepository;
-import kz.geowarning.common.exceptions.GeneralException;
 import kz.geowarning.common.exceptions.NotFoundException;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;

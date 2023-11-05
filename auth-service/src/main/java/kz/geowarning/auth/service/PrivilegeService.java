@@ -2,7 +2,7 @@ package kz.geowarning.auth.service;
 
 import kz.geowarning.auth.entity.Privilege;
 import kz.geowarning.auth.repository.PrivilegeRepository;
-import kz.geowarning.common.exceptions.GeneralException;
+import kz.geowarning.common.exceptions.CommonException;
 import kz.geowarning.common.exceptions.NotFoundException;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class PrivilegeService {
     @SneakyThrows
     public Privilege createPrivilege(@RequestBody Privilege privilege) {
         if(privilegeRepository.existsByPrivilegeCode(privilege.getPrivilegeCode())) {
-            throw new GeneralException("Privilege Already Exists");
+            throw new CommonException("Privilege Already Exists");
         }
         return privilegeRepository.save(privilege);
     }

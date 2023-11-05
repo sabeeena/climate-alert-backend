@@ -1,7 +1,6 @@
 package kz.geowarning.auth;
 
 import kz.geowarning.auth.service.TestDataService;
-import kz.geowarning.common.exceptions.GeneralException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -10,6 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.scheduling.annotation.EnableAsync;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 
@@ -18,6 +18,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableDiscoveryClient
 @EnableSwagger2
 @Slf4j
+@EnableAsync
 public class AuthApplication implements ApplicationRunner {
 
 	@Autowired

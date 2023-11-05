@@ -1,11 +1,8 @@
-package kz.geowarning.auth.config.security;
+package kz.geowarning.notification.config;
 
 import feign.Request;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
-import feign.codec.ErrorDecoder;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.cloud.openfeign.FeignClientsConfiguration;
@@ -14,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableFeignClients(basePackages = {"kz.geowarning.common.api"})
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class FeignConfig extends FeignClientsConfiguration {
 
     private static final int CONNECT_TIMEOUT_MILLIS = 15000;
@@ -40,8 +36,5 @@ public class FeignConfig extends FeignClientsConfiguration {
         }
     }
 
-    @Bean
-    public ErrorDecoder errorDecoder() {
-        return new CustomErrorDecoder();
-    }
 }
+

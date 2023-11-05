@@ -3,7 +3,7 @@ package kz.geowarning.auth.service;
 import kz.geowarning.auth.entity.Organization;
 import kz.geowarning.auth.repository.OrganizationRepository;
 import kz.geowarning.common.dto.OrganizationDto;
-import kz.geowarning.common.exceptions.GeneralException;
+import kz.geowarning.common.exceptions.CommonException;
 import kz.geowarning.common.exceptions.NotFoundException;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class OrganizationService {
     @SneakyThrows
     public Organization createOrganization(Organization organization) {
         if (organizationRepository.existsByBinOrFullName(organization.getBin(), organization.getFullName())) {
-            throw new GeneralException("Organization Already Exists");
+            throw new CommonException("Organization Already Exists");
         }
         organization.setCreated(ZonedDateTime.now());
         return organizationRepository.save(organization);

@@ -1,0 +1,49 @@
+server:
+  port: 8083
+
+spring:
+  cloud:
+    service-registry:
+      auto-registration:
+        enabled: true
+  application:
+    name: notification
+  mail:
+    host: smtp.yandex.ru
+    port: 587
+    username: warningkz@yandex.ru
+    password: clxjseltcthofcka
+    from: warningkz@yandex.ru
+    protocol: smtp
+    tls: true
+    default-encoding: UTF-8
+    mime.charset: utf8
+    debug: true
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true
+      ssl.protocols: TLSv1.2
+      ssl.trust: smtp.yandex.ru
+
+eureka:
+  instance:
+    leaseRenewalIntervalInSeconds: 0
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+      registerWithEureka: true
+    enabled: true
+
+# Logging configuration
+logging:
+  level:
+    com.netflix.discovery.shared.resolver.aws.ConfigClusterResolver: WARN
+
+app:
+  gateway:
+    url: ${GATEWAY_URL:http://localhost:8080}
+  secretKey: ${JWT_SECRET:357538782F413F442}
+
+application:
+  link:
+    verification-link: http://localhost:8080/api/auth/service/authorize/confirm/
