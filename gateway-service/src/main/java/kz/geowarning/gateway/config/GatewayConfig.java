@@ -22,6 +22,8 @@ public class GatewayConfig {
     private String authUrl;
     @Value("${app.gateway.url.notification}")
     private String notificationUrl;
+    @Value("${app.gateway.url.data}")
+    private String dataUrl;
 
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
@@ -32,6 +34,9 @@ public class GatewayConfig {
                 .route("notification_route", r -> r.path("/api/notification/**")
                         .filters(f -> f.circuitBreaker(c -> c.setFallbackUri("forward:/fallback")))
                         .uri(notificationUrl))
+                .route("data_route", r -> r.path("/api/data/**")
+                        .filters(f -> f.circuitBreaker(c -> c.setFallbackUri("forward:/fallback")))
+                        .uri(dataUrl))
                 .build();
     }
 
