@@ -20,8 +20,10 @@ public class FireRTData {
     private String bright_ti4;
     private String scan;
     private String track;
-    private Date acq_date;
-    private Time acq_time;
+    @Column(name = "acq_date", nullable = false)
+    private Date acqDate;
+    @Column(name = "acq_time", nullable = false)
+    private Time acqTime;
     private String satellite;
     private String instrument;
     private String confidence;

@@ -20,6 +20,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.Field;
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -125,6 +126,10 @@ public class FireRTDataService {
 
     public void getDataAndSave() throws IOException, CsvException {
         saveAllData(getRTData());
+    }
+
+    public List<FireRTData> getDataByDate(Date date) {
+        return fireRTDataRepository.findAllByAcqDate(date);
     }
 
 }
