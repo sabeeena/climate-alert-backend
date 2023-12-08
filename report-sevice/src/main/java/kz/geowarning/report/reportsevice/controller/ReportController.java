@@ -36,3 +36,4 @@ public class ReportController {
     }
 
 }
+//http://localhost:8086/report/fire-real-time-overall?reportId=1&lang=ru&type=pdf
