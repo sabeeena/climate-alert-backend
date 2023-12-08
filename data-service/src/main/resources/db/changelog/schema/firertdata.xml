@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+	  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="Sabina" id="firertdata-1">
+        <createSequence incrementBy="1" sequenceName="firertdata_seq" startValue="1"/>
+    </changeSet>
+
+    <changeSet author="Sabina" id="firertdata-2">
+        <createTable tableName="firertdata">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="firertdataPK"/>
+            </column>
+            <column name="country_id" type="VARCHAR(256)"/>
+            <column name="latitude" type="VARCHAR(256)"/>
+            <column name="longitude" type="VARCHAR(256)"/>
+            <column name="bright_ti4" type="VARCHAR(256)"/>
+            <column name="scan" type="VARCHAR(256)"/>
+            <column name="track" type="VARCHAR(256)"/>
+            <column name="acq_date" type="DATE"/>
+            <column name="acq_time" type="TIME"/>
+            <column name="satellite" type="VARCHAR(256)"/>
+            <column name="instrument" type="VARCHAR(256)"/>
+            <column name="confidence" type="VARCHAR(256)"/>
+            <column name="version" type="VARCHAR(256)"/>
+            <column name="bright_ti5" type="VARCHAR(256)"/>
+            <column name="frp" type="VARCHAR(256)"/>
+            <column name="daynight" type="VARCHAR(256)"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
