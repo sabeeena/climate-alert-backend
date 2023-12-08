@@ -131,7 +131,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setEmailVerified(true);
         repository.save(user);
         RedirectView redirectView = new RedirectView();
-        String redirectUrl = "https://localhost/#/authentication/signin";
+        String redirectUrl = "http://localhost:4200/auth/login";
         redirectView.setUrl(redirectUrl);
         return redirectView;
     }

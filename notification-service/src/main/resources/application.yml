@@ -46,4 +46,4 @@ app:
 
 application:
   link:
-    verification-link: http://localhost:8080/api/auth/service/authorize/confirm/
+    verification-link: http://localhost:8083/api/auth/authorize/confirm/

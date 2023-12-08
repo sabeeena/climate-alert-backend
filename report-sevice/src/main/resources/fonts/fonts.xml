@@ -1,0 +1,11 @@
+<fontFamilies>
+    <fontFamily name="Times New Roman">
+        <normal>fonts/tnr/times-new-roman.ttf</normal>
+        <bold>fonts/tnr/times-new-roman-gras.ttf</bold>
+        <italic>fonts/tnr/times-new-roman-italique.ttf</italic>
+        <boldItalic>fonts/tnr/times-new-roman-gras-italique.ttf</boldItalic>
+        <pdfEncoding>Identity-H</pdfEncoding>
+        <pdfEmbedded>true</pdfEmbedded>
+        <exportFonts/>
+    </fontFamily>
+</fontFamilies>
