@@ -61,6 +61,10 @@ public class EgovFireReportService {
         return egovFireReportRepository.saveAll(convertedData);
     }
 
+    public List<ReportYearlyData> getDataByYear(String year) {
+        return egovFireReportRepository.getAllByYear(year);
+    }
+
     private static List<ReportYearlyData> convertFromJson(String jsonString) {
         List<ReportYearlyData> dataList = new ArrayList<>();
 
