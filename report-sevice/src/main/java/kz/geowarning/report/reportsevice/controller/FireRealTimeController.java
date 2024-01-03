@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -28,7 +29,7 @@ public class FireRealTimeController {
     }
 
     @PutMapping("/edit-f1/fire-real-time")
-    public ResponseEntity<FireRealTimeReport> updateF1realTime(@RequestParam FireReportF1Dto dto){
+    public ResponseEntity<FireRealTimeReport> updateF1realTime(@RequestBody FireReportF1Dto dto){
         return ResponseEntity.ok(fireService.editRealTimeReportF1(dto));
     }
 }

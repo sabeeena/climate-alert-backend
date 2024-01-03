@@ -75,8 +75,10 @@ public class FireService {
     public FireReportF1Dto getFireRealTimeF1(Long id){
         FireReportF1Dto dto = new FireReportF1Dto();
         FireRealTimeReport fireRealTimeReport=null;
-        if (fireRealTimeReportRepository.findById(dto.getId()).isPresent()) {
-            fireRealTimeReport = fireRealTimeReportRepository.findById(dto.getId()).get();
+        if (id != null) {
+            if (fireRealTimeReportRepository.findById(id).isPresent()) {
+                fireRealTimeReport = fireRealTimeReportRepository.findById(id).get();
+            }
         }
         FireRealTimeVegetationInformation fireRealTimeVegetationInformation=null;
 
@@ -97,7 +99,7 @@ public class FireService {
         dto.setVegetationArea(fireRealTimeVegetationInformation.getVegetationArea());
         dto.setVegetationDensity(fireRealTimeVegetationInformation.getVegetationDensity());
         dto.setVegetationMoisture(fireRealTimeVegetationInformation.getVegetationMoisture());
-        dto.setInformation(dto.getInformation());
+        dto.setInformation(fireRealTimeVegetationInformation.getInformation());
         return dto;
     }
 
