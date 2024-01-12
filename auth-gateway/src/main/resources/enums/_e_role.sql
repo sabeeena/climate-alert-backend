@@ -1,0 +1,6 @@
+CREATE TYPE _e_role AS ENUM (
+    'ROLE_USER',
+    'ROLE_EMPLOYEE',
+    'ROLE_ADMIN',
+    'ROLE_SUPER_ADMIN'
+);
