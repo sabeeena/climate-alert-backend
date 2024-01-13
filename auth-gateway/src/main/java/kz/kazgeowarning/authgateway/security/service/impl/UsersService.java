@@ -1,17 +1,23 @@
 package kz.kazgeowarning.authgateway.security.service.impl;
 
+import kz.kazgeowarning.authgateway.dto.AdminEmployeeDTO;
 import kz.kazgeowarning.authgateway.dto.ClientDetailDTO;
 import kz.kazgeowarning.authgateway.dto.ClientsDTO;
 import kz.kazgeowarning.authgateway.enums.Role;
 import kz.kazgeowarning.authgateway.enums.UserLoginType;
+import kz.kazgeowarning.authgateway.model.AdminEmployee;
+import kz.kazgeowarning.authgateway.model.RegisteredEmployee;
 import kz.kazgeowarning.authgateway.model.User;
+import kz.kazgeowarning.authgateway.repository.AdminEmployeeRepository;
 import kz.kazgeowarning.authgateway.repository.ClientDetailDTORepository;
+import kz.kazgeowarning.authgateway.repository.RegisteredEmployeeRepository;
 import kz.kazgeowarning.authgateway.repository.UserRepository;
 import kz.kazgeowarning.authgateway.security.service.IUsersService;
 import kz.kazgeowarning.authgateway.util.PageableCustom;
 import kz.kazgeowarning.authgateway.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.repository.query.QueryUtils;
@@ -25,6 +31,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -40,6 +47,11 @@ public class UsersService implements IUsersService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private final ClientDetailDTORepository clientDetailDTORepository;
+    @Autowired
+    private AdminEmployeeRepository adminEmployeeRepository;
+
+    @Autowired
+    private RegisteredEmployeeRepository registeredEmployeeRepository;
 
     @Override
     public List<User> findAll() throws DataAccessException {
@@ -258,5 +270,50 @@ public class UsersService implements IUsersService {
 
     public List<User> findByEmployeeRole() {
         return usersRepository.getTotalEmployee();
+    }
+
+    @Transactional
+    public AdminEmployee registerEmployeeToAdmin(AdminEmployeeDTO adminEmployee){
+        AdminEmployee existingAdmin = adminEmployeeRepository.findByAdminEmail(adminEmployee.getAdminEmail());
+        Set<RegisteredEmployee> registeredEmployees;
+
+        if (existingAdmin == null) {
+            existingAdmin = new AdminEmployee();
+            existingAdmin.setAdminEmail(adminEmployee.getAdminEmail());
+            registeredEmployees = new HashSet<>();
+        } else {
+            registeredEmployees = existingAdmin.getEmployees();
+
+            // Удалить сотрудников, которых нет в новом списке
+            registeredEmployees.removeIf(existingEmployee ->
+                    adminEmployee.getEmployees().stream()
+                            .noneMatch(newEmployee -> newEmployee.getEmail().equals(existingEmployee.getEmployeeEmail()))
+            );
+        }
+
+        // Добавить новых сотрудников
+        for (User employee : adminEmployee.getEmployees()) {
+            RegisteredEmployee registeredEmployee = new RegisteredEmployee();
+            registeredEmployee.setFirstName(employee.getFirstName());
+            registeredEmployee.setEmployeeEmail(employee.getEmail());
+            registeredEmployee.setLastName(employee.getLastName());
+            registeredEmployee.setAdmin(existingAdmin);
+            registeredEmployees.add(registeredEmployee);
+            registeredEmployeeRepository.save(registeredEmployee);
+        }
+
+        existingAdmin.setEmployees(registeredEmployees);
+        return adminEmployeeRepository.save(existingAdmin);
+
+    }
+
+    public Set<RegisteredEmployee> getEmployeesByAdminEmail(String adminEmail) {
+        AdminEmployee admin = adminEmployeeRepository.findByAdminEmail(adminEmail);
+
+        if (admin != null) {
+            return admin.getEmployees();
+        }
+
+        return Collections.emptySet();
     }
 }
