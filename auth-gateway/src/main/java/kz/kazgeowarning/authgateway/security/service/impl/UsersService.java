@@ -3,6 +3,7 @@ package kz.kazgeowarning.authgateway.security.service.impl;
 import kz.kazgeowarning.authgateway.dto.ClientDetailDTO;
 import kz.kazgeowarning.authgateway.dto.ClientsDTO;
 import kz.kazgeowarning.authgateway.enums.Role;
+import kz.kazgeowarning.authgateway.enums.UserLoginType;
 import kz.kazgeowarning.authgateway.model.User;
 import kz.kazgeowarning.authgateway.repository.ClientDetailDTORepository;
 import kz.kazgeowarning.authgateway.repository.UserRepository;
@@ -103,35 +104,42 @@ public class UsersService implements IUsersService {
 
 
     @Override
-    public User createOrUpdateUser(ClientsDTO clientDTO) {
-        User client;
-        if (clientDTO.getId() == null) {
-            client = User
+    public User createOrUpdateUser(ClientsDTO userDto) {
+        User user;
+        if (userDto.getId() == null) {
+            user = User
                     .builder()
-                    .email(clientDTO.getEmail())
-                    .firstName(clientDTO.getName())
-                    .city(clientDTO.getCity())
-                    .role(Role.ROLE_USER)
-                    .loginType(clientDTO.getLoginType())
+                    .email(userDto.getEmail())
+                    .firstName(userDto.getFirstName())
+                    .lastName(userDto.getLastName())
+                    .middleName(userDto.getMiddleName())
+                    .birthDate(userDto.getBirthDate())
+                    .phoneNumber(userDto.getPhoneNumber())
+                    .city(userDto.getCity())
+                    .role(userDto.getRole())
+                    .loginType(UserLoginType.origin)
                     .active(true)
-                    .password(bCryptPasswordEncoder.encode(clientDTO.getPassword()))
+                    .password(bCryptPasswordEncoder.encode(userDto.getPassword()))
+                    .approved(true)
                     .registerDate(new Timestamp(new Date().getTime()))
                     .build();
         } else {
-            client = findUserById(clientDTO.getId());
-            assert client != null;
-            client.setEmail(clientDTO.getEmail());
-            client.setFirstName(clientDTO.getName());
-            client.setLastName(clientDTO.getSurname());
-            client.setRole(Role.ROLE_USER);
-            client.setLoginType(client.getLoginType());
-            client.setActive(true);
-            client.setPassword(client.getPassword());
-            client.setCity(clientDTO.getCity());
-            client.setPhoneNumber(clientDTO.getPhoneNumber());
+            user = findUserById(userDto.getId());
+            assert user != null;
+            user.setEmail(userDto.getEmail());
+            user.setFirstName(userDto.getFirstName());
+            user.setLastName(userDto.getLastName());
+            user.setMiddleName(userDto.getMiddleName());
+            user.setBirthDate(userDto.getBirthDate());
+            user.setPhoneNumber(userDto.getPhoneNumber());
+            user.setRole(userDto.getRole());
+            user.setLoginType(user.getLoginType());
+            user.setActive(true);
+            user.setCity(userDto.getCity());
+            user.setPhoneNumber(userDto.getPhoneNumber());
         }
 
-        return usersRepository.saveAndFlush(client);
+        return usersRepository.saveAndFlush(user);
     }
 
     @Override
@@ -160,16 +168,15 @@ public class UsersService implements IUsersService {
     }
 
     @Override
-    public User editClient(ClientsDTO clientsDTO) {
-        User client = findUserById(clientsDTO.getId());
+    public User editClient(ClientsDTO userDto) {
+        User client = findUserById(userDto.getId());
         if (client != null) {
-            client.setCity(clientsDTO.getCity());
-            client.setPhoneNumber(clientsDTO.getPhoneNumber());
-            client.setBirthDate(clientsDTO.getBirthDate());
-            client.setStorageUrl(clientsDTO.getStorageUrl());
-            client.setFirstName(clientsDTO.getName());
+            client.setCity(userDto.getCity());
+            client.setPhoneNumber(userDto.getPhoneNumber());
+            client.setBirthDate(userDto.getBirthDate());
+            client.setFirstName(userDto.getFirstName());
             client.setLastName(client.getLastName());
-            client.setEmail(clientsDTO.getEmail());
+            client.setEmail(userDto.getEmail());
             return usersRepository.save(client);
         } else {
             return null;
@@ -249,4 +256,7 @@ public class UsersService implements IUsersService {
     }
 
 
+    public List<User> findByEmployeeRole() {
+        return usersRepository.getTotalEmployee();
+    }
 }

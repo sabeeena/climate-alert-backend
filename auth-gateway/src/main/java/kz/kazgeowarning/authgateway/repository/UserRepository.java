@@ -24,7 +24,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User getByEmailAndActive(String email, Boolean active);
 
     @Query("select c from User c where c.role = 'ROLE_EMPLOYEE'")
-    Optional<User> getTotalEmployee();
+    List<User> getTotalEmployee();
     @Query("select count(c) from User c where c.role = 'ROLE_EMPLOYEE'")
     Long getTotalSizeEmployee();
 

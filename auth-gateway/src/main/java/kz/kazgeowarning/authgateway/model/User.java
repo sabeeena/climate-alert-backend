@@ -12,6 +12,7 @@ import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Date;
 
 @Entity
 @Table(name = "_users", schema = "auth")
@@ -79,7 +80,7 @@ public class User {
     private String phoneNumber;
 
     @Column(name = "birth_date")
-    private Timestamp birthDate;
+    private Date birthDate;
 
     @Column(name = "city")
     private String city;

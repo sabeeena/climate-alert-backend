@@ -55,7 +55,7 @@ public class AuthController {
             User user = usersService.findUserByUsername(loginDTO.getEmail());
 
             if (!(bCryptPasswordEncoder.matches(loginDTO.getPassword(), user.getPassword())
-                    && (user.getRole() == Role.ROLE_USER || user.getRole() == Role.ROLE_TEACHER))) {
+                    && (user.getRole() == Role.ROLE_USER || user.getRole() == Role.ROLE_EMPLOYEE))) {
                 throw new InternalException(ErrorCode.ErrorCodes.AUTH_ERROR, "Неправильный пароль");
             }
 
@@ -91,6 +91,10 @@ public class AuthController {
         return ResponseEntity.ok(usersService.findAll());
     }
 
+    @GetMapping(PUBLIC_URL + "/v1/users/role-employee")
+    public ResponseEntity<List<User>> getUserEmployee() {
+        return ResponseEntity.ok(usersService.findByEmployeeRole());
+    }
 
     @GetMapping(PUBLIC_URL + "/v1/users/{id}")
     public ResponseEntity<User> getById(@PathVariable("id") Long id) {
