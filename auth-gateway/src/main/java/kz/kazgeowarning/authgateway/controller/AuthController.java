@@ -3,6 +3,7 @@ package kz.kazgeowarning.authgateway.controller;
 import io.swagger.annotations.ApiOperation;
 import kz.kazgeowarning.authgateway.dto.*;
 import kz.kazgeowarning.authgateway.enums.Role;
+import kz.kazgeowarning.authgateway.model.AdminEmployee;
 import kz.kazgeowarning.authgateway.model.Session;
 import kz.kazgeowarning.authgateway.model.User;
 import kz.kazgeowarning.authgateway.repository.SessionRepository;
@@ -54,8 +55,7 @@ public class AuthController {
         try {
             User user = usersService.findUserByUsername(loginDTO.getEmail());
 
-            if (!(bCryptPasswordEncoder.matches(loginDTO.getPassword(), user.getPassword())
-                    && (user.getRole() == Role.ROLE_USER || user.getRole() == Role.ROLE_EMPLOYEE))) {
+            if (!(bCryptPasswordEncoder.matches(loginDTO.getPassword(), user.getPassword()))) {
                 throw new InternalException(ErrorCode.ErrorCodes.AUTH_ERROR, "Неправильный пароль");
             }
 
@@ -95,6 +95,17 @@ public class AuthController {
     public ResponseEntity<List<User>> getUserEmployee() {
         return ResponseEntity.ok(usersService.findByEmployeeRole());
     }
+
+    @PostMapping(PUBLIC_URL + "/v1/users/register-employee")
+    public ResponseEntity<AdminEmployee> registerEmployeeToAdmin(@RequestBody AdminEmployeeDTO adminEmployee) {
+        return ResponseEntity.ok(usersService.registerEmployeeToAdmin(adminEmployee));
+    }
+
+    @GetMapping(PUBLIC_URL + "/v1/users/get/admin-employees")
+    public ResponseEntity<?> getEmployeesByAdminEmail(@RequestParam String email) {
+        return ResponseEntity.ok(usersService.getEmployeesByAdminEmail(email));
+    }
+
 
     @GetMapping(PUBLIC_URL + "/v1/users/{id}")
     public ResponseEntity<User> getById(@PathVariable("id") Long id) {
