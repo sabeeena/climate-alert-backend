@@ -292,14 +292,18 @@ public class UsersService implements IUsersService {
         }
 
         // Добавить новых сотрудников
-        for (User employee : adminEmployee.getEmployees()) {
-            RegisteredEmployee registeredEmployee = new RegisteredEmployee();
-            registeredEmployee.setFirstName(employee.getFirstName());
-            registeredEmployee.setEmployeeEmail(employee.getEmail());
-            registeredEmployee.setLastName(employee.getLastName());
-            registeredEmployee.setAdmin(existingAdmin);
-            registeredEmployees.add(registeredEmployee);
-            registeredEmployeeRepository.save(registeredEmployee);
+        for (Object obj : adminEmployee.getEmployees()) {
+            if (obj instanceof User) {
+                User employee = (User) obj;
+
+                RegisteredEmployee registeredEmployee = new RegisteredEmployee();
+                registeredEmployee.setFirstName(employee.getFirstName());
+                registeredEmployee.setEmployeeEmail(employee.getEmail());
+                registeredEmployee.setLastName(employee.getLastName());
+                registeredEmployee.setAdmin(existingAdmin);
+                registeredEmployees.add(registeredEmployee);
+                registeredEmployeeRepository.save(registeredEmployee);
+            }
         }
 
         existingAdmin.setEmployees(registeredEmployees);
@@ -312,6 +316,16 @@ public class UsersService implements IUsersService {
 
         if (admin != null) {
             return admin.getEmployees();
+        }
+
+        return Collections.emptySet();
+    }
+
+    public Set<RegisteredEmployee> getRegisteredEmployeesByEmployee(String email) {
+        Set<RegisteredEmployee>  employees = registeredEmployeeRepository.findAllEmployeeByEEmail(email);
+
+        if (employees != null) {
+            return employees;
         }
 
         return Collections.emptySet();

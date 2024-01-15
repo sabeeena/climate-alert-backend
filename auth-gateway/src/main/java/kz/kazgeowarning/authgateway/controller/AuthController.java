@@ -106,6 +106,11 @@ public class AuthController {
         return ResponseEntity.ok(usersService.getEmployeesByAdminEmail(email));
     }
 
+    @GetMapping(PUBLIC_URL + "/v1/users/get/admin-employees/by-employee")
+    public ResponseEntity<?> getRegisteredEmployeesByEmployee(@RequestParam String email) {
+        return ResponseEntity.ok(usersService.getRegisteredEmployeesByEmployee(email));
+    }
+
 
     @GetMapping(PUBLIC_URL + "/v1/users/{id}")
     public ResponseEntity<User> getById(@PathVariable("id") Long id) {
