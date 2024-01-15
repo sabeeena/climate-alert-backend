@@ -5,10 +5,7 @@ import kz.geowarning.data.entity.FireRTData;
 import kz.geowarning.data.service.FireRTDataService;
 import kz.geowarning.data.util.RestConstants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -35,4 +32,13 @@ public class FireRTDataController {
         return fireRTDataService.getDataByDate(date);
     }
 
+    @GetMapping(RestConstants.REST_RT_DATA + "/search")
+    public List<FireRTData> searchDataByYearAndMonth(@RequestParam("year") Integer year, @RequestParam("month") Integer month) {
+        return fireRTDataService.getDataByYearAndMonth(year, month);
+    }
+
+    @GetMapping(RestConstants.REST_RT_DATA + "/by-id")
+    public FireRTData getRTById(@RequestParam("id") Long id) {
+        return fireRTDataService.getById(id);
+    }
 }
