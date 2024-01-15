@@ -20,7 +20,7 @@ public class ReportController {
     ReportService reportService;
 
     @GetMapping("/fire-real-time-overall")
-    public ResponseEntity<?> generateAccessDenials(@RequestParam Long reportId,
+    public ResponseEntity<?> realTimeOverall(@RequestParam Long reportId,
                                                    @RequestParam String lang, @RequestParam String type) throws JRException, SQLException, IOException, IllegalAccessException {
         byte[] bytes = reportService.exportReportFireRealTimeOverall(reportId, lang);
         ByteArrayResource resource = new ByteArrayResource(bytes);
@@ -30,7 +30,23 @@ public class ReportController {
         } else {
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType("application/octet-stream"))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Report." + type)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Fire_RealTime_Overall_Info." + type)
+                    .body(resource);
+        }
+    }
+
+    @GetMapping("/fire-real-time-economic-damage")
+    public ResponseEntity<?> realTimeEconomicDamage(@RequestParam Long reportId,
+                                                   @RequestParam String lang, @RequestParam String type) throws JRException, SQLException, IOException, IllegalAccessException {
+        byte[] bytes = reportService.exportReportFireRealTimeEDamage(reportId, lang);
+        ByteArrayResource resource = new ByteArrayResource(bytes);
+
+        if (bytes.length == 0) {
+            return ResponseEntity.status(204).build();
+        } else {
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType("application/octet-stream"))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Fire_RealTime_Economic_Damage." + type)
                     .body(resource);
         }
     }

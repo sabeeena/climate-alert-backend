@@ -31,6 +31,9 @@ public class FireRealTimeVegetationInformation {
 
     @Column(name = "information")
     private String information;
+    @ManyToOne
+    private Status status;
+    private String authorEmail;
 
 }
 

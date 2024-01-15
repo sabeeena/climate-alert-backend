@@ -2,16 +2,15 @@ package kz.geowarning.report.reportsevice.service;
 
 import kz.geowarning.report.reportsevice.dto.FireReportCreateDto;
 import kz.geowarning.report.reportsevice.dto.FireReportF1Dto;
-import kz.geowarning.report.reportsevice.entity.FireRealTimeEconomicDamageReport;
-import kz.geowarning.report.reportsevice.entity.FireRealTimeReport;
-import kz.geowarning.report.reportsevice.entity.FireRealTimeVegetationInformation;
-import kz.geowarning.report.reportsevice.repository.FireRealTimeEconomicDamageReportRepository;
-import kz.geowarning.report.reportsevice.repository.FireRealTimeReportRepository;
-import kz.geowarning.report.reportsevice.repository.FireRealTimeVegetationInformationRepository;
+import kz.geowarning.report.reportsevice.entity.*;
+import kz.geowarning.report.reportsevice.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class FireService {
@@ -21,20 +20,42 @@ public class FireService {
     private FireRealTimeReportRepository fireRealTimeReportRepository;
     @Autowired
     private FireRealTimeVegetationInformationRepository fireRealTimeVegetationInformationRepository;
+    @Autowired
+    private EditorRepository editorRepository;
+
+    @Autowired
+    private StatusRepository statusRepository;
 
     public FireRealTimeReport createRealTimeNewReport(FireReportCreateDto dto){
-        FireRealTimeEconomicDamageReport economicDamageReport = fireRealTimeEconomicDamageReportRepository.save(new FireRealTimeEconomicDamageReport());
-        FireRealTimeVegetationInformation vegetationInformation = fireRealTimeVegetationInformationRepository.save(new FireRealTimeVegetationInformation());
+        Status status = statusRepository.findById(1L).orElse(null);
 
-        FireRealTimeReport fireRealTimeReport = new FireRealTimeReport();
-        fireRealTimeReport.setStartDate(dto.getStartDate());
-        fireRealTimeReport.setLatitude(dto.getLatitude());
-        fireRealTimeReport.setLongitude(dto.getLongitude());
-        fireRealTimeReport.setEconomicDamageReport(economicDamageReport);
-        fireRealTimeReport.setVegetationInformation(vegetationInformation);
-        fireRealTimeReportRepository.save(fireRealTimeReport);
+            FireRealTimeEconomicDamageReport economicDamageReport = new FireRealTimeEconomicDamageReport();
+            economicDamageReport.setStatus(status);
+            FireRealTimeEconomicDamageReport savedEconomicDamageReport = fireRealTimeEconomicDamageReportRepository.save(economicDamageReport);
 
-        return fireRealTimeReport;
+            FireRealTimeVegetationInformation vegetationInformation = new FireRealTimeVegetationInformation();
+            vegetationInformation.setStatus(status);
+            FireRealTimeVegetationInformation savedVegetationInformation = fireRealTimeVegetationInformationRepository.save(vegetationInformation);
+
+            FireRealTimeReport fireRealTimeReport = new FireRealTimeReport();
+            fireRealTimeReport.setStartDate(dto.getStartDate());
+            fireRealTimeReport.setLatitude(dto.getLatitude());
+            fireRealTimeReport.setLongitude(dto.getLongitude());
+            fireRealTimeReport.setEconomicDamageReport(savedEconomicDamageReport);
+            fireRealTimeReport.setVegetationInformation(savedVegetationInformation);
+            fireRealTimeReport.setStatus(status);
+            Set<Editor> editors = dto.getEditors();
+            Set<Editor> savedEditors = new HashSet<>();
+
+            for (Editor editor : editors) {
+                Editor savedEditor = editorRepository.save(editor);
+                savedEditors.add(savedEditor);
+            }
+            fireRealTimeReport.setEditors(savedEditors);
+            fireRealTimeReport.setFireRTDataId(dto.getFireRTDataId());
+            fireRealTimeReportRepository.save(fireRealTimeReport);
+
+            return fireRealTimeReport;
     }
 
     public FireRealTimeReport editRealTimeReportF1(FireReportF1Dto dto){
@@ -104,5 +125,7 @@ public class FireService {
     }
 
 
-
+    public List<FireRealTimeReport> getAllByRTDataId(Long rtDataId) {
+        return fireRealTimeReportRepository.findByFireRTDataId(rtDataId);
+    }
 }
