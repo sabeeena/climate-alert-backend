@@ -40,12 +40,33 @@ public class ReportService {
     @Value("classpath:reports/jrxml/fire/realTime/fire_real_time_overall_report.jrxml")
     private String fireRealTimeOverall;
 
+    @Value("classpath:reports/jrxml/fire/realTime/fire_real_time_economic_damage.jrxml")
+    private String fireRealTimeEconomicDamage;
+
 
 
     public byte[] exportReportFireRealTimeOverall(Long reportId, String lang) throws IOException, JRException, SQLException {
         JasperReport compileReport = null;
         if (lang.equals("ru")) {
             compileReport = JasperCompileManager.compileReport(resourceLoader.getResource(fireRealTimeOverall).getInputStream());
+        }
+//        else {
+//            compileReport = JasperCompileManager.compileReport(resourceLoader.getResource(DENIAL_ACT_COUNTING_COMMITTEE_KZ).getInputStream());
+//        }
+        InputStream imgInputStream = resourceLoader.getResource(coatOfArms).getInputStream();
+        Map<String, Object> parameters = new HashMap<>();
+        Connection conn = DriverManager.getConnection(databaseUrl, databaseLogin, databasePassword);
+        parameters.put("reportId", reportId);
+        parameters.put("logo", imgInputStream);
+        JasperPrint jasperPrint = JasperFillManager.fillReport(compileReport, parameters, conn);
+
+        return JasperExportManager.exportReportToPdf(jasperPrint);
+    }
+
+    public byte[] exportReportFireRealTimeEDamage(Long reportId, String lang) throws IOException, JRException, SQLException {
+        JasperReport compileReport = null;
+        if (lang.equals("ru")) {
+            compileReport = JasperCompileManager.compileReport(resourceLoader.getResource(fireRealTimeEconomicDamage).getInputStream());
         }
 //        else {
 //            compileReport = JasperCompileManager.compileReport(resourceLoader.getResource(DENIAL_ACT_COUNTING_COMMITTEE_KZ).getInputStream());

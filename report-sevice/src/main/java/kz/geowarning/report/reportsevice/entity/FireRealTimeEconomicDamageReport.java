@@ -38,6 +38,21 @@ public class FireRealTimeEconomicDamageReport {
     @Column(name = "conclusions", length = 10000)
     private String conclusions;
 
+    @ManyToOne
+    private Status status;
+    private String authorEmail;
+
+    private String harmfulSubstancesEmissions;
+    private String impactOnLocalClimateAndEcosystem;
+    private String damageToFloraAndFauna;
+    private String lossesForLocalCommunitiesAndEconomy;
+    private String aidToAffected;
+    private String restorationAndRehabilitationCosts;
+    private String elevationAboveSeaLevel;
+    private String adjacentAffectedObjectsInfo;
+    private String fireIncidenceTrends;
+    private String comparisonWithPriorFires;
+    private String evaluationOfFirefightingAndPreventionMeasures;
     // Геттеры и сеттеры для полей
 
     // Дополнительные методы, конструкторы и т.д.

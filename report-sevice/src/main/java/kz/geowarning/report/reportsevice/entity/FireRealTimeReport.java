@@ -4,6 +4,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -47,7 +50,15 @@ public class FireRealTimeReport {
     @JoinColumn(name = "fire_real_time_vegetation_information_id")
     private FireRealTimeVegetationInformation vegetationInformation;
 
-    // Геттеры и сеттеры для полей
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "report_editors",
+            joinColumns = @JoinColumn(name = "report_id"),
+            inverseJoinColumns = @JoinColumn(name = "editor_id"))
+    private Set<Editor> editors = new HashSet<>();
 
-    // Дополнительные методы, конструкторы и т.д.
+    @ManyToOne
+    private Status status;
+
+    private Long fireRTDataId;
+
 }
