@@ -33,8 +33,8 @@ public class FireRTDataController {
     }
 
     @GetMapping(RestConstants.REST_RT_DATA + "/search")
-    public List<FireRTData> searchDataByYearAndMonth(@RequestParam("year") Integer year, @RequestParam("month") Integer month) {
-        return fireRTDataService.getDataByYearAndMonth(year, month);
+    public List<FireRTData> searchDataByYearAndMonth(@RequestParam("year") Integer year, @RequestParam("month") Integer month, String email) {
+        return fireRTDataService.getDataByYearAndMonth(year, month, email);
     }
 
     @GetMapping(RestConstants.REST_RT_DATA + "/by-id")

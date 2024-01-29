@@ -29,39 +29,39 @@ public class FireService {
     public FireRealTimeReport createRealTimeNewReport(FireReportCreateDto dto){
         Status status = statusRepository.findById(1L).orElse(null);
 
-            FireRealTimeEconomicDamageReport economicDamageReport = new FireRealTimeEconomicDamageReport();
-            economicDamageReport.setStatus(status);
-            FireRealTimeEconomicDamageReport savedEconomicDamageReport = fireRealTimeEconomicDamageReportRepository.save(economicDamageReport);
+        FireRealTimeEconomicDamageReport economicDamageReport = new FireRealTimeEconomicDamageReport();
+        economicDamageReport.setStatus(status);
+        FireRealTimeEconomicDamageReport savedEconomicDamageReport = fireRealTimeEconomicDamageReportRepository.save(economicDamageReport);
 
-            FireRealTimeVegetationInformation vegetationInformation = new FireRealTimeVegetationInformation();
-            vegetationInformation.setStatus(status);
-            FireRealTimeVegetationInformation savedVegetationInformation = fireRealTimeVegetationInformationRepository.save(vegetationInformation);
+        FireRealTimeVegetationInformation vegetationInformation = new FireRealTimeVegetationInformation();
+        vegetationInformation.setStatus(status);
+        FireRealTimeVegetationInformation savedVegetationInformation = fireRealTimeVegetationInformationRepository.save(vegetationInformation);
 
-            FireRealTimeReport fireRealTimeReport = new FireRealTimeReport();
-            fireRealTimeReport.setStartDate(dto.getStartDate());
-            fireRealTimeReport.setLatitude(dto.getLatitude());
-            fireRealTimeReport.setLongitude(dto.getLongitude());
-            fireRealTimeReport.setEconomicDamageReport(savedEconomicDamageReport);
-            fireRealTimeReport.setVegetationInformation(savedVegetationInformation);
-            fireRealTimeReport.setStatus(status);
-            Set<Editor> editors = dto.getEditors();
-            Set<Editor> savedEditors = new HashSet<>();
+        FireRealTimeReport fireRealTimeReport = new FireRealTimeReport();
+        fireRealTimeReport.setStartDate(dto.getStartDate());
+        fireRealTimeReport.setLatitude(dto.getLatitude());
+        fireRealTimeReport.setLongitude(dto.getLongitude());
+        fireRealTimeReport.setEconomicDamageReport(savedEconomicDamageReport);
+        fireRealTimeReport.setVegetationInformation(savedVegetationInformation);
+        fireRealTimeReport.setStatus(status);
+        Set<Editor> editors = dto.getEditors();
+        Set<Editor> savedEditors = new HashSet<>();
 
-            for (Editor editor : editors) {
-                Editor savedEditor = editorRepository.save(editor);
-                savedEditors.add(savedEditor);
-            }
-            fireRealTimeReport.setEditors(savedEditors);
-            fireRealTimeReport.setFireRTDataId(dto.getFireRTDataId());
-            fireRealTimeReportRepository.save(fireRealTimeReport);
+        for (Editor editor : editors) {
+            Editor savedEditor = editorRepository.save(editor);
+            savedEditors.add(savedEditor);
+        }
+        fireRealTimeReport.setEditors(savedEditors);
+        fireRealTimeReport.setFireRTDataId(dto.getFireRTDataId());
+        fireRealTimeReportRepository.save(fireRealTimeReport);
 
-            return fireRealTimeReport;
+        return fireRealTimeReport;
     }
 
     public FireRealTimeReport editRealTimeReportF1(FireReportF1Dto dto){
         FireRealTimeReport fireRealTimeReport=null;
         if (fireRealTimeReportRepository.findById(dto.getId()).isPresent()) {
-           fireRealTimeReport = fireRealTimeReportRepository.findById(dto.getId()).get();
+            fireRealTimeReport = fireRealTimeReportRepository.findById(dto.getId()).get();
         }
         FireRealTimeVegetationInformation fireRealTimeVegetationInformation=null;
 

@@ -13,7 +13,10 @@ public interface FireRTDataRepository extends JpaRepository<FireRTData, Long> {
 
     List<FireRTData> findAllByAcqDate(Date date);
 
-    @Query(value="SELECT * FROM data.firertdata\n" +
-            "WHERE EXTRACT(YEAR FROM acq_date) =:year AND EXTRACT(month FROM acq_date) =:month", nativeQuery = true)
-    List<FireRTData> findByYearAndMonth(Integer year, Integer month);
+    @Query(value="SELECT data.firertdata.* from data.firertdata, public.fire_real_time_report, public.editor\n" +
+            "         WHERE EXTRACT(YEAR FROM acq_date) =:year AND EXTRACT(month FROM acq_date) =:month\n" +
+            "and data.firertdata.id = public.fire_real_time_report.firertdata_id\n" +
+            "           and public.fire_real_time_report.id = public.editor.report_id\n" +
+            "           and email =:email", nativeQuery = true)
+    List<FireRTData> findByYearAndMonth(Integer year, Integer month, String email);
 }
