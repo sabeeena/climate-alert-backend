@@ -10,7 +10,7 @@ security:
 
 spring:
   application:
-    name: ng-gateway
+    name: auth-gateway
 
   datasource:
     driver-class-name: org.postgresql.Driver
