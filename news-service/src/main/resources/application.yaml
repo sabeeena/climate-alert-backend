@@ -1,7 +1,5 @@
 server:
   port: 8058
-  servlet:
-    context-path: /news
 
 spring:
   application:

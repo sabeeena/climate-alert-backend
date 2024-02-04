@@ -12,7 +12,7 @@ spring:
     host: smtp.yandex.ru
     port: 587
     username: warningkz@yandex.ru
-    password: clxjseltcthofcka
+    password: xzuyfdympolvwwsy
     from: warningkz@yandex.ru
     protocol: smtp
     tls: true
@@ -39,10 +39,6 @@ logging:
   level:
     com.netflix.discovery.shared.resolver.aws.ConfigClusterResolver: WARN
 
-app:
-  gateway:
-    url: ${GATEWAY_URL:http://localhost:8080}
-  secretKey: ${JWT_SECRET:357538782F413F442}
 
 application:
   link:

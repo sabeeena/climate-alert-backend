@@ -76,7 +76,7 @@ spring:
     host: smtp.yandex.ru
     port: 587
     username: warningkz@yandex.ru
-    password: clxjseltcthofcka
+    password: xzuyfdympolvwwsy
     from: warningkz@yandex.ru
     protocol: smtp
     tls: true
@@ -143,7 +143,16 @@ zuul:
       sensitiveHeaders: Cookie,Set-Cookie
       path: /report/**
       url: http://localhost:8086
-
+    news-service:
+      stripPrefix: 'false'
+      sensitiveHeaders: Cookie,Set-Cookie
+      path: /api/news/**
+      url: http://localhost:8058
+    notification-service:
+      stripPrefix: 'false'
+      sensitiveHeaders: Cookie,Set-Cookie
+      path: /api/notification/**
+      url: http://localhost:8083
 
 
 hystrix:
