@@ -76,7 +76,7 @@ spring:
     host: smtp.yandex.ru
     port: 587
     username: warningkz@yandex.ru
-    password: xzuyfdympolvwwsy
+    password: digndpxxoxbfgvga
     from: warningkz@yandex.ru
     protocol: smtp
     tls: true

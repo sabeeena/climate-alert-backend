@@ -40,7 +40,7 @@ public class NotificationService {
         message += "Sincerely,\n";
         message += "The kazgeowarning team!";
 
-
+        System.out.println(userEmail);
         return message;
     }
 
@@ -62,13 +62,13 @@ public class NotificationService {
         message += "Вы зарегистрировали учетную запись на kazgeowarning портале, прежде чем сможете использовать свою учетную запись, вам необходимо подтвердить, что это ваш адрес электронной почты, нажав здесь: " + verificationLink+userEmail + "\n\n";
         message += "С наилучшими пожеланиями, kazgeowarning\n\n\n";
 
-        message += "Сәлем "+ userEmail + ",\n\n";
-        message += "Есептік жазбаңызды пайдаланбас бұрын kazgeowarning порталда тіркелгіге тіркелдіңіз, бұл сіздің электрондық пошта екенін мына жерді басу арқылы растауыңыз керек: " + verificationLink +userEmail + "\n\n";
-        message += "Ізгі ниетпен, kazgeowarning\n\n\n";
-
-        message += "Hello " + userEmail + ",\n\n";
-        message += "You registered an account on kazgeowarning. Before being able to use your account, you need to verify that this is your email address by clicking here: " + verificationLink+userEmail + "\n\n";
-        message += "Kind Regards, kazgeowarning";
+//        message += "Сәлем "+ userEmail + ",\n\n";
+//        message += "Есептік жазбаңызды пайдаланбас бұрын kazgeowarning порталда тіркелгіге тіркелдіңіз, бұл сіздің электрондық пошта екенін мына жерді басу арқылы растауыңыз керек: " + verificationLink +userEmail + "\n\n";
+//        message += "Ізгі ниетпен, kazgeowarning\n\n\n";
+//
+//        message += "Hello " + userEmail + ",\n\n";
+//        message += "You registered an account on kazgeowarning. Before being able to use your account, you need to verify that this is your email address by clicking here: " + verificationLink+userEmail + "\n\n";
+//        message += "Kind Regards, kazgeowarning";
         return message;
     }
 
