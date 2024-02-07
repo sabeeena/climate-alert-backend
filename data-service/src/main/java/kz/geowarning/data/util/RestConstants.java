@@ -9,4 +9,7 @@ public class RestConstants {
 
     public static final String REST_WEATHER_DATA = BASE_REST + "/WeatherData";
 
+    public static final String REST_FORECAST_DATA = BASE_REST + "/ForecastData";
+
+
 }
