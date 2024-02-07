@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Data
@@ -17,6 +18,7 @@ public class WeatherData {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "weatherdata_seq")
     @SequenceGenerator(name = "weatherdata_seq", allocationSize = 1, sequenceName = "weatherdata_seq")
     private Long id;
+    private Date time;
     private String temp;
     /** Dew Point */
     private String dwpt;
