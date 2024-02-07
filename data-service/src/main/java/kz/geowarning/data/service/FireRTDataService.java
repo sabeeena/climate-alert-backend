@@ -132,4 +132,14 @@ public class FireRTDataService {
         return fireRTDataRepository.findAllByAcqDate(date);
     }
 
+    public List<FireRTData> getDataByYearAndMonth(Integer year, Integer month, String email) {
+        return fireRTDataRepository.findByYearAndMonth(year, month, email);
+    }
+
+    public FireRTData getById(Long id) {
+        if(fireRTDataRepository.findById(id).isPresent()) {
+            return fireRTDataRepository.findById(id).get();
+        }
+        return null;
+    }
 }

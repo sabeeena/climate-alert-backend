@@ -48,3 +48,4 @@ public class NotificationController implements NotificationClient {
         }
     }
 }
+//http://localhost:8083/api/notification/service/notify-warning?warningType=earthquake&userEmail=adilbayevameruert@gmail.com&region=almaty&dangerPossibility=123

@@ -1,0 +1,11 @@
+server:
+  port: 8058
+
+spring:
+  application:
+    name: auth-gateway
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: AVNS_luzCQn9kr50xgAY0cew
+    username: doadmin
+    url: jdbc:postgresql://kazgeowarningdb-do-user-15510721-0.c.db.ondigitalocean.com:25060/defaultdb?currentSchema=news&sslmode=require

@@ -1,0 +1,171 @@
+server:
+  port: 8011
+  use-forward-headers: true
+  servlet:
+    context-path: /internal
+security:
+  token:
+    secret:
+      key: Asjfwol2asf123142Ags1k23hnSA36as6f4qQ324FEsvb
+
+spring:
+  application:
+    name: auth-gateway
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: AVNS_luzCQn9kr50xgAY0cew
+    username: doadmin
+    url: jdbc:postgresql://kazgeowarningdb-do-user-15510721-0.c.db.ondigitalocean.com:25060/defaultdb?currentSchema=auth&sslmode=require
+  jmx:
+    enabled: false
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc.lob.non_contextual_creation: true
+        temp.use_jdbc_metadata_defaults: false
+        synonyms: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default-schema: OSADMIN
+        enable_lazy_load_no_trans: true
+    show-sql: false
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 50MB
+      location: ..
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 724422601071-ljnh3auupuipuqdkshfrs691h3ic4apb.apps.googleusercontent.com
+            clientSecret: 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
+            redirectUriTemplate: "https://damoo.kz/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+          facebook:
+            clientId: 493602265074130
+            clientSecret: f9492f14950a51e56fd8110d169949d2
+            redirectUriTemplate: "https://damoo.kz/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - public_profile
+          github:
+            clientId: 51bbc81f71aeaded7dec
+            clientSecret: 808e276c0f63c0e6f42a90ab92dd19218eee5c49
+            redirectUriTemplate: "https://damoo.kz/oauth2/callback/{registrationId}"
+            scope:
+              - user:email
+              - read:user
+        provider:
+          facebook:
+            authorizationUri: https://www.facebook.com/v3.0/dialog/oauth
+            tokenUri: https://graph.facebook.com/v3.0/oauth/access_token
+            userInfoUri: https://graph.facebook.com/v3.0/me?fields=id,first_name,middle_name,last_name,name,email,verified,is_verified,picture.width(250).height(250)
+  liquibase:
+    enabled: false
+  mail:
+    host: smtp.yandex.ru
+    port: 587
+    username: warningkz@yandex.ru
+    password: digndpxxoxbfgvga
+    from: warningkz@yandex.ru
+    protocol: smtp
+    tls: true
+    default-encoding: UTF-8
+    mime.charset: utf8
+    debug: true
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true
+      ssl.protocols: TLSv1.2
+      ssl.trust: smtp.yandex.ru
+
+#  mail:
+#    host: smtp.gmail.com
+#    port: 587
+#    username: romankin.roma.rakho@gmail.com
+#    password: Romankin345678
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true
+
+app:
+  auth:
+    tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
+    tokenExpirationMsec: 864000000
+  oauth2:
+    # After successfully authenticating with the OAuth2 Provider,
+    # we'll be generating an auth token for the user and sending the token to the
+    # redirectUri mentioned by the client in the /oauth2/authorize request.
+    # We're not using cookies because they won't work well in mobile clients.
+    authorizedRedirectUris:
+      - http://localhost:4201/#/auth/login
+      - http://localhost:4201/#/home
+      - http://damoo.kz/#/authentication/signin
+      - https://damoo.kz/#/authentication/signin
+      - https://185.255.79.19/#/auth/login
+      - myandroidapp://oauth2/redirect
+      - myiosapp://oauth2/redirect
+eureka:
+  instance:
+    leaseRenewalIntervalInSeconds: '0'
+  client:
+    enabled: 'true'
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+    registerWithEureka: 'false'
+    fetchRegistry: 'false'
+
+zuul:
+  ignoredServices: '*'
+  host:
+    connect-timeout-millis: 120000
+    socket-timeout-millis: 120000
+  routes:
+    data-service:
+      stripPrefix: 'false'
+      sensitiveHeaders: Cookie,Set-Cookie
+      path: /api/data/**
+      url: http://localhost:8084
+    report-service:
+      stripPrefix: 'false'
+      sensitiveHeaders: Cookie,Set-Cookie
+      path: /report/**
+      url: http://localhost:8086
+    news-service:
+      stripPrefix: 'false'
+      sensitiveHeaders: Cookie,Set-Cookie
+      path: /api/news/**
+      url: http://localhost:8058
+    notification-service:
+      stripPrefix: 'false'
+      sensitiveHeaders: Cookie,Set-Cookie
+      path: /api/notification/**
+      url: http://localhost:8083
+
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 600000
+
+ribbon:
+  ConnectTimeout: 3000
+  ReadTimeout: 60000
+approve:
+  url: ${APPROVE_URL:https://localhost:8011}
