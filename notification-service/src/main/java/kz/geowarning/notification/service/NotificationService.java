@@ -1,10 +1,14 @@
 package kz.geowarning.notification.service;
 
+import kz.geowarning.notification.dto.ReportNotificationDTO;
+import kz.geowarning.notification.entity.AlertNotification;
+import kz.geowarning.notification.repository.AlertNotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
+import java.util.Objects;
 
 
 @Service
@@ -15,11 +19,14 @@ public class NotificationService {
     @Value("${application.link.verification-link}")
     private String verificationLink;
 
+    @Autowired
+    private AlertNotificationRepository alertNotificationRepository;
+
     public void notifyWarning(String warningType, String userEmail, String region, String dangerPossibility) throws MessagingException {
-        iEmailService.sendMail(userEmail, generateWarningSubject(region, dangerPossibility), generateWarningMessage(userEmail, warningType, dangerPossibility));
+        iEmailService.sendMail(userEmail, generateWarningSubject(region, dangerPossibility), generateWarningMessage(region, userEmail, warningType, dangerPossibility));
     }
 
-    public String generateWarningMessage(String userEmail, String warningType, String dangerPossibility){
+    public String generateWarningMessage(String region, String userEmail, String warningType, String dangerPossibility){
         String message = "Уважаемый пользователь," + userEmail + "\n\n";
         message += "Мы обнаружили " + warningType + " с возможностью опасности " + dangerPossibility + "% ";
         message += "Примите немедленные меры для обеспечения безопасности.\n";
@@ -28,19 +35,26 @@ public class NotificationService {
         message += "С уважением,\n";
         message += "Команда kazgeowarning!\n\n";
 
-        message += "Құрметті пайдаланушы," + userEmail + "\n\n";
-        message += "Біз ескерту түрі " + warningType + " қауіп ықтималдығы " + dangerPossibility + "% жарамдықтың мүмкіндігін анықтадық. ";
-        message += "Егер сізде сұрауларыңыз немесе көмек қажет болса, алдыңғы көмек қызметімен байланысуыңызды сұраймыз.\n\n";
-        message += "Сіздің " + "kazgeowarning" + " қомандасы!.\n\n\n";
+//        message += "Құрметті пайдаланушы," + userEmail + "\n\n";
+//        message += "Біз ескерту түрі " + warningType + " қауіп ықтималдығы " + dangerPossibility + "% жарамдықтың мүмкіндігін анықтадық. ";
+//        message += "Егер сізде сұрауларыңыз немесе көмек қажет болса, алдыңғы көмек қызметімен байланысуыңызды сұраймыз.\n\n";
+//        message += "Сіздің " + "kazgeowarning" + " қомандасы!.\n\n\n";
+//
+//        message += "Dear user," + userEmail + "\n\n";
+//        message += "We have detected a " + warningType + " with a possibility of danger of " + dangerPossibility + "% ";
+//        message += "Please take immediate action to ensure safety. ";
+//        message += "If you have any questions or need further information, please contact our support team.\n\n";
+//        message += "Sincerely,\n";
+//        message += "The kazgeowarning team!";
 
-        message += "Dear user," + userEmail + "\n\n";
-        message += "We have detected a " + warningType + " with a possibility of danger of " + dangerPossibility + "% ";
-        message += "Please take immediate action to ensure safety. ";
-        message += "If you have any questions or need further information, please contact our support team.\n\n";
-        message += "Sincerely,\n";
-        message += "The kazgeowarning team!";
-
-        System.out.println(userEmail);
+        AlertNotification alertNotification = new AlertNotification();
+        alertNotification.setReceiverEmail(userEmail);
+        alertNotification.setType(warningType);
+        alertNotification.setText(message);
+        alertNotification.setSeen(false);
+        alertNotification.setRegion(region);
+        alertNotification.setDangerPossibility(dangerPossibility);
+        alertNotificationRepository.save(alertNotification);
         return message;
     }
 
@@ -76,9 +90,58 @@ public class NotificationService {
         String subject = "";
 
         subject += "Добро пожаловать на kazgeowarning, пожалуйста, подтвердите свой адрес электронной почты\n";
-        subject += "Kazgeowarning порталға қош келдіңіз, электрондық пошта мекенжайыңызды растаңыз\n";
-        subject += "Welcome to kazgeowarning, please verify your email address";
+//        subject += "Kazgeowarning порталға қош келдіңіз, электрондық пошта мекенжайыңызды растаңыз\n";
+//        subject += "Welcome to kazgeowarning, please verify your email address";
 
         return subject;
+    }
+
+    private String generateReportSubject() {
+        String subject = "";
+
+        subject += "Запрос на согласование отчета от редактора.\n";
+
+        return subject;
+    }
+
+    private String generateReportMessage() {
+        String subject = "";
+
+        subject += "Вам был отправлен запрос на согласования отчета. Пожалуйста, рассмотрите в ближайшем времени.\n";
+
+        return subject;
+    }
+
+    private String generateReportSubjectAdmin(String type) {
+        String message = "empty something is wrong";
+
+        if(Objects.equals(type, "Согласовано")){
+            return "Успешное согласование репорта.\n";
+        } else if(Objects.equals(type, "Корректировка")) {
+            return "Возврат на корректировку репорта.\n";
+        }
+
+        return message;
+    }
+
+    public String generateReportMessageAdmin(String type){
+        String subject = "empty something is wrong";
+
+        if(Objects.equals(type, "Согласовано")){
+            return "Хочу сообщить, что отчет был успешно согласован от имени администратора.\n";
+        } else if(Objects.equals(type, "Корректировка")) {
+            return "Хочу сообщить, что отчет был отправлен на корректировку.\n";
+        }
+
+        return subject;
+    }
+
+    public void reportNotify(ReportNotificationDTO reportNotificationDTO) throws MessagingException {
+        if (reportNotificationDTO.isSenderAdmin()) {
+            iEmailService.sendMail(reportNotificationDTO.getReceiverEmail(), generateReportSubjectAdmin(reportNotificationDTO.getReportType()), generateReportSubjectAdmin(reportNotificationDTO.getReportType()));
+        }
+        else {
+            iEmailService.sendMail(reportNotificationDTO.getReceiverEmail(), generateReportSubject(), generateReportMessage());
+        }
     }
 }

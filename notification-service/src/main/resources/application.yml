@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: notification
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: AVNS_luzCQn9kr50xgAY0cew
+    username: doadmin
+    url: jdbc:postgresql://kazgeowarningdb-do-user-15510721-0.c.db.ondigitalocean.com:25060/defaultdb?currentSchema=notification&sslmode=require
   mail:
     host: smtp.yandex.ru
     port: 587
