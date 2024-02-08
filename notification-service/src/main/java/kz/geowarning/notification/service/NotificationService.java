@@ -49,7 +49,7 @@ public class NotificationService {
 
         AlertNotification alertNotification = new AlertNotification();
         alertNotification.setReceiverEmail(userEmail);
-        alertNotification.setType(warningType);
+        alertNotification.setWarningType(warningType);
         alertNotification.setText(message);
         alertNotification.setSeen(false);
         alertNotification.setRegion(region);
