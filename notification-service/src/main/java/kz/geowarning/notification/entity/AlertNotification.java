@@ -24,4 +24,7 @@ public class AlertNotification {
     private String warningType;
     private String region;
     private String dangerPossibility;
+    private boolean notifyEmail = false;
+    private boolean notifySms = false;
+
 }

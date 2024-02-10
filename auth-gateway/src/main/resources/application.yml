@@ -47,21 +47,21 @@ spring:
           google:
             clientId: 724422601071-ljnh3auupuipuqdkshfrs691h3ic4apb.apps.googleusercontent.com
             clientSecret: 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
-            redirectUriTemplate: "https://damoo.kz/oauth2/callback/{registrationId}"
+            redirectUriTemplate: "http://localhost:8086/user/profile"
             scope:
               - email
               - profile
           facebook:
             clientId: 493602265074130
             clientSecret: f9492f14950a51e56fd8110d169949d2
-            redirectUriTemplate: "https://damoo.kz/oauth2/callback/{registrationId}"
+            redirectUriTemplate: "http://localhost:8086/user/profile"
             scope:
               - email
               - public_profile
           github:
             clientId: 51bbc81f71aeaded7dec
             clientSecret: 808e276c0f63c0e6f42a90ab92dd19218eee5c49
-            redirectUriTemplate: "https://damoo.kz/oauth2/callback/{registrationId}"
+            redirectUriTemplate: "http://localhost:8086/user/profile"
             scope:
               - user:email
               - read:user
