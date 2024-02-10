@@ -84,6 +84,8 @@ public class User {
 
     @Column(name = "city")
     private String city;
+    @Column(length = 2000)
+    private String imageUrl;
 
     @JsonIgnore
     public String getPassword() {

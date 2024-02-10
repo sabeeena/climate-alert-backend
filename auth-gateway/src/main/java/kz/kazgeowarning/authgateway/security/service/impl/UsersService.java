@@ -129,6 +129,7 @@ public class UsersService implements IUsersService {
                     .phoneNumber(userDto.getPhoneNumber())
                     .city(userDto.getCity())
                     .role(userDto.getRole())
+                    .imageUrl(userDto.getImageUrl())
                     .loginType(UserLoginType.origin)
                     .active(true)
                     .password(bCryptPasswordEncoder.encode(userDto.getPassword()))
@@ -144,6 +145,7 @@ public class UsersService implements IUsersService {
             user.setMiddleName(userDto.getMiddleName());
             user.setBirthDate(userDto.getBirthDate());
             user.setPhoneNumber(userDto.getPhoneNumber());
+            user.setImageUrl(userDto.getImageUrl());
             user.setRole(userDto.getRole());
             user.setLoginType(user.getLoginType());
             user.setActive(true);
@@ -189,6 +191,7 @@ public class UsersService implements IUsersService {
             client.setFirstName(userDto.getFirstName());
             client.setLastName(client.getLastName());
             client.setEmail(userDto.getEmail());
+            client.setImageUrl(userDto.getImageUrl());
             return usersRepository.save(client);
         } else {
             return null;

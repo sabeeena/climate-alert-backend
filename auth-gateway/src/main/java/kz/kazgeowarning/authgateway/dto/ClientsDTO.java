@@ -50,5 +50,7 @@ public class ClientsDTO {
     @JsonProperty("city")
     private String city;
 
+    @JsonProperty("imageUrl")
+    private String imageUrl;
 
 }
