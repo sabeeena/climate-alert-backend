@@ -86,6 +86,8 @@ public class User {
     private String city;
     @Column(length = 2000)
     private String imageUrl;
+    private boolean notifyEmail=false;
+    private boolean notifySms=false;
 
     @JsonIgnore
     public String getPassword() {

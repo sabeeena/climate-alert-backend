@@ -130,6 +130,8 @@ public class UsersService implements IUsersService {
                     .city(userDto.getCity())
                     .role(userDto.getRole())
                     .imageUrl(userDto.getImageUrl())
+                    .notifyEmail(userDto.isNotifyEmail())
+                    .notifySms(userDto.isNotifySms())
                     .loginType(UserLoginType.origin)
                     .active(true)
                     .password(bCryptPasswordEncoder.encode(userDto.getPassword()))
@@ -146,6 +148,8 @@ public class UsersService implements IUsersService {
             user.setBirthDate(userDto.getBirthDate());
             user.setPhoneNumber(userDto.getPhoneNumber());
             user.setImageUrl(userDto.getImageUrl());
+            user.setNotifyEmail(userDto.isNotifyEmail());
+            user.setNotifySms(userDto.isNotifySms());
             user.setRole(userDto.getRole());
             user.setLoginType(user.getLoginType());
             user.setActive(true);

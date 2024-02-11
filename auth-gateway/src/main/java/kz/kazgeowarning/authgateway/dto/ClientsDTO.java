@@ -52,5 +52,9 @@ public class ClientsDTO {
 
     @JsonProperty("imageUrl")
     private String imageUrl;
+    @JsonProperty("notifyEmail")
+    private boolean notifyEmail;
+    @JsonProperty("notifySms")
+    private boolean notifySms;
 
 }
