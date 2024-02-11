@@ -29,6 +29,10 @@ public class FireRealTimeController {
     public ResponseEntity<?> getAll(@RequestParam Long reportId) {
         return ResponseEntity.ok(fireService.getFireRealTimeF1(reportId));
     }
+    @DeleteMapping("/delete/fire-real-time")
+    public void deleteReport(@RequestParam Long reportId) {
+        fireService.deleteFireRealTimeReport(reportId);
+    }
 
     @GetMapping("/get-all/fire-real-time/by-rt-data-id")
     public ResponseEntity<?> getAllRtData(@RequestParam Long rtDataId) {

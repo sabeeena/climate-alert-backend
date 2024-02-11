@@ -86,7 +86,9 @@ public class User {
     private String city;
     @Column(length = 2000)
     private String imageUrl;
+    @Column(name = "notify_email")
     private boolean notifyEmail=false;
+    @Column(name = "notify_sms")
     private boolean notifySms=false;
 
     @JsonIgnore

@@ -129,4 +129,8 @@ public class FireService {
     public List<FireRealTimeReport> getAllByRTDataId(Long rtDataId) {
         return fireRealTimeReportRepository.findByFireRTDataId(rtDataId);
     }
+
+    public void deleteFireRealTimeReport(Long reportId) {
+         fireRealTimeReportRepository.deleteById(reportId);
+    }
 }
