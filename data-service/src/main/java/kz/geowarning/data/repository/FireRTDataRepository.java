@@ -18,5 +18,9 @@ public interface FireRTDataRepository extends JpaRepository<FireRTData, Long> {
             "and data.firertdata.id = public.fire_real_time_report.firertdata_id\n" +
             "           and public.fire_real_time_report.id = public.editor.report_id\n" +
             "           and email =:email", nativeQuery = true)
-    List<FireRTData> findByYearAndMonth(Integer year, Integer month, String email);
+    List<FireRTData> findByYearAndMonthAndEmail(Integer year, Integer month, String email);
+
+    @Query(nativeQuery = true, value = "SELECT data.firertdata.* from data.firertdata\n" +
+            "                     WHERE EXTRACT(YEAR FROM acq_date) =:year AND EXTRACT(month FROM acq_date) =:month")
+    List<FireRTData> findByYearAndMonth(Integer year, Integer month);
 }

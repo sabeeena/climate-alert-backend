@@ -28,6 +28,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class FireRTDataService {
@@ -133,7 +134,12 @@ public class FireRTDataService {
     }
 
     public List<FireRTData> getDataByYearAndMonth(Integer year, Integer month, String email) {
-        return fireRTDataRepository.findByYearAndMonth(year, month, email);
+        if(email == null) {
+            System.out.println("email is not null");
+            return fireRTDataRepository.findByYearAndMonthAndEmail(year, month, email);
+        } else {System.out.println("email is null");
+            return fireRTDataRepository.findByYearAndMonth(year, month);
+        }
     }
 
     public FireRTData getById(Long id) {
