@@ -14,11 +14,17 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 @RestController
 public class FireRealTimeController {
     @Autowired
     FireService fireService;
+
+    @GetMapping("/search")
+    public List<FireRealTimeReport> searchDataByYearAndMonth(@RequestParam("year") Integer year, @RequestParam("month") Integer month, String email) {
+        return fireService.getDataByYearAndMonth(year, month, email);
+    }
 
     @GetMapping("/get-one/fire-real-time")
     public ResponseEntity<?> getById(@RequestParam Long reportId) {

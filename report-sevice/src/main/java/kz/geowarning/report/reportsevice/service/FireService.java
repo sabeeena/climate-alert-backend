@@ -133,4 +133,8 @@ public class FireService {
     public void deleteFireRealTimeReport(Long reportId) {
          fireRealTimeReportRepository.deleteById(reportId);
     }
+
+    public List<FireRealTimeReport> getDataByYearAndMonth(Integer year, Integer month, String email) {
+        return fireRealTimeReportRepository.findByYearAndMonth(year, month, email);
+    }
 }
