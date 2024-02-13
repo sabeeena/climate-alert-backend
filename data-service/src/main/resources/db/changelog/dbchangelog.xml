@@ -8,7 +8,11 @@
     <!--Schema: modify, create, drop, alter command-->
     <include file="/schema/firertdata.xml" relativeToChangelogFile="true"/>
     <include file="/schema/reportdata.xml" relativeToChangelogFile="true"/>
+    <include file="/schema/regions.xml" relativeToChangelogFile="true"/>
+    <include file="/schema/stations.xml" relativeToChangelogFile="true"/>
 
     <!--Data: insert, update, delete-->
+    <include file="/data/regions.sql" relativeToChangelogFile="true"/>
+    <include file="/data/stations.sql" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

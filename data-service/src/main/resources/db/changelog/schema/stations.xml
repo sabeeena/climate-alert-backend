@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+	  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="Sabina" id="stations-1">
+        <createSequence incrementBy="1" sequenceName="stations_seq" startValue="1"/>
+    </changeSet>
+
+    <changeSet author="Sabina" id="stations-2">
+        <createTable tableName="stations">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="stationsPK"/>
+            </column>
+            <column name="name" type="VARCHAR(256)"/>
+            <column name="latitude" type="VARCHAR(256)"/>
+            <column name="longitude" type="VARCHAR(256)"/>
+            <column name="region_id" type="VARCHAR(6)">
+                <constraints nullable="false" foreignKeyName="fk_stations_regions" references="regions(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
