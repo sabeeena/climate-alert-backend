@@ -2,7 +2,9 @@ package kz.geowarning.notification.service;
 
 import kz.geowarning.notification.dto.ReportNotificationDTO;
 import kz.geowarning.notification.entity.AlertNotification;
+import kz.geowarning.notification.entity.ReportNotification;
 import kz.geowarning.notification.repository.AlertNotificationRepository;
+import kz.geowarning.notification.repository.ReportNotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,9 @@ public class NotificationService {
 
     @Autowired
     private AlertNotificationRepository alertNotificationRepository;
+
+    @Autowired
+    private ReportNotificationRepository reportNotificationRepository;
 
     public void notifyWarning(String warningType, String userEmail, String region, String dangerPossibility) throws MessagingException {
         iEmailService.sendMail(userEmail, generateWarningSubject(region, dangerPossibility), generateWarningMessage(region, userEmail, warningType, dangerPossibility));
@@ -104,12 +109,21 @@ public class NotificationService {
         return subject;
     }
 
-    private String generateReportMessage() {
-        String subject = "";
+    private String generateReportMessage(ReportNotificationDTO reportNotificationDTO) {
+        String message = "";
 
-        subject += "Вам был отправлен запрос на согласования отчета. Пожалуйста, рассмотрите в ближайшем времени.\n";
+        message += "Вам был отправлен запрос на согласования отчета. Пожалуйста, рассмотрите в ближайшем времени.\n";
 
-        return subject;
+        ReportNotification reportNotification = new ReportNotification();
+        reportNotification.setReceiverEmail(reportNotificationDTO.getReceiverEmail());
+        reportNotification.setSenderEmail(reportNotificationDTO.getSenderEmail());
+        reportNotification.setText(message);
+        reportNotification.setTypeStatus("согласование");
+        reportNotification.setReportType(reportNotificationDTO.getReportType());
+        reportNotification.setReportId(reportNotificationDTO.getReportId());
+        reportNotification.setSeen(false);
+        reportNotificationRepository.save(reportNotification);
+        return message;
     }
 
     private String generateReportSubjectAdmin(String type) {
@@ -124,24 +138,32 @@ public class NotificationService {
         return message;
     }
 
-    public String generateReportMessageAdmin(String type){
-        String subject = "empty something is wrong";
+    public String generateReportMessageAdmin(String type, ReportNotificationDTO reportNotificationDTO){
+        String message = "empty something is wrong";
 
         if(Objects.equals(type, "Согласовано")){
-            return "Хочу сообщить, что отчет был успешно согласован от имени администратора.\n";
+            message = "Хочу сообщить, что отчет был успешно согласован от имени администратора.\n";
         } else if(Objects.equals(type, "Корректировка")) {
-            return "Хочу сообщить, что отчет был отправлен на корректировку.\n";
+            message = "Хочу сообщить, что отчет был отправлен на корректировку.\n";
         }
-
-        return subject;
+        ReportNotification reportNotification = new ReportNotification();
+        reportNotification.setReceiverEmail(reportNotificationDTO.getReceiverEmail());
+        reportNotification.setSenderEmail(reportNotificationDTO.getSenderEmail());
+        reportNotification.setText(message);
+        reportNotification.setTypeStatus("согласование");
+        reportNotification.setReportType(reportNotificationDTO.getReportType());
+        reportNotification.setReportId(reportNotificationDTO.getReportId());
+        reportNotification.setSeen(false);
+        reportNotificationRepository.save(reportNotification);
+        return message;
     }
 
     public void reportNotify(ReportNotificationDTO reportNotificationDTO) throws MessagingException {
         if (reportNotificationDTO.isSenderAdmin()) {
-            iEmailService.sendMail(reportNotificationDTO.getReceiverEmail(), generateReportSubjectAdmin(reportNotificationDTO.getReportType()), generateReportSubjectAdmin(reportNotificationDTO.getReportType()));
+            iEmailService.sendMail(reportNotificationDTO.getReceiverEmail(), generateReportSubjectAdmin(reportNotificationDTO.getReportType()), generateReportMessageAdmin(reportNotificationDTO.getReportType(), reportNotificationDTO));
         }
         else {
-            iEmailService.sendMail(reportNotificationDTO.getReceiverEmail(), generateReportSubject(), generateReportMessage());
+            iEmailService.sendMail(reportNotificationDTO.getReceiverEmail(), generateReportSubject(), generateReportMessage(reportNotificationDTO));
         }
     }
 }
