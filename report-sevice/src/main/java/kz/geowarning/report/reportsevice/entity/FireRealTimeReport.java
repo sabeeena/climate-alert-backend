@@ -3,6 +3,7 @@ package kz.geowarning.report.reportsevice.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "fire_real_time_report")
-public class FireRealTimeReport {
+public class FireRealTimeReport implements Agreement<FireRealTimeReport>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,5 +61,22 @@ public class FireRealTimeReport {
     private Status status;
 
     private Long fireRTDataId;
+    private Long agreementId;
 
+    @Override
+    public FireRealTimeReport agreed() {
+        this.status.setId(3L);
+        this.status.setName("согласовано");
+        return this;
+    }
+
+    @Override
+    public Long getAgreementId() {
+        return agreementId;
+    }
+
+    @Override
+    public void setAgreementId(Long agreementId) {
+        this.agreementId = agreementId;
+    }
 }
