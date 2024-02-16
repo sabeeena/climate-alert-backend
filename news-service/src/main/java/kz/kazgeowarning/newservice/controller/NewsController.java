@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +33,7 @@ public class NewsController {
 
     @PostMapping
     public News saveNews(@RequestBody News news) {
+        news.setPublicationDate(new Date());
         return newsService.saveNews(news);
     }
 

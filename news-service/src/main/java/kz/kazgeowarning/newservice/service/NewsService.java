@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,8 +39,8 @@ public class NewsService {
             newsToUpdate.setTitle(news.getTitle());
             newsToUpdate.setSubtitle(news.getSubtitle());
             newsToUpdate.setText(news.getText());
-            newsToUpdate.setPublicationDate(news.getPublicationDate());
-            newsToUpdate.setCategory(news.getCategory());
+            newsToUpdate.setPublicationDate(new Date());
+            newsToUpdate.setImageUrl(news.getImageUrl());
 
             News savedNews = saveNews(newsToUpdate);
 

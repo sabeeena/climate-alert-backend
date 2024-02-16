@@ -9,3 +9,20 @@ spring:
     password: AVNS_luzCQn9kr50xgAY0cew
     username: doadmin
     url: jdbc:postgresql://kazgeowarningdb-do-user-15510721-0.c.db.ondigitalocean.com:25060/defaultdb?currentSchema=news&sslmode=require
+  jmx:
+    enabled: false
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc.lob.non_contextual_creation: true
+        temp.use_jdbc_metadata_defaults: false
+        synonyms: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default-schema: OSADMIN
+        enable_lazy_load_no_trans: true
+    show-sql: false

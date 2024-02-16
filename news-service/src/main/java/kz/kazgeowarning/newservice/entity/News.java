@@ -32,6 +32,6 @@ public class News {
     @Column(nullable = false)
     private Date publicationDate;
 
-    @Column(nullable = false)
-    private String category;
+    @Column(length = 2000)
+    private String imageUrl;
 }
