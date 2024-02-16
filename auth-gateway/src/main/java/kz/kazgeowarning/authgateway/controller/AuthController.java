@@ -95,6 +95,10 @@ public class AuthController {
     public ResponseEntity<List<User>> getUserEmployee() {
         return ResponseEntity.ok(usersService.findByEmployeeRole());
     }
+    @GetMapping(PUBLIC_URL + "/v1/users/role-admin")
+    public ResponseEntity<List<User>> getUserAdmin() {
+        return ResponseEntity.ok(usersService.getAdmins());
+    }
 
     @PostMapping(PUBLIC_URL + "/v1/users/register-employee")
     public ResponseEntity<AdminEmployee> registerEmployeeToAdmin(@RequestBody AdminEmployeeDTO adminEmployee) {

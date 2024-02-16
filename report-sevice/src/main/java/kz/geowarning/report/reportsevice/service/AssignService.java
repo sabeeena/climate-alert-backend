@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.function.Function;
@@ -45,22 +47,28 @@ public class AssignService {
 
     @Autowired
     private StatusRepository statusRepository;
-    public void sendNotification (@RequestBody Object requestBody, HttpServletRequest httpServletRequest, HttpServletResponse response) throws IOException {
-        String url = "api/notification/service/notify-report";
+    public void sendNotification(ReportNotificationDTO reportNotificationDTO, HttpServletRequest httpServletRequest, HttpServletResponse response) throws IOException {
+        String url = "/api/notification/service/notify-report";
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        HttpEntity<?> httpEntity = new HttpEntity<>(requestBody, httpHeaders);
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 
-        ResponseEntity<String> responseFromNSI = restTemplate.postForEntity( notification + url, httpEntity, String.class);
+        HttpEntity<ReportNotificationDTO> httpEntity = new HttpEntity<>(reportNotificationDTO, httpHeaders);
+
+        ResponseEntity<String> responseFromNSI = restTemplate.postForEntity(notification + url, httpEntity, String.class);
+
         response.setStatus(200);
-
-        response.setHeader("Content-Type", "application/json;charset=UTF-8");
+        response.setContentType("application/json;charset=UTF-8");
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Expires", "0");
 
-        response.getWriter().print(responseFromNSI.getBody());
+        // Instead of using getWriter(), directly write to the OutputStream
+        response.getOutputStream().write(responseFromNSI.getBody().getBytes("UTF-8"));
+        response.getOutputStream().flush();
     }
+
+
 
 
 
@@ -113,7 +121,7 @@ public class AssignService {
         reportNotificationDTO.setReportType(assignmentDTO.getEntityType());
         reportNotificationDTO.setReportId(Long.parseLong(assignmentDTO.getEntityId()));
         reportNotificationDTO.setSenderAdmin(false);
-        sendNotification(assignment, httpServletRequest, response);
+        sendNotification(reportNotificationDTO, httpServletRequest, response);
     }
 
 
@@ -152,7 +160,7 @@ public class AssignService {
             reportNotificationDTO.setReportType(assign.getEntityType());
             reportNotificationDTO.setReportId(Long.parseLong(assign.getEntityId()));
             reportNotificationDTO.setSenderAdmin(true);
-            sendNotification(assignment, httpServletRequest, response);
+            sendNotification(reportNotificationDTO, httpServletRequest, response);
             fireRealTimeReportRepository.save(fireRealTimeReport);
         }
     }
