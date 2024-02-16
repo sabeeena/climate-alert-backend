@@ -25,6 +25,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select c from User c where c.role = 'ROLE_EMPLOYEE'")
     List<User> getTotalEmployee();
+    @Query("select c from User c where c.role = 'ROLE_ADMIN'")
+    List<User> getTotalAdmin();
     @Query("select count(c) from User c where c.role = 'ROLE_EMPLOYEE'")
     Long getTotalSizeEmployee();
 

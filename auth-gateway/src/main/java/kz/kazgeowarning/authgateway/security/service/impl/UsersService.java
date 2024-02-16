@@ -278,6 +278,9 @@ public class UsersService implements IUsersService {
     public List<User> findByEmployeeRole() {
         return usersRepository.getTotalEmployee();
     }
+    public List<User> getAdmins() {
+        return usersRepository.getTotalAdmin();
+    }
 
     @Transactional
     public AdminEmployee registerEmployeeToAdmin(AdminEmployeeDTO adminEmployee){
