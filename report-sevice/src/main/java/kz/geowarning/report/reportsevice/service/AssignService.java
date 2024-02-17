@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -163,5 +164,9 @@ public class AssignService {
             sendNotification(reportNotificationDTO, httpServletRequest, response);
             fireRealTimeReportRepository.save(fireRealTimeReport);
         }
+    }
+
+    public List<Assignment> getAssignments(String email) {
+        return assignmentRepository.findByUserIncoming(email);
     }
 }

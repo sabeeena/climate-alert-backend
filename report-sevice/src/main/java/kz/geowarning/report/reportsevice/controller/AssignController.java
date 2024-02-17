@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping({"/assign"})
@@ -31,5 +32,10 @@ public class AssignController {
     public void approveFireRT(@RequestBody final Assignment assignment,
                                          HttpServletRequest httpServletRequest, HttpServletResponse response)  throws IOException {
      assignService.approval(assignment, httpServletRequest, response);
+    }
+
+    @GetMapping("/get-all/assignments")
+    public List<Assignment> getAssignments(@RequestParam String incomingEmail){
+        return assignService.getAssignments(incomingEmail);
     }
 }
