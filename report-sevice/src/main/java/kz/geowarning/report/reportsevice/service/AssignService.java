@@ -1,5 +1,6 @@
 package kz.geowarning.report.reportsevice.service;
 
+import kz.geowarning.report.reportsevice.dto.ApprovalRequest;
 import kz.geowarning.report.reportsevice.dto.AssignmentDTO;
 import kz.geowarning.report.reportsevice.dto.ReportNotificationDTO;
 import kz.geowarning.report.reportsevice.entity.Agreement;
@@ -23,6 +24,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -64,9 +66,17 @@ public class AssignService {
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Expires", "0");
 
-        // Instead of using getWriter(), directly write to the OutputStream
-        response.getOutputStream().write(responseFromNSI.getBody().getBytes("UTF-8"));
-        response.getOutputStream().flush();
+        OutputStream outputStream = response.getOutputStream();
+
+        if (responseFromNSI.getBody() != null) {
+            outputStream.write(responseFromNSI.getBody().getBytes("UTF-8"));
+        } else {
+            // Handle the case where the response body is null
+            // You may want to log a message, throw an exception, or send a default response
+            outputStream.write("Default response".getBytes("UTF-8"));
+        }
+
+        outputStream.flush();
     }
 
 
@@ -135,8 +145,10 @@ public class AssignService {
         }
     }
 
-    public void approval(final Assignment assignment, HttpServletRequest httpServletRequest, HttpServletResponse response) throws IOException {
+    public void approval(ApprovalRequest approvalRequest, HttpServletRequest httpServletRequest, HttpServletResponse response) throws IOException {
         Assignment assign = null;
+        Assignment assignment = approvalRequest.getAssignment();
+        String comment = approvalRequest.getComment();
         if (assignmentRepository.findById(assignment.getId()).isPresent()) {
             assign = assignmentRepository.findById(assignment.getId()).get();
         }
@@ -144,24 +156,24 @@ public class AssignService {
         if (check(FireRealTimeReport.class, Long.parseLong(assign.getEntityId())) &&
                 FireRealTimeReport.class.toString().substring(FireRealTimeReport.class.toString().lastIndexOf(".") + 1).equals(assign.getEntityType())) {
             FireRealTimeReport fireRealTimeReport = fireRealTimeReportRepository.findById(Long.parseLong(assign.getEntityId())).orElseThrow(null);
-            if (Objects.equals(assign.getName(), "Соглосовать")) {
-                fireRealTimeReport.agreed();
+            if (Objects.equals(assignment.getName(), "Согласовать")) {
+                fireRealTimeReport.setApprovalComment(comment);
                 Status status = statusRepository.findById(3L).orElse(null);
                 fireRealTimeReport.setStatus(status);
-            } else if (Objects.equals(assign.getName(), "Корректировка")) {
-                fireRealTimeReport.agreed();
+            } else if (Objects.equals(assignment.getName(), "Корректировка")) {
+                fireRealTimeReport.setApprovalComment(comment);
                 Status status = statusRepository.findById(4L).orElse(null);
                 fireRealTimeReport.setStatus(status);
             }
             ReportNotificationDTO reportNotificationDTO = new ReportNotificationDTO();
             reportNotificationDTO.setReceiverEmail(assign.getUserIncoming());
             reportNotificationDTO.setSenderEmail(assign.getUserOutComing());
-            reportNotificationDTO.setTypeStatus(assign.getComment());
+            reportNotificationDTO.setTypeStatus(assignment.getName());
             reportNotificationDTO.setReportType(assign.getEntityType());
             reportNotificationDTO.setReportId(Long.parseLong(assign.getEntityId()));
             reportNotificationDTO.setSenderAdmin(true);
-            sendNotification(reportNotificationDTO, httpServletRequest, response);
             fireRealTimeReportRepository.save(fireRealTimeReport);
+            sendNotification(reportNotificationDTO, httpServletRequest, response);
         }
     }
 

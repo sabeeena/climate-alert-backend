@@ -1,5 +1,6 @@
 package kz.geowarning.report.reportsevice.controller;
 
+import kz.geowarning.report.reportsevice.dto.ApprovalRequest;
 import kz.geowarning.report.reportsevice.dto.AssignmentDTO;
 import kz.geowarning.report.reportsevice.entity.Assignment;
 import kz.geowarning.report.reportsevice.entity.FireRealTimeReport;
@@ -29,9 +30,9 @@ public class AssignController {
         return ResponseEntity.ok().body(assignService.assign(assignment, id, FireRealTimeReport.class, httpServletRequest, response));
     }
     @PutMapping("/fire-real-time/approve")
-    public void approveFireRT(@RequestBody final Assignment assignment,
+    public void approveFireRT(@RequestBody ApprovalRequest approvalRequest,
                                          HttpServletRequest httpServletRequest, HttpServletResponse response)  throws IOException {
-     assignService.approval(assignment, httpServletRequest, response);
+     assignService.approval(approvalRequest, httpServletRequest, response);
     }
 
     @GetMapping("/get-all/assignments")

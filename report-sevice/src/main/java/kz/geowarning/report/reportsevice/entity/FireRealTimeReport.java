@@ -62,6 +62,8 @@ public class FireRealTimeReport implements Agreement<FireRealTimeReport>{
 
     private Long fireRTDataId;
     private Long agreementId;
+    @Column(length = 2000)
+    private String approvalComment;
 
     @Override
     public FireRealTimeReport agreed() {
