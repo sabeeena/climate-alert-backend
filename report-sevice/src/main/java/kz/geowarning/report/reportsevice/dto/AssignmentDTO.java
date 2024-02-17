@@ -33,6 +33,7 @@ public class AssignmentDTO {
         assignment.setUserIncoming(userIncoming);
         assignment.setUserOutComing(userOutComing);
         assignment.setEntityType(entityType);
+        assignment.setEntityId(entityId);
         assignment.setShortContent(shortContent);
         assignment.setSentDateTime(sentDateTime);
         assignment.setComment(comment);

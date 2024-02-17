@@ -81,7 +81,6 @@ public class AssignService {
 
             if (check(clazz, id)) {
 
-                assignment.setEntityId(String.valueOf(id));
                 assignment.setEntityType(clazz.getSimpleName());
                 assignment.setSentDateTime(LocalDateTime.now());
 
