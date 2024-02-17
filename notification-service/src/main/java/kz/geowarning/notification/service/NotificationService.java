@@ -129,7 +129,7 @@ public class NotificationService {
     private String generateReportSubjectAdmin(String type) {
         String message = "empty something is wrong";
 
-        if(Objects.equals(type, "Согласовано")){
+        if(Objects.equals(type, "Согласовать")){
             return "Успешное согласование репорта.\n";
         } else if(Objects.equals(type, "Корректировка")) {
             return "Возврат на корректировку репорта.\n";
@@ -141,7 +141,7 @@ public class NotificationService {
     public String generateReportMessageAdmin(String type, ReportNotificationDTO reportNotificationDTO){
         String message = "empty something is wrong";
 
-        if(Objects.equals(type, "Согласовано")){
+        if(Objects.equals(type, "Согласовать")){
             message = "Хочу сообщить, что отчет был успешно согласован от имени администратора.\n";
         } else if(Objects.equals(type, "Корректировка")) {
             message = "Хочу сообщить, что отчет был отправлен на корректировку.\n";
@@ -160,7 +160,7 @@ public class NotificationService {
 
     public void reportNotify(ReportNotificationDTO reportNotificationDTO) throws MessagingException {
         if (reportNotificationDTO.isSenderAdmin()) {
-            iEmailService.sendMail(reportNotificationDTO.getReceiverEmail(), generateReportSubjectAdmin(reportNotificationDTO.getReportType()), generateReportMessageAdmin(reportNotificationDTO.getReportType(), reportNotificationDTO));
+            iEmailService.sendMail(reportNotificationDTO.getReceiverEmail(), generateReportSubjectAdmin(reportNotificationDTO.getTypeStatus()), generateReportMessageAdmin(reportNotificationDTO.getTypeStatus(), reportNotificationDTO));
         }
         else {
             iEmailService.sendMail(reportNotificationDTO.getReceiverEmail(), generateReportSubject(), generateReportMessage(reportNotificationDTO));
