@@ -2,6 +2,7 @@ package kz.geowarning.data.controller;
 
 import com.opencsv.exceptions.CsvException;
 import kz.geowarning.data.entity.FireRTData;
+import kz.geowarning.data.entity.dto.FireDataDTO;
 import kz.geowarning.data.service.FireRTDataService;
 import kz.geowarning.data.util.RestConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +41,10 @@ public class FireRTDataController {
     @GetMapping(RestConstants.REST_RT_DATA + "/by-id")
     public FireRTData getRTById(@RequestParam("id") Long id) {
         return fireRTDataService.getById(id);
+    }
+
+    @PostMapping(RestConstants.REST_RT_DATA + "/getByFilter")
+    public List<FireRTData> getFiresByFilter(@RequestBody FireDataDTO fireDataDTO) {
+        return fireRTDataService.getByFilter(fireDataDTO);
     }
 }

@@ -4,7 +4,10 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
 import kz.geowarning.data.entity.FireRTData;
+import kz.geowarning.data.entity.Region;
+import kz.geowarning.data.entity.dto.FireDataDTO;
 import kz.geowarning.data.repository.FireRTDataRepository;
+import kz.geowarning.data.repository.RegionRepository;
 import lombok.SneakyThrows;
 import okhttp3.ResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +31,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class FireRTDataService {
@@ -43,6 +45,12 @@ public class FireRTDataService {
 
     @Autowired
     private FireRTDataRepository fireRTDataRepository;
+
+    @Autowired
+    private RegionRepository regionRepository;
+
+    @Autowired
+    private BingLocationsService bingLocationsService;
 
     @PostConstruct
     public void init() {
@@ -120,6 +128,14 @@ public class FireRTDataService {
                     field.set(fireData, val.toString());
                 }
             }
+            List<Region> regions = regionRepository.findByNameEngCaseInsensitive(bingLocationsService.getAddressInfoByCoordinates(
+                    fireData.getLatitude(), fireData.getLongitude()).getAdminDistrict());
+
+            if (regions != null && !regions.isEmpty()) {
+                fireData.setRegionId(regions.get(0).getId());
+            } else {
+                fireData.setRegionId(regionRepository.findByNameEngCaseInsensitive("Undetected Region").get(0).getId());
+            }
             dataList.add(fireData);
         }
         return fireRTDataRepository.saveAll(dataList);
@@ -147,5 +163,30 @@ public class FireRTDataService {
             return fireRTDataRepository.findById(id).get();
         }
         return null;
+    }
+
+    public List<FireRTData> getByFilter(FireDataDTO fireDataDTO) {
+        LocalDate currentDate = LocalDate.now();
+        LocalDate dateAMonthAgo = currentDate.minusMonths(1);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        if (fireDataDTO.getLatitude() == null) {
+            fireDataDTO.setLatitude("0");
+        }
+        if (fireDataDTO.getLongitude() == null) {
+            fireDataDTO.setLongitude("0");
+        }
+        if (fireDataDTO.getRegionId() == null) {
+            fireDataDTO.setRegionId("0");
+        }
+        if (fireDataDTO.getDateFrom() == null) {
+            fireDataDTO.setDateFrom(Date.valueOf(dateAMonthAgo.format(formatter)));
+        }
+        if (fireDataDTO.getDateTo() == null) {
+            fireDataDTO.setDateTo(Date.valueOf(currentDate.format(formatter)));
+        }
+
+        return fireRTDataRepository.findByFilter(fireDataDTO);
     }
 }
