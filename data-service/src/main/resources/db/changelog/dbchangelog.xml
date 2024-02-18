@@ -15,5 +15,6 @@
     <!--Data: insert, update, delete-->
     <include file="/data/regions.sql" relativeToChangelogFile="true"/>
     <include file="/data/stations.sql" relativeToChangelogFile="true"/>
+    <include file="/data/region_add_unknown.sql" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
