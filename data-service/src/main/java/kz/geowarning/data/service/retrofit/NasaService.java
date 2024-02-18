@@ -1,4 +1,4 @@
-package kz.geowarning.data.service;
+package kz.geowarning.data.service.retrofit;
 
 import kz.geowarning.data.entity.FireRTData;
 import okhttp3.ResponseBody;

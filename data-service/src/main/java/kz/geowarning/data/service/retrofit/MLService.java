@@ -1,4 +1,4 @@
-package kz.geowarning.data.service;
+package kz.geowarning.data.service.retrofit;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

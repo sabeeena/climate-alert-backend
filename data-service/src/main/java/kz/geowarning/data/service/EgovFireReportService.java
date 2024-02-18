@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kz.geowarning.data.entity.ReportYearlyData;
 import kz.geowarning.data.repository.EgovFireReportRepository;
+import kz.geowarning.data.service.retrofit.EgovService;
 import okhttp3.ResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

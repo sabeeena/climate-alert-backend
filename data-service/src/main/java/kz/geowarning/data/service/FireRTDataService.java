@@ -8,6 +8,7 @@ import kz.geowarning.data.entity.Region;
 import kz.geowarning.data.entity.dto.FireDataDTO;
 import kz.geowarning.data.repository.FireRTDataRepository;
 import kz.geowarning.data.repository.RegionRepository;
+import kz.geowarning.data.service.retrofit.NasaService;
 import lombok.SneakyThrows;
 import okhttp3.ResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;

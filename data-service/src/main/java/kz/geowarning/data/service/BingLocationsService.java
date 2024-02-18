@@ -3,6 +3,7 @@ package kz.geowarning.data.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kz.geowarning.data.entity.dto.AddressInfoDTO;
+import kz.geowarning.data.service.retrofit.BingMapsService;
 import okhttp3.ResponseBody;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

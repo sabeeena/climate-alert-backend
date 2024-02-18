@@ -3,6 +3,7 @@ package kz.geowarning.data.service;
 import kz.geowarning.data.entity.ForecastFireData;
 import kz.geowarning.data.entity.dto.WeatherDTO;
 import kz.geowarning.data.entity.WeatherData;
+import kz.geowarning.data.service.retrofit.MLService;
 import okhttp3.ResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

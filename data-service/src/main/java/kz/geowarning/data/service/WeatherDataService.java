@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kz.geowarning.data.entity.dto.WeatherDTO;
 import kz.geowarning.data.entity.WeatherData;
+import kz.geowarning.data.service.retrofit.MeteostatService;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
