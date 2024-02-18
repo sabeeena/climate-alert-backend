@@ -1,6 +1,6 @@
 package kz.geowarning.data.controller;
 
-import kz.geowarning.data.entity.WeatherDTO;
+import kz.geowarning.data.entity.dto.WeatherDTO;
 import kz.geowarning.data.entity.WeatherData;
 import kz.geowarning.data.service.WeatherDataService;
 import kz.geowarning.data.util.RestConstants;

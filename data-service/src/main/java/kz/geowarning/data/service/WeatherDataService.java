@@ -2,7 +2,7 @@ package kz.geowarning.data.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kz.geowarning.data.entity.WeatherDTO;
+import kz.geowarning.data.entity.dto.WeatherDTO;
 import kz.geowarning.data.entity.WeatherData;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;

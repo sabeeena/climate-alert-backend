@@ -1,6 +1,5 @@
 package kz.geowarning.data.service;
 
-import kz.geowarning.data.entity.WeatherDTO;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;

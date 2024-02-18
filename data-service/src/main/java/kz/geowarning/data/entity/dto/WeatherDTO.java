@@ -1,4 +1,4 @@
-package kz.geowarning.data.entity;
+package kz.geowarning.data.entity.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
