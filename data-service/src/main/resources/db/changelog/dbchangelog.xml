@@ -10,6 +10,7 @@
     <include file="/schema/reportdata.xml" relativeToChangelogFile="true"/>
     <include file="/schema/regions.xml" relativeToChangelogFile="true"/>
     <include file="/schema/stations.xml" relativeToChangelogFile="true"/>
+    <include file="/schema/firertdata_add_regionId.xml" relativeToChangelogFile="true"/>
 
     <!--Data: insert, update, delete-->
     <include file="/data/regions.sql" relativeToChangelogFile="true"/>
