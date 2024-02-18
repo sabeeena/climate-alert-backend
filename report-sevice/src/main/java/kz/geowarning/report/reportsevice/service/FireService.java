@@ -2,6 +2,7 @@ package kz.geowarning.report.reportsevice.service;
 
 import kz.geowarning.report.reportsevice.dto.FireReportCreateDto;
 import kz.geowarning.report.reportsevice.dto.FireReportF1Dto;
+import kz.geowarning.report.reportsevice.dto.FireReportF2DTO;
 import kz.geowarning.report.reportsevice.entity.*;
 import kz.geowarning.report.reportsevice.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,6 @@ public class FireService {
         Status status = statusRepository.findById(1L).orElse(null);
 
         FireRealTimeEconomicDamageReport economicDamageReport = new FireRealTimeEconomicDamageReport();
-        economicDamageReport.setStatus(status);
         FireRealTimeEconomicDamageReport savedEconomicDamageReport = fireRealTimeEconomicDamageReportRepository.save(economicDamageReport);
 
         FireRealTimeVegetationInformation vegetationInformation = new FireRealTimeVegetationInformation();
@@ -136,5 +136,42 @@ public class FireService {
 
     public List<FireRealTimeReport> getDataByYearAndMonth(Integer year, Integer month, String email) {
         return fireRealTimeReportRepository.findByYearAndMonth(year, month, email);
+    }
+
+    public FireRealTimeEconomicDamageReport editRealTimeReportF2(FireReportF2DTO dto) {
+        FireRealTimeEconomicDamageReport fireRealTimeEconomicDamageReport=null;
+
+        if (fireRealTimeEconomicDamageReportRepository.findById(dto.getId()).isPresent()) {
+            fireRealTimeEconomicDamageReport = fireRealTimeEconomicDamageReportRepository.findById(dto.getId()).get();
+        }
+        fireRealTimeEconomicDamageReport.setAgricultureDamage(dto.getAgricultureDamage());
+        fireRealTimeEconomicDamageReport.setForestryDamage(dto.getForestryDamage());
+        fireRealTimeEconomicDamageReport.setInfrastructureDamage(dto.getInfrastructureDamage());
+        fireRealTimeEconomicDamageReport.setTotalEconomicDamage(dto.getTotalEconomicDamage());
+        fireRealTimeEconomicDamageReport.setFirefightingCosts(dto.getFirefightingCosts());
+        fireRealTimeEconomicDamageReport.setAnalysis(dto.getAnalysis());
+        fireRealTimeEconomicDamageReport.setConclusions(dto.getConclusions());
+        fireRealTimeEconomicDamageReport.setHarmfulSubstancesEmissions(dto.getHarmfulSubstancesEmissions());
+        fireRealTimeEconomicDamageReport.setImpactOnLocalClimateAndEcosystem(dto.getImpactOnLocalClimateAndEcosystem());
+        fireRealTimeEconomicDamageReport.setDamageToFloraAndFauna(dto.getDamageToFloraAndFauna());
+        fireRealTimeEconomicDamageReport.setLossesForLocalCommunitiesAndEconomy(dto.getLossesForLocalCommunitiesAndEconomy());
+        fireRealTimeEconomicDamageReport.setAidToAffected(dto.getAidToAffected());
+        fireRealTimeEconomicDamageReport.setRestorationAndRehabilitationCosts(dto.getRestorationAndRehabilitationCosts());
+        fireRealTimeEconomicDamageReport.setElevationAboveSeaLevel(dto.getElevationAboveSeaLevel());
+        fireRealTimeEconomicDamageReport.setAdjacentAffectedObjectsInfo(dto.getAdjacentAffectedObjectsInfo());
+        fireRealTimeEconomicDamageReport.setFireIncidenceTrends(dto.getFireIncidenceTrends());
+        fireRealTimeEconomicDamageReport.setComparisonWithPriorFires(dto.getComparisonWithPriorFires());
+        fireRealTimeEconomicDamageReport.setEvaluationOfFirefightingAndPreventionMeasures(dto.getEvaluationOfFirefightingAndPreventionMeasures());
+        
+
+        fireRealTimeEconomicDamageReportRepository.save(fireRealTimeEconomicDamageReport);
+        return fireRealTimeEconomicDamageReport;
+    }
+
+    public FireRealTimeEconomicDamageReport getFireRealTimeF2(Long reportId) {
+        if (fireRealTimeEconomicDamageReportRepository.findById(reportId).isPresent()) {
+            return fireRealTimeEconomicDamageReportRepository.findById(reportId).get();
+        }
+        return null;
     }
 }

@@ -2,6 +2,8 @@ package kz.geowarning.report.reportsevice.controller;
 
 import kz.geowarning.report.reportsevice.dto.FireReportCreateDto;
 import kz.geowarning.report.reportsevice.dto.FireReportF1Dto;
+import kz.geowarning.report.reportsevice.dto.FireReportF2DTO;
+import kz.geowarning.report.reportsevice.entity.FireRealTimeEconomicDamageReport;
 import kz.geowarning.report.reportsevice.entity.FireRealTimeReport;
 import kz.geowarning.report.reportsevice.service.FireService;
 import net.sf.jasperreports.engine.JRException;
@@ -30,6 +32,10 @@ public class FireRealTimeController {
     public ResponseEntity<?> getById(@RequestParam Long reportId) {
        return ResponseEntity.ok(fireService.getFireRealTimeF1(reportId));
     }
+    @GetMapping("/get-one/economic-damage")
+    public ResponseEntity<?> getEconomicDamage(@RequestParam Long reportId) {
+        return ResponseEntity.ok(fireService.getFireRealTimeF2(reportId));
+    }
 
     @GetMapping("/get-all/fire-real-time")
     public ResponseEntity<?> getAll(@RequestParam Long reportId) {
@@ -48,6 +54,10 @@ public class FireRealTimeController {
     @PutMapping("/edit-f1/fire-real-time")
     public ResponseEntity<FireRealTimeReport> updateF1realTime(@RequestBody FireReportF1Dto dto){
         return ResponseEntity.ok(fireService.editRealTimeReportF1(dto));
+    }
+    @PutMapping("/edit-f2/fire-real-time")
+    public ResponseEntity<FireRealTimeEconomicDamageReport> updateF2realTime(@RequestBody FireReportF2DTO dto){
+        return ResponseEntity.ok(fireService.editRealTimeReportF2(dto));
     }
 
     @PostMapping("/create/fire-real-time")
