@@ -53,13 +53,17 @@ public class MLDataService {
         mlService = retrofit.create(MLService.class);
     }
 
-    public ForecastFireData getForecastByStation(String stationId) throws IOException, ParseException {
+    public ForecastFireData getForecastByStation(String stationId) throws Exception {
         LocalDateTime currentDate = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter hourFormatter = DateTimeFormatter.ofPattern("HH");
 
         List<WeatherData> weather = weatherDataService.getHourlyDataByStationId(new WeatherDTO(stationId, currentDate.format(formatter),
                                                                     currentDate.format(formatter), currentDate.format(hourFormatter)));
+
+        if (weather.isEmpty()) {
+            throw new Exception("Couldn't Retrieve Weather Data For The Station");
+        }
 
         Call<ResponseBody> retrofitCall = mlService.getForecastByWeather(weather.get(0).getDwpt(), weather.get(0).getPres(),
                             weather.get(0).getRhum(), weather.get(0).getTemp(), weather.get(0).getWdir(), weather.get(0).getWspd());
@@ -78,7 +82,7 @@ public class MLDataService {
         return new ForecastFireData(null, stationId, weatherData.getId(), dangerLevel, dateFormat.parse(dateFormat.format(new Date())));
     }
 
-    public ForecastFireData saveForecastByStation(String stationId) throws IOException, ParseException {
+    public ForecastFireData saveForecastByStation(String stationId) throws Exception {
         return forecastFireRepository.save(getForecastByStation(stationId));
     }
 
