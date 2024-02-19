@@ -16,6 +16,7 @@
             </column>
             <column name="station_id" type="VARCHAR(256)"/>
             <column name="danger_level" type="VARCHAR(256)"/>
+            <column name="time" type="TIMESTAMP"/>
             <column name="weather_id" type="BIGINT">
                 <constraints nullable="false" foreignKeyName="fk_forecastfiredata_weatherdata" references="weatherdata(id)"/>
             </column>

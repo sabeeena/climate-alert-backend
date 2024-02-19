@@ -17,8 +17,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -38,6 +41,8 @@ public class MLDataService {
     @Autowired
     private WeatherRepository weatherRepository;
 
+    private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     @PostConstruct
     public void init() {
         Retrofit retrofit = new Retrofit.Builder()
@@ -48,7 +53,7 @@ public class MLDataService {
         mlService = retrofit.create(MLService.class);
     }
 
-    public ForecastFireData getForecastByStation(String stationId) throws IOException {
+    public ForecastFireData getForecastByStation(String stationId) throws IOException, ParseException {
         LocalDateTime currentDate = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter hourFormatter = DateTimeFormatter.ofPattern("HH");
@@ -70,10 +75,10 @@ public class MLDataService {
         String dangerLevel = responseBody.string();
         WeatherData weatherData = weatherRepository.save(weather.get(0));
 
-        return new ForecastFireData(null, stationId, weatherData.getId(), dangerLevel);
+        return new ForecastFireData(null, stationId, weatherData.getId(), dangerLevel, dateFormat.parse(dateFormat.format(new Date())));
     }
 
-    public ForecastFireData saveForecastByStation(String stationId) throws IOException {
+    public ForecastFireData saveForecastByStation(String stationId) throws IOException, ParseException {
         return forecastFireRepository.save(getForecastByStation(stationId));
     }
 

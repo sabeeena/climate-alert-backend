@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Data
@@ -23,5 +24,6 @@ public class ForecastFireData {
     private Long weatherId;
     @Column(name = "danger_level", nullable = false)
     private String dangerLevel;
+    private Date time;
 
 }

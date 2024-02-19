@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 @RestController
 public class MLDataController {
@@ -17,12 +18,12 @@ public class MLDataController {
     private MLDataService mlDataService;
 
     @PostMapping(RestConstants.REST_FORECAST_DATA + "/station/{stationId}")
-    public ForecastFireData getForecastByStationId(@PathVariable("stationId") String stationId) throws IOException {
+    public ForecastFireData getForecastByStationId(@PathVariable("stationId") String stationId) throws IOException, ParseException {
         return mlDataService.getForecastByStation(stationId);
     }
 
     @PostMapping(RestConstants.REST_FORECAST_DATA + "/station/save/{stationId}")
-    public ForecastFireData saveForecastByStationId(@PathVariable("stationId") String stationId) throws IOException {
+    public ForecastFireData saveForecastByStationId(@PathVariable("stationId") String stationId) throws IOException, ParseException {
         return mlDataService.saveForecastByStation(stationId);
     }
 
