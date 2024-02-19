@@ -172,21 +172,11 @@ public class FireRTDataService {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        if (fireDataDTO.getLatitude() == null) {
-            fireDataDTO.setLatitude("0");
-        }
-        if (fireDataDTO.getLongitude() == null) {
-            fireDataDTO.setLongitude("0");
-        }
-        if (fireDataDTO.getRegionId() == null) {
-            fireDataDTO.setRegionId("0");
-        }
-        if (fireDataDTO.getDateFrom() == null) {
-            fireDataDTO.setDateFrom(Date.valueOf(dateAMonthAgo.format(formatter)));
-        }
-        if (fireDataDTO.getDateTo() == null) {
-            fireDataDTO.setDateTo(Date.valueOf(currentDate.format(formatter)));
-        }
+        fireDataDTO.setLatitude(fireDataDTO.getLatitude() == null ? "0" : fireDataDTO.getLatitude());
+        fireDataDTO.setLongitude(fireDataDTO.getLongitude() == null ? "0" : fireDataDTO.getLongitude());
+        fireDataDTO.setRegionId(fireDataDTO.getRegionId() == null ? "0" : fireDataDTO.getRegionId());
+        fireDataDTO.setDateFrom(fireDataDTO.getDateFrom() == null ? Date.valueOf(dateAMonthAgo.format(formatter)) : fireDataDTO.getDateFrom());
+        fireDataDTO.setDateTo(fireDataDTO.getDateTo() == null ? Date.valueOf(currentDate.format(formatter)) : fireDataDTO.getDateTo());
 
         return fireRTDataRepository.findByFilter(fireDataDTO);
     }
