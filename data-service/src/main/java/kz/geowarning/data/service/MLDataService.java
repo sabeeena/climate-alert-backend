@@ -1,6 +1,7 @@
 package kz.geowarning.data.service;
 
 import kz.geowarning.data.entity.ForecastFireData;
+import kz.geowarning.data.entity.dto.ForecastDTO;
 import kz.geowarning.data.entity.dto.WeatherDTO;
 import kz.geowarning.data.entity.WeatherData;
 import kz.geowarning.data.repository.ForecastFireRepository;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
@@ -84,6 +86,30 @@ public class MLDataService {
 
     public ForecastFireData saveForecastByStation(String stationId) throws Exception {
         return forecastFireRepository.save(getForecastByStation(stationId));
+    }
+
+    public List<ForecastFireData> getByFilter(ForecastDTO fireDataDTO) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        Date currentDateTime = new Date();
+        Date dateTimeAMonthAgo = Date.from(LocalDateTime.now().minusMonths(1).atZone(ZoneId.systemDefault()).toInstant());
+
+        String currentDateTimeFormatted = dateFormat.format(currentDateTime);
+        String dateTimeAMonthAgoFormatted = dateFormat.format(dateTimeAMonthAgo);
+
+        Date parsedCurrentDateTime = dateFormat.parse(currentDateTimeFormatted);
+        Date parsedDateTimeAMonthAgo = dateFormat.parse(dateTimeAMonthAgoFormatted);
+
+        java.sql.Timestamp sqlCurrentDateTime = new java.sql.Timestamp(parsedCurrentDateTime.getTime());
+        java.sql.Timestamp sqlDateTimeAMonthAgo = new java.sql.Timestamp(parsedDateTimeAMonthAgo.getTime());
+
+        fireDataDTO.setLatitude(fireDataDTO.getLatitude() == null ? "0" : fireDataDTO.getLatitude());
+        fireDataDTO.setLongitude(fireDataDTO.getLongitude() == null ? "0" : fireDataDTO.getLongitude());
+        fireDataDTO.setRegionId(fireDataDTO.getRegionId() == null ? "0" : fireDataDTO.getRegionId());
+        fireDataDTO.setDateFrom(fireDataDTO.getDateFrom() == null ? sqlDateTimeAMonthAgo : fireDataDTO.getDateFrom());
+        fireDataDTO.setDateTo(fireDataDTO.getDateTo() == null ? sqlCurrentDateTime : fireDataDTO.getDateTo());
+
+        return forecastFireRepository.findByFilter(fireDataDTO);
     }
 
 }
