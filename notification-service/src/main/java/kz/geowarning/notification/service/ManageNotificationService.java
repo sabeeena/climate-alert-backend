@@ -52,11 +52,11 @@ public class ManageNotificationService {
         return reportNotificationRepository.findAll();
     }
 
-    public List<NotificationDTO> getAllNotifications() {
+    public List<NotificationDTO> getAllNotifications(String email) {
         List<NotificationDTO> notifications = new ArrayList<>();
 
-        List<AlertNotification> alertNotifications = alertNotificationRepository.findAll();
-        List<ReportNotification> reportNotifications = reportNotificationRepository.findAll();
+        List<AlertNotification> alertNotifications = alertNotificationRepository.findByReceiverEmail(email);
+        List<ReportNotification> reportNotifications = reportNotificationRepository.findByReceiverEmail(email);
 
         // Convert AlertNotification to NotificationDTO
         alertNotifications.forEach(alert -> {

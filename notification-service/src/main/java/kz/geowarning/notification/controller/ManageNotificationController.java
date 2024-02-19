@@ -7,6 +7,7 @@ import kz.geowarning.notification.entity.ReportNotification;
 import kz.geowarning.notification.repository.AlertNotificationRepository;
 import kz.geowarning.notification.repository.ReportNotificationRepository;
 import kz.geowarning.notification.service.ManageNotificationService;
+import kz.geowarning.notification.util.RestConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping(RestConstants.BASE_REST + "/service")
 public class ManageNotificationController {
     @Autowired
     private ManageNotificationService manageNotificationService;
@@ -32,8 +34,8 @@ public class ManageNotificationController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<NotificationDTO>> getAllNotifications() {
-        List<NotificationDTO> notifications = manageNotificationService.getAllNotifications();
+    public ResponseEntity<List<NotificationDTO>> getAllNotifications(@RequestParam String email) {
+        List<NotificationDTO> notifications = manageNotificationService.getAllNotifications(email);
         return ResponseEntity.ok(notifications);
     }
 
