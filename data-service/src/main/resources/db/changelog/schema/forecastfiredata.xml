@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+	  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="Sabina" id="forecastfiredata-1">
+        <createSequence incrementBy="1" sequenceName="forecastfiredata_seq" startValue="1"/>
+    </changeSet>
+
+    <changeSet author="Sabina" id="forecastfiredata-2">
+        <createTable tableName="forecastfiredata">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="forecastfiredataPK"/>
+            </column>
+            <column name="danger_level" type="VARCHAR(256)"/>
+            <column name="weather_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_forecastfiredata_weatherdata" references="weatherdata(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

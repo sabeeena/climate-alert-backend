@@ -21,4 +21,9 @@ public class MLDataController {
         return mlDataService.getForecastByStation(stationId);
     }
 
+    @PostMapping(RestConstants.REST_FORECAST_DATA + "/station/save/{stationId}")
+    public ForecastFireData saveForecastByStationId(@PathVariable("stationId") String stationId) throws IOException {
+        return mlDataService.saveForecastByStation(stationId);
+    }
+
 }

@@ -3,6 +3,8 @@ package kz.geowarning.data.service;
 import kz.geowarning.data.entity.ForecastFireData;
 import kz.geowarning.data.entity.dto.WeatherDTO;
 import kz.geowarning.data.entity.WeatherData;
+import kz.geowarning.data.repository.ForecastFireRepository;
+import kz.geowarning.data.repository.WeatherRepository;
 import kz.geowarning.data.service.retrofit.MLService;
 import okhttp3.ResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,12 @@ public class MLDataService {
 
     @Autowired
     private WeatherDataService weatherDataService;
+
+    @Autowired
+    private ForecastFireRepository forecastFireRepository;
+
+    @Autowired
+    private WeatherRepository weatherRepository;
 
     @PostConstruct
     public void init() {
@@ -60,8 +68,13 @@ public class MLDataService {
 
         ResponseBody responseBody = response.body();
         String dangerLevel = responseBody.string();
+        WeatherData weatherData = weatherRepository.save(weather.get(0));
 
-        return new ForecastFireData(null, weather.get(0), dangerLevel);
+        return new ForecastFireData(null, weatherData.getId(), dangerLevel);
+    }
+
+    public ForecastFireData saveForecastByStation(String stationId) throws IOException {
+        return forecastFireRepository.save(getForecastByStation(stationId));
     }
 
 }
