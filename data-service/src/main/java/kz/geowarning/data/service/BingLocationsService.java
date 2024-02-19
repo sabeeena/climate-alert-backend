@@ -62,13 +62,13 @@ public class BingLocationsService {
             JsonNode resources = resourceSets.get(0).get("resources");
             JsonNode addressNode = resources.get(0).get("address");
 
-            addressInfo.setAddressLine(String.valueOf(addressNode.get("addressLine")));
-            addressInfo.setAdminDistrict(String.valueOf(addressNode.get("adminDistrict")));
-            addressInfo.setAdminDistrict2(String.valueOf(addressNode.get("adminDistrict2")));
-            addressInfo.setCountryRegion(String.valueOf(addressNode.get("countryRegion")));
-            addressInfo.setFormattedAddress(String.valueOf(addressNode.get("formattedAddress")));
-            addressInfo.setLocality(String.valueOf(addressNode.get("locality")));
-            addressInfo.setPostalCode(String.valueOf(addressNode.get("postalCode")));
+            addressInfo.setAddressLine(String.valueOf(addressNode.get("addressLine")).replaceAll("^\\s*\"|\"\\s*$", "").trim());
+            addressInfo.setAdminDistrict(String.valueOf(addressNode.get("adminDistrict")).replaceAll("^\\s*\"|\"\\s*$", "").trim());
+            addressInfo.setAdminDistrict2(String.valueOf(addressNode.get("adminDistrict2")).replaceAll("^\\s*\"|\"\\s*$", "").trim());
+            addressInfo.setCountryRegion(String.valueOf(addressNode.get("countryRegion")).replaceAll("^\\s*\"|\"\\s*$", "").trim());
+            addressInfo.setFormattedAddress(String.valueOf(addressNode.get("formattedAddress")).replaceAll("^\\s*\"|\"\\s*$", "").trim());
+            addressInfo.setLocality(String.valueOf(addressNode.get("locality")).replaceAll("^\\s*\"|\"\\s*$", "").trim());
+            addressInfo.setPostalCode(String.valueOf(addressNode.get("postalCode")).replaceAll("^\\s*\"|\"\\s*$", "").trim());
 
         } catch (Exception e) {
             e.printStackTrace();
