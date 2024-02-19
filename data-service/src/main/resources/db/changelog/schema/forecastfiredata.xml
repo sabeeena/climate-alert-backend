@@ -14,6 +14,7 @@
             <column name="id" type="BIGINT">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="forecastfiredataPK"/>
             </column>
+            <column name="station_id" type="VARCHAR(256)"/>
             <column name="danger_level" type="VARCHAR(256)"/>
             <column name="weather_id" type="BIGINT">
                 <constraints nullable="false" foreignKeyName="fk_forecastfiredata_weatherdata" references="weatherdata(id)"/>

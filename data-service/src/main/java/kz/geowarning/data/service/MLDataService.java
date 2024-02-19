@@ -70,7 +70,7 @@ public class MLDataService {
         String dangerLevel = responseBody.string();
         WeatherData weatherData = weatherRepository.save(weather.get(0));
 
-        return new ForecastFireData(null, weatherData.getId(), dangerLevel);
+        return new ForecastFireData(null, stationId, weatherData.getId(), dangerLevel);
     }
 
     public ForecastFireData saveForecastByStation(String stationId) throws IOException {
