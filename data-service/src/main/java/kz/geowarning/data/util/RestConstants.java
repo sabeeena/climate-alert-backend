@@ -11,5 +11,5 @@ public class RestConstants {
 
     public static final String REST_FORECAST_DATA = BASE_REST + "/ForecastData";
 
-
+    public static final String REST_REGIONS = BASE_REST + "/Regions";
 }
