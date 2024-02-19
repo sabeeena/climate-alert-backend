@@ -21,4 +21,8 @@ public class WeatherDataController {
         return weatherDataService.getHourlyDataByStationId(weatherDTO);
     }
 
+    @PostMapping(RestConstants.REST_WEATHER_DATA + "/hourly/station/save")
+    public List<WeatherData> saveWeatherHourlyDataByStationId(@RequestBody WeatherDTO weatherDTO) throws IOException {
+        return weatherDataService.saveWeatherData(weatherDTO);
+    }
 }

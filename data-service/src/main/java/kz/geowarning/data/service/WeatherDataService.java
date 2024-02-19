@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kz.geowarning.data.entity.dto.WeatherDTO;
 import kz.geowarning.data.entity.WeatherData;
+import kz.geowarning.data.repository.WeatherRepository;
 import kz.geowarning.data.service.retrofit.MeteostatService;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
 import retrofit2.Call;
@@ -34,6 +36,9 @@ public class WeatherDataService {
     private String meteostatApiKey;
 
     private MeteostatService meteostatService;
+
+    @Autowired
+    private WeatherRepository weatherRepository;
 
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -89,6 +94,10 @@ public class WeatherDataService {
 
         List<WeatherData> convertedData = convertFromJson(jsonString, weatherDTO.getHour());
         return convertedData;
+    }
+
+    public List<WeatherData> saveWeatherData(WeatherDTO weatherDTO) throws IOException {
+        return weatherRepository.saveAll(getHourlyDataByStationId(weatherDTO));
     }
 
     private static List<WeatherData> convertFromJson(String jsonString, String hour) {

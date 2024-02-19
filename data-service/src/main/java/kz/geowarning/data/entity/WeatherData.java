@@ -30,6 +30,4 @@ public class WeatherData {
     private String wspd;
     /** Sea-Level Air Pressure */
     private String pres;
-    @OneToOne(mappedBy = "weather")
-    private ForecastFireData forecastFireData;
 }

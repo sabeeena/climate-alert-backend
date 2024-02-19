@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+	  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="Sabina" id="weatherdata-1">
+        <createSequence incrementBy="1" sequenceName="weatherdata_seq" startValue="1"/>
+    </changeSet>
+
+    <changeSet author="Sabina" id="weatherdata-2">
+        <createTable tableName="weatherdata">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="weatherDataPK"/>
+            </column>
+            <column name="time" type="TIMESTAMP"/>
+            <column name="temp" type="VARCHAR(256)"/>
+            <column name="dwpt" type="VARCHAR(256)"/>
+            <column name="rhum" type="VARCHAR(256)"/>
+            <column name="wdir" type="VARCHAR(256)"/>
+            <column name="wspd" type="VARCHAR(256)"/>
+            <column name="pres" type="VARCHAR(256)"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
