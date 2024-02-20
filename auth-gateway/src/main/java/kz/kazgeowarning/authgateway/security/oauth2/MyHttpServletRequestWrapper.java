@@ -10,11 +10,11 @@ public class MyHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
     public final String redirectUrl;
     private static final String GET_PROTOCOL = "://.*";
-    private static final String HTTPS = "http";
+    private static final String HTTPS = "https";
 
     public MyHttpServletRequestWrapper(HttpServletRequest request) {
         super(request);
-        this.redirectUrl = "http://localhost:4200" + request.getRequestURI();
+        this.redirectUrl = "https://damoo.kz" + request.getRequestURI();
         log.info("this.redirectUrl = " + this.redirectUrl);
     }
 

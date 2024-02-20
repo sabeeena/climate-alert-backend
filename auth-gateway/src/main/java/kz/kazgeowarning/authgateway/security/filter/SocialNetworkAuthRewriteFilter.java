@@ -42,7 +42,7 @@ public class SocialNetworkAuthRewriteFilter extends OncePerRequestFilter {
 
         @Override
         public String getScheme() {
-            baseUrl = "https://localhost:4200";
+            baseUrl = "https://damoo.kz";
 //            baseUrl = "http://localhost";
             log.info("LinkedInHttpServletRequestWrapper.getScheme baseUrl: " + baseUrl);
             return baseUrl.replaceFirst(GET_PROTOCOL, "");
