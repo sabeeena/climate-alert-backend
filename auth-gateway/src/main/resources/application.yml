@@ -45,23 +45,23 @@ spring:
       client:
         registration:
           google:
-            clientId: 489623114713-nkdu5u2vr4uopip76a3g9mgus6viloag.apps.googleusercontent.com
-            clientSecret: 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
-            redirectUriTemplate: "http://localhost:4200/user/profile"
+            clientId: 724422601071-ljnh3auupuipuqdkshfrs691h3ic4apb.apps.googleusercontent.com
+            clientSecret: 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
+            redirectUriTemplate: "http://localhost:8086/user/profile"
             scope:
               - email
               - profile
           facebook:
             clientId: 493602265074130
             clientSecret: f9492f14950a51e56fd8110d169949d2
-            redirectUriTemplate: "http://localhost:4200/user/profile"
+            redirectUriTemplate: "http://localhost:8086/user/profile"
             scope:
               - email
               - public_profile
           github:
             clientId: 51bbc81f71aeaded7dec
             clientSecret: 808e276c0f63c0e6f42a90ab92dd19218eee5c49
-            redirectUriTemplate: "http://localhost:4200/user/profile"
+            redirectUriTemplate: "http://localhost:8086/user/profile"
             scope:
               - user:email
               - read:user
@@ -111,14 +111,13 @@ app:
     # redirectUri mentioned by the client in the /oauth2/authorize request.
     # We're not using cookies because they won't work well in mobile clients.
     authorizedRedirectUris:
-      - http://localhost:4200/user/profile
-#      - http://localhost:4201/#/auth/login
-#      - http://localhost:4201/#/home
-#      - http://damoo.kz/#/authentication/signin
-#      - https://damoo.kz/#/authentication/signin
-#      - https://185.255.79.19/#/auth/login
-#      - myandroidapp://oauth2/redirect
-#      - myiosapp://oauth2/redirect
+      - http://localhost:4201/#/auth/login
+      - http://localhost:4201/#/home
+      - http://damoo.kz/#/authentication/signin
+      - https://damoo.kz/#/authentication/signin
+      - https://185.255.79.19/#/auth/login
+      - myandroidapp://oauth2/redirect
+      - myiosapp://oauth2/redirect
 eureka:
   instance:
     leaseRenewalIntervalInSeconds: '0'
