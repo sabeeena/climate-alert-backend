@@ -63,13 +63,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/swagger-ui.html",
                         "/webjars/**",
                         "/oauth2/**",
-                        "/questionnaire/api/v1/news/filter",
-                        "/questionnaire/api/v1/news/id/**",
-                        "/api/public/**", "/api/signup", "/resod-management/api/v1/public/**", "/storage/api/public/**",
-                        "/api/resod-management/v1/test",
-                        "/product-service/api/v1/product/access/pay",
-                        "/resod-management/v1/test",
-                        "/resod-management/test").permitAll()
+                        "/api/news",
+                        "/api/news/"
+                ).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new MyCustomFilter(), OAuth2LoginAuthenticationFilter.class)
