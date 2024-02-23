@@ -294,32 +294,46 @@ public class UsersService implements IUsersService {
         } else {
             registeredEmployees = existingAdmin.getEmployees();
 
-            // Удалить сотрудников, которых нет в новом списке
-            registeredEmployees.removeIf(existingEmployee ->
-                    adminEmployee.getEmployees().stream()
-                            .noneMatch(newEmployee -> newEmployee.getEmail().equals(existingEmployee.getEmployeeEmail()))
-            );
+            // Remove employees not present in the new list
+            Iterator<RegisteredEmployee> iterator = registeredEmployees.iterator();
+            while (iterator.hasNext()) {
+                RegisteredEmployee existingEmployee = iterator.next();
+                boolean employeeExistsInNewList = adminEmployee.getEmployees().stream()
+                        .anyMatch(newEmployee -> newEmployee.getEmail().equals(existingEmployee.getEmployeeEmail()));
+
+                if (!employeeExistsInNewList) {
+                    // Employee not present in the new list, remove it
+                    iterator.remove();
+                    registeredEmployeeRepository.delete(existingEmployee); // Optionally delete from the repository
+                }
+            }
         }
 
-        // Добавить новых сотрудников
+        // Add new employees
         for (Object obj : adminEmployee.getEmployees()) {
             if (obj instanceof User) {
                 User employee = (User) obj;
 
-                RegisteredEmployee registeredEmployee = new RegisteredEmployee();
-                registeredEmployee.setFirstName(employee.getFirstName());
-                registeredEmployee.setEmployeeEmail(employee.getEmail());
-                registeredEmployee.setLastName(employee.getLastName());
-                registeredEmployee.setAdmin(existingAdmin);
-                registeredEmployees.add(registeredEmployee);
-                registeredEmployeeRepository.save(registeredEmployee);
+                // Check if the employee is already in the set to avoid duplicates
+                boolean employeeExists = registeredEmployees.stream()
+                        .anyMatch(existingEmployee -> existingEmployee.getEmployeeEmail().equals(employee.getEmail()));
+
+                if (!employeeExists) {
+                    RegisteredEmployee registeredEmployee = new RegisteredEmployee();
+                    registeredEmployee.setFirstName(employee.getFirstName());
+                    registeredEmployee.setEmployeeEmail(employee.getEmail());
+                    registeredEmployee.setLastName(employee.getLastName());
+                    registeredEmployee.setAdmin(existingAdmin);
+                    registeredEmployees.add(registeredEmployee);
+                    registeredEmployeeRepository.save(registeredEmployee);
+                }
             }
         }
 
         existingAdmin.setEmployees(registeredEmployees);
         return adminEmployeeRepository.save(existingAdmin);
-
     }
+
 
     public Set<RegisteredEmployee> getEmployeesByAdminEmail(String adminEmail) {
         AdminEmployee admin = adminEmployeeRepository.findByAdminEmail(adminEmail);
