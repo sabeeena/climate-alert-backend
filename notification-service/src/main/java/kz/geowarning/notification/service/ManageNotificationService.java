@@ -2,6 +2,7 @@ package kz.geowarning.notification.service;
 
 import kz.geowarning.common.exceptions.NotFoundException;
 import kz.geowarning.notification.dto.NotificationDTO;
+import kz.geowarning.notification.dto.ReportNotificationDTO;
 import kz.geowarning.notification.entity.AlertNotification;
 import kz.geowarning.notification.entity.ReportNotification;
 import kz.geowarning.notification.repository.AlertNotificationRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ManageNotificationService {
@@ -90,4 +92,36 @@ public class ManageNotificationService {
         return notifications;
     }
 
+    public NotificationDTO getReportNotificationById(Long id, String notificationType) throws NotFoundException {
+        ReportNotification reportNotification = null;
+        AlertNotification alertNotification = null;
+        if (Objects.equals(notificationType, "report")){
+            reportNotification = reportNotificationRepository.findById(id)
+                    .orElseThrow(() -> new NotFoundException("Report Notification not found with id: " + id));
+            NotificationDTO dto = new NotificationDTO();
+            dto.setId(reportNotification.getId());
+            dto.setReceiverEmail(reportNotification.getReceiverEmail());
+            dto.setSenderEmail(reportNotification.getSenderEmail());
+            dto.setText(reportNotification.getText());
+            dto.setTypeStatus(reportNotification.getTypeStatus());
+            dto.setReportType(reportNotification.getReportType());
+            dto.setReportId(reportNotification.getReportId());
+            dto.setSeen(reportNotification.isSeen());
+            dto.setNotificationType("report");
+            return dto;
+        } else {
+            alertNotification = alertNotificationRepository.findById(id)
+                    .orElseThrow(() -> new NotFoundException("Report Notification not found with id: " + id));
+            NotificationDTO dto = new NotificationDTO();
+            dto.setId(alertNotification.getId());
+            dto.setReceiverEmail(alertNotification.getReceiverEmail());
+            dto.setText(alertNotification.getText());
+            dto.setType(alertNotification.getWarningType());
+            dto.setRegion(alertNotification.getRegion());
+            dto.setDangerPossibility(alertNotification.getDangerPossibility());
+            dto.setSeen(alertNotification.isSeen());
+            dto.setNotificationType("alert");
+            return dto;
+        }
+    }
 }

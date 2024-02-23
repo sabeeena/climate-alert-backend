@@ -39,6 +39,10 @@ public class ManageNotificationController {
         return ResponseEntity.ok(notifications);
     }
 
+    @GetMapping("/get-by-id")
+    public NotificationDTO getReportNotificationById(@RequestParam Long id, String notificationType) throws NotFoundException {
+        return ResponseEntity.ok(manageNotificationService.getReportNotificationById(id, notificationType)).getBody();
+    }
 
     // Delete alert by ID
     @DeleteMapping("/alert/{id}")
