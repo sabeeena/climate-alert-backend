@@ -72,7 +72,7 @@ public class AuthController {
                     .lastName(user.getLastName())
                     .phoneNumber(user.getPhoneNumber()!=null?user.getPhoneNumber():"")
                     .birthDate(user.getBirthDate()!=null?new Date(user.getBirthDate().getTime()):null)
-                    .city(user.getCity()!=null?user.getCity():"Almaty")
+                    //.city(user.getCity()!=null?user.getCity():"Almaty")
                     .email(user.getEmail())
                     .role(user.getRole())
                     .loginType(user.getLoginType())

@@ -6,12 +6,10 @@ import kz.kazgeowarning.authgateway.dto.ClientsDTO;
 import kz.kazgeowarning.authgateway.enums.Role;
 import kz.kazgeowarning.authgateway.enums.UserLoginType;
 import kz.kazgeowarning.authgateway.model.AdminEmployee;
+import kz.kazgeowarning.authgateway.model.Location;
 import kz.kazgeowarning.authgateway.model.RegisteredEmployee;
 import kz.kazgeowarning.authgateway.model.User;
-import kz.kazgeowarning.authgateway.repository.AdminEmployeeRepository;
-import kz.kazgeowarning.authgateway.repository.ClientDetailDTORepository;
-import kz.kazgeowarning.authgateway.repository.RegisteredEmployeeRepository;
-import kz.kazgeowarning.authgateway.repository.UserRepository;
+import kz.kazgeowarning.authgateway.repository.*;
 import kz.kazgeowarning.authgateway.security.service.IUsersService;
 import kz.kazgeowarning.authgateway.util.PageableCustom;
 import kz.kazgeowarning.authgateway.util.exception.ResourceNotFoundException;
@@ -52,6 +50,9 @@ public class UsersService implements IUsersService {
 
     @Autowired
     private RegisteredEmployeeRepository registeredEmployeeRepository;
+
+    @Autowired
+    private LocationRepository locationRepository;
 
     @Override
     public List<User> findAll() throws DataAccessException {
@@ -118,6 +119,18 @@ public class UsersService implements IUsersService {
     @Override
     public User createOrUpdateUser(ClientsDTO userDto) {
         User user;
+        Optional<Location> locationOptional = locationRepository.getByName(userDto.getLocationName());
+        Location location;
+        if (locationOptional.isPresent()) {
+            location = locationOptional.get();
+        } else {
+            Location newLocation = new Location();
+            newLocation.setName(userDto.getLocationName());
+            newLocation.setLatitude(userDto.getLatitude());
+            newLocation.setLongitude(userDto.getLongitude());
+            Location savedLocation = locationRepository.save(newLocation);
+            location = savedLocation;
+        }
         if (userDto.getId() == null) {
             user = User
                     .builder()
@@ -127,7 +140,8 @@ public class UsersService implements IUsersService {
                     .middleName(userDto.getMiddleName())
                     .birthDate(userDto.getBirthDate())
                     .phoneNumber(userDto.getPhoneNumber())
-                    .city(userDto.getCity())
+                    //.city(userDto.getCity())
+                    .locationId(location)
                     .role(userDto.getRole())
                     .imageUrl(userDto.getImageUrl())
                     .notifyEmail(userDto.isNotifyEmail())
@@ -153,7 +167,8 @@ public class UsersService implements IUsersService {
             user.setRole(userDto.getRole());
             user.setLoginType(user.getLoginType());
             user.setActive(true);
-            user.setCity(userDto.getCity());
+            //user.setCity(userDto.getCity());
+            user.setLocationId(location);
             user.setPhoneNumber(userDto.getPhoneNumber());
         }
 
@@ -189,7 +204,20 @@ public class UsersService implements IUsersService {
     public User editClient(ClientsDTO userDto) {
         User client = findUserById(userDto.getId());
         if (client != null) {
-            client.setCity(userDto.getCity());
+            //client.setCity(userDto.getCity());
+            Optional<Location> locationOptional = locationRepository.getByName(userDto.getLocationName());
+            Location location;
+            if (locationOptional.isPresent()) {
+                location = locationOptional.get();
+            } else {
+                Location newLocation = new Location();
+                newLocation.setName(userDto.getLocationName());
+                newLocation.setLatitude(userDto.getLatitude());
+                newLocation.setLongitude(userDto.getLongitude());
+                Location savedLocation = locationRepository.save(newLocation);
+                location = savedLocation;
+            }
+            client.setLocationId(location);
             client.setPhoneNumber(userDto.getPhoneNumber());
             client.setBirthDate(userDto.getBirthDate());
             client.setFirstName(userDto.getFirstName());

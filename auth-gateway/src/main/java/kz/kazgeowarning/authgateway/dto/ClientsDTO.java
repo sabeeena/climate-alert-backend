@@ -47,8 +47,17 @@ public class ClientsDTO {
     @JsonProperty("birthDate")
     private Date birthDate;
 
-    @JsonProperty("city")
-    private String city;
+//    @JsonProperty("city")
+//    private String city;
+
+    @JsonProperty("location_name")
+    private String locationName;
+
+    @JsonProperty("location_latitude")
+    private String latitude;
+
+    @JsonProperty("location_longitude")
+    private String longitude;
 
     @JsonProperty("imageUrl")
     private String imageUrl;

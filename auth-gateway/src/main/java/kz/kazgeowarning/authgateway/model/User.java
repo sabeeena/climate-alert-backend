@@ -60,6 +60,7 @@ public class User {
 //    public String getStorageUrl() {
 //        return Api.USER_IMAGE.getPath()  + getFileId();
 //    }
+
     /** Активный ли пользователь */
     @Column(name = "active")
     private boolean active;
@@ -82,8 +83,13 @@ public class User {
     @Column(name = "birth_date")
     private Date birthDate;
 
-    @Column(name = "city")
-    private String city;
+    @ManyToOne
+    @JoinColumn(name = "location_id")
+    private Location locationId;
+
+//    @Column(name = "city")
+//    private String city;
+
     @Column(length = 2000)
     private String imageUrl;
     @Column(name = "notify_email")
