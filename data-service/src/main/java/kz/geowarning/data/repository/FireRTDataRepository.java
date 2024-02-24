@@ -42,6 +42,10 @@ public interface FireRTDataRepository extends JpaRepository<FireRTData, Long> {
             "AND (:#{#fireDataDTO.dateFrom} = '0' OR " +
             "data.firertdata.acq_date >= CAST(:#{#fireDataDTO.dateFrom} AS DATE)) " +
             "AND (:#{#fireDataDTO.dateTo} = '0' OR " +
-            "data.firertdata.acq_date <= CAST(:#{#fireDataDTO.dateTo} AS DATE)) ")
+            "data.firertdata.acq_date <= CAST(:#{#fireDataDTO.dateTo} AS DATE)) " +
+            "AND (:#{#fireDataDTO.timeFrom} = '0' OR " +
+            "CAST(CONCAT(data.firertdata.acq_date, ' ', data.firertdata.acq_time) AS TIMESTAMP) >= CAST(CONCAT(CAST(:#{#fireDataDTO.dateFrom} AS DATE), ' ', CAST(:#{#fireDataDTO.timeFrom} AS TIME)) AS TIMESTAMP)) " +
+            "AND (:#{#fireDataDTO.timeTo} = '0' OR " +
+            "CAST(CONCAT(data.firertdata.acq_date, ' ', data.firertdata.acq_time) AS TIMESTAMP) <= CAST(CONCAT(CAST(:#{#fireDataDTO.dateTo} AS DATE), ' ', CAST(:#{#fireDataDTO.timeTo} AS TIME)) AS TIMESTAMP)) ")
     List<FireRTData> findByFilter(@Param("fireDataDTO") FireDataDTO fireDataDTO);
 }

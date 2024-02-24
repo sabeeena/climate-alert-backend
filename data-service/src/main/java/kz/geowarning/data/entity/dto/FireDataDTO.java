@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.sql.Time;
 
 @Data
 @NoArgsConstructor
@@ -15,4 +16,6 @@ public class FireDataDTO {
     private String longitude;
     private Date dateFrom;
     private Date dateTo;
+    private Time timeFrom;
+    private Time timeTo;
 }
