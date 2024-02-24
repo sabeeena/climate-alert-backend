@@ -1,5 +1,7 @@
 package kz.geowarning.notification.service;
 
+import kz.geowarning.notification.dto.ForecastNotificationContentDTO;
+import kz.geowarning.notification.dto.RealTimeNotificationContentDTO;
 import kz.geowarning.notification.dto.ReportNotificationDTO;
 import kz.geowarning.notification.entity.AlertNotification;
 import kz.geowarning.notification.entity.ReportNotification;
@@ -10,6 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 
 
@@ -29,6 +33,14 @@ public class NotificationService {
 
     public void notifyWarning(String warningType, String userEmail, String region, String dangerPossibility) throws MessagingException {
         iEmailService.sendMail(userEmail, generateWarningSubject(region, dangerPossibility), generateWarningMessage(region, userEmail, warningType, dangerPossibility));
+    }
+
+    public void notifyRealtime(RealTimeNotificationContentDTO contentDTO) throws MessagingException {
+        iEmailService.sendMail(contentDTO.getEmail(), generateWarningSubjectRealtime(contentDTO), generateWarningMessageRealTime(contentDTO));
+    }
+
+    public void notifyForecast(ForecastNotificationContentDTO contentDTO) throws MessagingException {
+        iEmailService.sendMail(contentDTO.getEmail(), generateWarningSubjectForecast(contentDTO), generateWarningMessageForecast(contentDTO));
     }
 
     public String generateWarningMessage(String region, String userEmail, String warningType, String dangerPossibility){
@@ -61,6 +73,70 @@ public class NotificationService {
         alertNotification.setDangerPossibility(dangerPossibility);
         alertNotificationRepository.save(alertNotification);
         return message;
+    }
+
+    public String generateWarningMessageRealTime(RealTimeNotificationContentDTO contentDTO) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date currentDate = new Date();
+        String currentDateTimeString = dateFormat.format(currentDate);
+
+        String message =  currentDateTimeString + "\n\n\n";
+        message += "Уважаемый(ая) " + contentDTO.getFirstName() + " " + contentDTO.getLastName() + ", \n";
+        message += "За последний час возле " + contentDTO.getLocationName() + "  было обнаружено " + contentDTO.getCount() + " пожаров.\n\n";
+        message += "Приблизительные местоположения:\n";
+        for (String row : contentDTO.getFireOccurrences()) {
+            message += row + "\n";
+        }
+        message += "\nЕсли у вас есть какие-либо вопросы или требуется дополнительная информация, пожалуйста, ";
+        message += "свяжитесь с нашей службой поддержки.\n\n\n";
+        message += "С уважением,\n";
+        message += "Команда KazGeoWarning!\n\n";
+
+        AlertNotification alertNotification = new AlertNotification();
+        alertNotification.setReceiverEmail(contentDTO.getEmail());
+        alertNotification.setWarningType("real-time fire");
+        alertNotification.setText(message);
+        alertNotification.setSeen(false);
+        alertNotificationRepository.save(alertNotification);
+        return message;
+    }
+
+    public String generateWarningSubjectRealtime(RealTimeNotificationContentDTO contentDTO) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date currentDate = new Date();
+        String currentDateTimeString = dateFormat.format(currentDate);
+        String subject = "Информация о пожарах на " + currentDateTimeString + " в " + contentDTO.getLocationName() + ".\n";
+        return subject;
+    }
+
+    public String generateWarningMessageForecast(ForecastNotificationContentDTO contentDTO) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date currentDate = new Date();
+        String currentDateTimeString = dateFormat.format(currentDate);
+
+        String message =  currentDateTimeString + "\n\n\n";
+        message += "Уважаемый(ая) " + contentDTO.getFirstName() + " " + contentDTO.getLastName() + ", \n";
+        message += "В пределах региона " + contentDTO.getLocationName() + "  был обнаружен уровень опасности: " + contentDTO.getLevel() + ".\n";
+        message += "Если у вас есть какие-либо вопросы или требуется дополнительная информация, пожалуйста, ";
+        message += "свяжитесь с нашей службой поддержки.\n\n\n";
+        message += "С уважением,\n";
+        message += "Команда KazGeoWarning!\n\n";
+
+        AlertNotification alertNotification = new AlertNotification();
+        alertNotification.setReceiverEmail(contentDTO.getEmail());
+        alertNotification.setWarningType("forecast fire");
+        alertNotification.setText(message);
+        alertNotification.setSeen(false);
+        alertNotificationRepository.save(alertNotification);
+        return message;
+    }
+
+    public String generateWarningSubjectForecast(ForecastNotificationContentDTO contentDTO) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date currentDate = new Date();
+        String currentDateTimeString = dateFormat.format(currentDate);
+        String subject = "Уровень пожароопасности в " + contentDTO.getLocationName() + " на " + currentDateTimeString + ".\n";
+        return subject;
     }
 
     public String generateWarningSubject(String region, String dangerPossibility) {

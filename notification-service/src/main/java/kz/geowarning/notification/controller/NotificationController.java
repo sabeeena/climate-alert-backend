@@ -1,6 +1,8 @@
 package kz.geowarning.notification.controller;
 
 import kz.geowarning.common.api.NotificationClient;
+import kz.geowarning.notification.dto.ForecastNotificationContentDTO;
+import kz.geowarning.notification.dto.RealTimeNotificationContentDTO;
 import kz.geowarning.notification.dto.ReportNotificationDTO;
 import kz.geowarning.notification.service.NotificationService;
 import kz.geowarning.notification.util.RestConstants;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -28,6 +31,56 @@ public class NotificationController implements NotificationClient {
     public ResponseEntity notifyWarning(@RequestParam String warningType, String userEmail, String region, String dangerPossibility) {
         try {
             service.notifyWarning(warningType, userEmail, region, dangerPossibility);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @SneakyThrows
+    @PostMapping("/notify-warning-realtime")
+    public ResponseEntity notifyWarningRealtime(
+            @RequestParam String email,
+            @RequestParam String firstName,
+            @RequestParam String lastName,
+            @RequestParam String locationName,
+            @RequestParam String count,
+            @RequestParam List<String> fireOccurrences
+    ) {
+        try {
+            RealTimeNotificationContentDTO contentDTO = new RealTimeNotificationContentDTO();
+            contentDTO.setEmail(email);
+            contentDTO.setFirstName(firstName);
+            contentDTO.setLastName(lastName);
+            contentDTO.setLocationName(locationName);
+            contentDTO.setCount(count);
+            contentDTO.setFireOccurrences(fireOccurrences);
+
+            service.notifyRealtime(contentDTO);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @SneakyThrows
+    @PostMapping("/notify-warning-forecast")
+    public ResponseEntity notifyWarningForecast(
+            @RequestParam String email,
+            @RequestParam String firstName,
+            @RequestParam String lastName,
+            @RequestParam String locationName,
+            @RequestParam String level
+    ) {
+        try {
+            ForecastNotificationContentDTO contentDTO = new ForecastNotificationContentDTO();
+            contentDTO.setEmail(email);
+            contentDTO.setFirstName(firstName);
+            contentDTO.setLastName(lastName);
+            contentDTO.setLocationName(locationName);
+            contentDTO.setLevel(level);
+
+            service.notifyForecast(contentDTO);
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
