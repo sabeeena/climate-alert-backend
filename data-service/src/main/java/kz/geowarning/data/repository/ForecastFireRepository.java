@@ -29,6 +29,10 @@ public interface ForecastFireRepository extends JpaRepository<ForecastFireData, 
             "AND (:#{#fireDataDTO.dateFrom} = '0' OR " +
             "data.forecastfiredata.time >= CAST(:#{#fireDataDTO.dateFrom} AS TIMESTAMP)) " +
             "AND (:#{#fireDataDTO.dateTo} = '0' OR " +
-            "data.forecastfiredata.time <= CAST(:#{#fireDataDTO.dateTo} AS TIMESTAMP)) ")
+            "data.forecastfiredata.time <= CAST(:#{#fireDataDTO.dateTo} AS TIMESTAMP)) " +
+            "AND (:#{#fireDataDTO.dangerLevelFrom} = '0' OR " +
+            "(CAST(:#{#fireDataDTO.dangerLevelFrom} AS DECIMAL)) <= CAST(data.forecastfiredata.danger_level AS DECIMAL)) " +
+            "AND (:#{#fireDataDTO.dangerLevelTo} = '0' OR " +
+            "(CAST(:#{#fireDataDTO.dangerLevelTo} AS DECIMAL)) >= CAST(data.forecastfiredata.danger_level AS DECIMAL)) ")
     List<ForecastFireData> findByFilter(@Param("fireDataDTO") ForecastDTO fireDataDTO);
 }

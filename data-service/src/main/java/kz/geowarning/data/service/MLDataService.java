@@ -108,6 +108,8 @@ public class MLDataService {
         fireDataDTO.setRegionId(fireDataDTO.getRegionId() == null ? "0" : fireDataDTO.getRegionId());
         fireDataDTO.setDateFrom(fireDataDTO.getDateFrom() == null ? sqlDateTimeAMonthAgo : fireDataDTO.getDateFrom());
         fireDataDTO.setDateTo(fireDataDTO.getDateTo() == null ? sqlCurrentDateTime : fireDataDTO.getDateTo());
+        fireDataDTO.setDangerLevelFrom(fireDataDTO.getDangerLevelFrom() == null ? "0" : fireDataDTO.getDangerLevelFrom());
+        fireDataDTO.setDangerLevelTo(fireDataDTO.getDangerLevelTo() == null ? "0" : fireDataDTO.getDangerLevelTo());
 
         return forecastFireRepository.findByFilter(fireDataDTO);
     }

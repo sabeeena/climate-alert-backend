@@ -15,4 +15,6 @@ public class ForecastDTO {
     private String longitude;
     private Timestamp dateFrom;
     private Timestamp dateTo;
+    private String dangerLevelFrom;
+    private String dangerLevelTo;
 }
