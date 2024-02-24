@@ -26,7 +26,14 @@ public interface FireRTDataRepository extends JpaRepository<FireRTData, Long> {
             "                     WHERE EXTRACT(YEAR FROM acq_date) =:year AND EXTRACT(month FROM acq_date) =:month")
     List<FireRTData> findByYearAndMonth(Integer year, Integer month);
 
-    @Query(nativeQuery = true, value = "SELECT data.firertdata.* FROM data.firertdata " +
+    // Distance is calculated by using Haversine formula for sorting to by the nearest
+    @Query(nativeQuery = true, value = "SELECT data.firertdata.*, " +
+            "(6371 * acos(cos(radians(CAST(:#{#fireDataDTO.latitude} AS DECIMAL))) * " +
+            "cos(radians(CAST(data.firertdata.latitude AS DECIMAL))) * " +
+            "cos(radians(CAST(data.firertdata.longitude AS DECIMAL)) - radians(CAST(:#{#fireDataDTO.longitude} AS DECIMAL))) + " +
+            "sin(radians(CAST(:#{#fireDataDTO.latitude} AS DECIMAL))) * " +
+            "sin(radians(CAST(data.firertdata.latitude AS DECIMAL))))) AS distance " +
+            "FROM data.firertdata " +
             "WHERE (:#{#fireDataDTO.latitude} = '0' OR " +
             "(CAST(:#{#fireDataDTO.latitude} AS DECIMAL) - 0.270) <= CAST(data.firertdata.latitude AS DECIMAL)) " +
             "AND (:#{#fireDataDTO.latitude} = '0' OR " +
@@ -46,6 +53,7 @@ public interface FireRTDataRepository extends JpaRepository<FireRTData, Long> {
             "AND (:#{#fireDataDTO.timeFrom} = '0' OR " +
             "CAST(CONCAT(data.firertdata.acq_date, ' ', data.firertdata.acq_time) AS TIMESTAMP) >= CAST(CONCAT(CAST(:#{#fireDataDTO.dateFrom} AS DATE), ' ', CAST(:#{#fireDataDTO.timeFrom} AS TIME)) AS TIMESTAMP)) " +
             "AND (:#{#fireDataDTO.timeTo} = '0' OR " +
-            "CAST(CONCAT(data.firertdata.acq_date, ' ', data.firertdata.acq_time) AS TIMESTAMP) <= CAST(CONCAT(CAST(:#{#fireDataDTO.dateTo} AS DATE), ' ', CAST(:#{#fireDataDTO.timeTo} AS TIME)) AS TIMESTAMP)) ")
+            "CAST(CONCAT(data.firertdata.acq_date, ' ', data.firertdata.acq_time) AS TIMESTAMP) <= CAST(CONCAT(CAST(:#{#fireDataDTO.dateTo} AS DATE), ' ', CAST(:#{#fireDataDTO.timeTo} AS TIME)) AS TIMESTAMP)) " +
+            "ORDER BY distance ASC")
     List<FireRTData> findByFilter(@Param("fireDataDTO") FireDataDTO fireDataDTO);
 }
