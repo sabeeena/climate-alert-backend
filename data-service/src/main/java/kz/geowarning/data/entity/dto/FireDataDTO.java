@@ -18,4 +18,5 @@ public class FireDataDTO {
     private Date dateTo;
     private Time timeFrom;
     private Time timeTo;
+    private String confidence;
 }

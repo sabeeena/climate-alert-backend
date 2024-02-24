@@ -180,6 +180,7 @@ public class FireRTDataService {
         fireDataDTO.setDateTo(fireDataDTO.getDateTo() == null ? Date.valueOf(currentDate.format(formatter)) : fireDataDTO.getDateTo());
         fireDataDTO.setTimeFrom(fireDataDTO.getTimeFrom() == null ? Time.valueOf("00:00:00") : fireDataDTO.getTimeFrom());
         fireDataDTO.setTimeTo(fireDataDTO.getTimeTo() == null ? Time.valueOf("11:59:59") : fireDataDTO.getTimeTo());
+        fireDataDTO.setConfidence(fireDataDTO.getConfidence() == null ? "0" : fireDataDTO.getConfidence());
 
         return fireRTDataRepository.findByFilter(fireDataDTO);
     }

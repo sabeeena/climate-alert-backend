@@ -26,7 +26,7 @@ public interface FireRTDataRepository extends JpaRepository<FireRTData, Long> {
             "                     WHERE EXTRACT(YEAR FROM acq_date) =:year AND EXTRACT(month FROM acq_date) =:month")
     List<FireRTData> findByYearAndMonth(Integer year, Integer month);
 
-    // Distance is calculated by using Haversine formula for sorting to by the nearest
+    // Distance is calculated by using Haversine formula for sorting by the nearest
     @Query(nativeQuery = true, value = "SELECT data.firertdata.*, " +
             "(6371 * acos(cos(radians(CAST(:#{#fireDataDTO.latitude} AS DECIMAL))) * " +
             "cos(radians(CAST(data.firertdata.latitude AS DECIMAL))) * " +
@@ -46,6 +46,8 @@ public interface FireRTDataRepository extends JpaRepository<FireRTData, Long> {
             "CAST(:#{#fireDataDTO.longitude} AS DECIMAL)) " +
             "AND (:#{#fireDataDTO.regionId} = '0' OR " +
             "CAST(:#{#fireDataDTO.regionId} AS VARCHAR) = data.firertdata.region_id) " +
+            "AND (:#{#fireDataDTO.confidence} = '0' OR " +
+            "LOWER(CAST(:#{#fireDataDTO.confidence} AS VARCHAR)) = LOWER(data.firertdata.confidence))" +
             "AND (:#{#fireDataDTO.dateFrom} = '0' OR " +
             "data.firertdata.acq_date >= CAST(:#{#fireDataDTO.dateFrom} AS DATE)) " +
             "AND (:#{#fireDataDTO.dateTo} = '0' OR " +
