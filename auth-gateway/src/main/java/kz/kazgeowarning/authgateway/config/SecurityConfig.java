@@ -64,7 +64,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/webjars/**",
                         "/oauth2/**",
                         "/api/news/**",
-                        "/api/public/**"
+                        "/api/public/**",
+                        "/api/data/RTData/getByFilter",
+                        "/api/data/ForecastData/getByFilter"
                 ).permitAll()
                 .anyRequest().authenticated()
                 .and()
