@@ -95,6 +95,7 @@ public class NotificationService {
 
         AlertNotification alertNotification = new AlertNotification();
         alertNotification.setReceiverEmail(contentDTO.getEmail());
+        alertNotification.setSenderEmail("KazGeoWarning");
         alertNotification.setWarningType("real-time fire");
         alertNotification.setText(message);
         alertNotification.setSeen(false);
@@ -126,6 +127,7 @@ public class NotificationService {
 
         AlertNotification alertNotification = new AlertNotification();
         alertNotification.setReceiverEmail(contentDTO.getEmail());
+        alertNotification.setSenderEmail("KazGeoWarning");
         alertNotification.setWarningType("forecast fire");
         alertNotification.setText(message);
         alertNotification.setSeen(false);

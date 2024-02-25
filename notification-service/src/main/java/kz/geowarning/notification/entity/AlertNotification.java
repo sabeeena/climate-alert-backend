@@ -18,6 +18,7 @@ public class AlertNotification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String receiverEmail;
+    private String senderEmail;
     @Column(length = 20000)
     private String text;
     private boolean seen = false;
