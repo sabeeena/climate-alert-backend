@@ -28,6 +28,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import java.time.LocalDate;
@@ -179,7 +180,7 @@ public class FireRTDataService {
         fireDataDTO.setDateFrom(fireDataDTO.getDateFrom() == null ? Date.valueOf(dateAMonthAgo.format(formatter)) : fireDataDTO.getDateFrom());
         fireDataDTO.setDateTo(fireDataDTO.getDateTo() == null ? Date.valueOf(currentDate.format(formatter)) : fireDataDTO.getDateTo());
         fireDataDTO.setTimeFrom(fireDataDTO.getTimeFrom() == null ? Time.valueOf("00:00:00") : fireDataDTO.getTimeFrom());
-        fireDataDTO.setTimeTo(fireDataDTO.getTimeTo() == null ? Time.valueOf("23:59:59") : fireDataDTO.getTimeTo());
+        fireDataDTO.setTimeTo(fireDataDTO.getTimeTo() == null ? Time.valueOf(LocalTime.now()) : fireDataDTO.getTimeTo());
         fireDataDTO.setConfidence(fireDataDTO.getConfidence() == null ? "0" : fireDataDTO.getConfidence());
 
         return fireRTDataRepository.findByFilter(fireDataDTO);

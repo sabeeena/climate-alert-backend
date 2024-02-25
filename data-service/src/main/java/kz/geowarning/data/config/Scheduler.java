@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 @Service
 @RequiredArgsConstructor
@@ -29,20 +30,25 @@ public class Scheduler {
         fireRTDataService.getDataAndSave();
     }
 
-    @Scheduled(cron="0 00 00 20 11 ?")
+    @Scheduled(cron = "0 00 00 20 11 ?")
     public void getActualReportData() throws IOException {
         egovFireReportService.getDataAndSave();
     }
 
-    @Scheduled(cron="0 0 */1 * * *") // every hour
+    @Scheduled(cron = "0 0 */1 * * *") // every hour
     public void updateFireForecasts() throws Exception {
         for (Station station : stationsRepository.getAllStations()) {
             mlDataService.saveForecastByStation(station.getId());
         }
     }
 
-    @Scheduled(cron = "0 */5 * * * *")
+    @Scheduled(cron = "0 0 */1 * * *")
     public void sendRealtimeAlert() throws JSONException, IOException {
         alertService.alertRecipientsRealtime();
+    }
+
+    @Scheduled(cron = "0 0 */1 * * *")
+    public void sendForecastAlert() throws JSONException, ParseException {
+        alertService.alertRecipientsForecast();
     }
 }
