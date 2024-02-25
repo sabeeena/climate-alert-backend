@@ -91,6 +91,11 @@ public class AuthController {
         return ResponseEntity.ok(usersService.findAll());
     }
 
+    @GetMapping(PUBLIC_URL + "/v1/users/emailRecipients")
+    public ResponseEntity<List<User>> getAllNotified() {
+        return ResponseEntity.ok(usersService.findAllEmailRecipients());
+    }
+
     @GetMapping(PUBLIC_URL + "/v1/users/role-employee")
     public ResponseEntity<List<User>> getUserEmployee() {
         return ResponseEntity.ok(usersService.findByEmployeeRole());
@@ -299,7 +304,7 @@ public class AuthController {
     }
 
     @GetMapping(PUBLIC_URL + "/v1/users/details")
-    public ResponseEntity<PageableCustom> getStudentList(@RequestParam Map<String, String> params) {
+    public ResponseEntity<PageableCustom> getUserDetailsList(@RequestParam Map<String, String> params) {
         return ResponseEntity.ok(usersService.findAllUsersDetail(params));
     }
 }

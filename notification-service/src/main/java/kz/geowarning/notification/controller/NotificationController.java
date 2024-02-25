@@ -39,23 +39,8 @@ public class NotificationController implements NotificationClient {
 
     @SneakyThrows
     @PostMapping("/notify-warning-realtime")
-    public ResponseEntity notifyWarningRealtime(
-            @RequestParam String email,
-            @RequestParam String firstName,
-            @RequestParam String lastName,
-            @RequestParam String locationName,
-            @RequestParam String count,
-            @RequestParam List<String> fireOccurrences
-    ) {
+    public ResponseEntity notifyWarningRealtime(@RequestBody RealTimeNotificationContentDTO contentDTO) {
         try {
-            RealTimeNotificationContentDTO contentDTO = new RealTimeNotificationContentDTO();
-            contentDTO.setEmail(email);
-            contentDTO.setFirstName(firstName);
-            contentDTO.setLastName(lastName);
-            contentDTO.setLocationName(locationName);
-            contentDTO.setCount(count);
-            contentDTO.setFireOccurrences(fireOccurrences);
-
             service.notifyRealtime(contentDTO);
         } catch (MessagingException e) {
             throw new RuntimeException(e);

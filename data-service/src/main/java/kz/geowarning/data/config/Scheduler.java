@@ -3,10 +3,12 @@ package kz.geowarning.data.config;
 import com.opencsv.exceptions.CsvException;
 import kz.geowarning.data.entity.Station;
 import kz.geowarning.data.repository.StationsRepository;
+import kz.geowarning.data.service.AlertService;
 import kz.geowarning.data.service.EgovFireReportService;
 import kz.geowarning.data.service.FireRTDataService;
 import kz.geowarning.data.service.MLDataService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,7 @@ public class Scheduler {
     private final EgovFireReportService egovFireReportService;
     private final MLDataService mlDataService;
     private final StationsRepository stationsRepository;
+    private final AlertService alertService;
 
     @Scheduled(cron = "0 0 */1 * * *")
     public void getActualFireData() throws IOException, CsvException {
@@ -36,5 +39,10 @@ public class Scheduler {
         for (Station station : stationsRepository.getAllStations()) {
             mlDataService.saveForecastByStation(station.getId());
         }
+    }
+
+    @Scheduled(cron = "0 */5 * * * *")
+    public void sendRealtimeAlert() throws JSONException, IOException {
+        alertService.alertRecipientsRealtime();
     }
 }

@@ -59,6 +59,10 @@ public class UsersService implements IUsersService {
         return usersRepository.findAll();
     }
 
+    public List<User> findAllEmailRecipients() throws DataAccessException {
+        return usersRepository.findAllEmailRecipients();
+    }
+
     @Override
     public Long getSizeEmployee() {
         return this.usersRepository.getTotalSizeEmployee();

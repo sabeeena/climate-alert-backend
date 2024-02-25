@@ -30,4 +30,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select count(c) from User c where c.role = 'ROLE_EMPLOYEE'")
     Long getTotalSizeEmployee();
 
+    @Query("select c from User c where c.active = true and c.notifyEmail = true and c.email is not null and c.locationId is not null")
+    List<User> findAllEmailRecipients();
+
 }

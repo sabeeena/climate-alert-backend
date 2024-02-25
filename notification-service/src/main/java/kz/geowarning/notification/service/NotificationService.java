@@ -80,17 +80,18 @@ public class NotificationService {
         Date currentDate = new Date();
         String currentDateTimeString = dateFormat.format(currentDate);
 
-        String message =  currentDateTimeString + "\n\n\n";
-        message += "Уважаемый(ая) " + contentDTO.getFirstName() + " " + contentDTO.getLastName() + ", \n";
-        message += "За последний час возле " + contentDTO.getLocationName() + "  было обнаружено " + contentDTO.getCount() + " пожаров.\n\n";
-        message += "Приблизительные местоположения:\n";
+        String message = "<span style=\"font-family: Arial; font-size: 16px;\"><u>" + currentDateTimeString + "</u><br><br><br>";
+        message += "Уважаемый(ая) <b>" + contentDTO.getFirstName() + " " + contentDTO.getLastName() + "</b>, <br>";
+        message += "За последний час возле " + contentDTO.getLocationName() + " было обнаружено <b>" + contentDTO.getCount() + "</b> пожаров.<br><br>";
+        message += "<u>Приблизительные местоположения:</u><br>";
         for (String row : contentDTO.getFireOccurrences()) {
-            message += row + "\n";
+            message += row + "<br>";
         }
-        message += "\nЕсли у вас есть какие-либо вопросы или требуется дополнительная информация, пожалуйста, ";
-        message += "свяжитесь с нашей службой поддержки.\n\n\n";
-        message += "С уважением,\n";
-        message += "Команда KazGeoWarning!\n\n";
+        message += "<br><br>Если у вас есть какие-либо вопросы или требуется дополнительная информация, пожалуйста, ";
+        message += "свяжитесь с нашей службой поддержки.<br><br>";
+        message += "С уважением,<br>";
+        message += "Команда <b>KazGeoWarning!</b><br><br>";
+        message += "</span>";
 
         AlertNotification alertNotification = new AlertNotification();
         alertNotification.setReceiverEmail(contentDTO.getEmail());
