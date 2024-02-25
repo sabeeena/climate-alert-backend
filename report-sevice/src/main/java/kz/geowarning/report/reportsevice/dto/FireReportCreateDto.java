@@ -20,4 +20,5 @@ public class FireReportCreateDto {
     double longitude;
     private Set<Editor> editors;
     private Long fireRTDataId;
+    private String region;
 }

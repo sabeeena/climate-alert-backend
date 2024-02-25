@@ -45,6 +45,7 @@ public class FireService {
         fireRealTimeReport.setVegetationInformation(savedVegetationInformation);
         fireRealTimeReport.setStatus(status);
         fireRealTimeReport.setFireArea(0);
+        fireRealTimeReport.setRegion(dto.getRegion());
         Set<Editor> editors = dto.getEditors();
         Set<Editor> savedEditors = new HashSet<>();
 
