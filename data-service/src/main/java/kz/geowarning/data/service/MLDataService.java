@@ -5,6 +5,7 @@ import kz.geowarning.data.entity.dto.ForecastDTO;
 import kz.geowarning.data.entity.dto.WeatherDTO;
 import kz.geowarning.data.entity.WeatherData;
 import kz.geowarning.data.repository.ForecastFireRepository;
+import kz.geowarning.data.repository.StationsRepository;
 import kz.geowarning.data.repository.WeatherRepository;
 import kz.geowarning.data.service.retrofit.MLService;
 import okhttp3.ResponseBody;
@@ -42,6 +43,9 @@ public class MLDataService {
 
     @Autowired
     private WeatherRepository weatherRepository;
+
+    @Autowired
+    private StationsRepository stationsRepository;
 
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -81,7 +85,7 @@ public class MLDataService {
         String dangerLevel = responseBody.string();
         WeatherData weatherData = weatherRepository.save(weather.get(0));
 
-        return new ForecastFireData(null, stationId, weatherData.getId(), dangerLevel, dateFormat.parse(dateFormat.format(new Date())));
+        return new ForecastFireData(null, stationsRepository.getReferenceById(stationId), weatherData, dangerLevel, dateFormat.parse(dateFormat.format(new Date())));
     }
 
     public ForecastFireData saveForecastByStation(String stationId) throws Exception {
