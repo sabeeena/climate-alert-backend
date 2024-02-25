@@ -15,4 +15,10 @@ public class RegionService {
         return regionRepository.save(region);
     }
 
+    public Region getRegion(String id) {
+        if (regionRepository.findById(id).isPresent()) {
+            return regionRepository.findById(id).get();
+        }
+        return null;
+    }
 }
