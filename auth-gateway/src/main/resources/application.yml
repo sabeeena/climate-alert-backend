@@ -14,9 +14,9 @@ spring:
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    password: AVNS_luzCQn9kr50xgAY0cew
+    password: AVNS_bmkQTY2BB21V77w1WnX
     username: doadmin
-    url: jdbc:postgresql://kazgeowarningdb-do-user-15510721-0.c.db.ondigitalocean.com:25060/defaultdb?currentSchema=auth&sslmode=require
+    url: jdbc:postgresql://kazgeowarning-do-user-16008876-0.c.db.ondigitalocean.com:25060/defaultdb?currentSchema=auth&sslmode=require
   jmx:
     enabled: false
   jpa:
