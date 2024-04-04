@@ -42,17 +42,8 @@ public class WeatherDataService {
 
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-//    @Autowired
-//    private WeatherDataRepository weatherDataRepository;
-
     @PostConstruct
     public void init() {
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(meteostatApiUrl)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//
-//        meteostatService = retrofit.create(MeteostatService.class);
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {

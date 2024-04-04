@@ -135,9 +135,9 @@ public class FireRTDataService {
                     fireData.getLatitude(), fireData.getLongitude()).getAdminDistrict());
 
             if (regions != null && !regions.isEmpty()) {
-                fireData.setRegionId(regions.get(0).getId());
+                fireData.setRegionId(regions.get(0));
             } else {
-                fireData.setRegionId(regionRepository.findByNameEngCaseInsensitive("Undetected Region").get(0).getId());
+                fireData.setRegionId(regionRepository.findByNameEngCaseInsensitive("Undetected Region").get(0));
             }
             dataList.add(fireData);
         }

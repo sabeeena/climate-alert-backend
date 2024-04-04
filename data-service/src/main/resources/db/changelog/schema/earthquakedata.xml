@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+	  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="Sabina" id="earthquakedata-1">
+        <createSequence incrementBy="1" sequenceName="earthquakedata_seq" startValue="1"/>
+    </changeSet>
+
+    <changeSet author="Sabina" id="earthquakedata-2">
+        <createTable tableName="earthquakedata">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="earthquakedataPK"/>
+            </column>
+            <column name="time" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="latitude" type="VARCHAR(256)"/>
+            <column name="longitude" type="VARCHAR(256)"/>
+            <column name="depth" type="VARCHAR(256)"/>
+            <column name="mag" type="VARCHAR(256)"/>
+            <column name="mag_type" type="VARCHAR(256)"/>
+            <column name="nst" type="VARCHAR(256)"/>
+            <column name="gap" type="VARCHAR(256)"/>
+            <column name="dmin" type="VARCHAR(256)"/>
+            <column name="rms" type="VARCHAR(256)"/>
+            <column name="net" type="VARCHAR(256)"/>
+            <column name="usgs_id" type="VARCHAR(256)"/>
+            <column name="updated" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="place" type="VARCHAR(256)"/>
+            <column name="type" type="VARCHAR(256)"/>
+            <column name="horizontal_error" type="VARCHAR(256)"/>
+            <column name="depth_error" type="VARCHAR(256)"/>
+            <column name="mag_error" type="VARCHAR(256)"/>
+            <column name="mag_nst" type="VARCHAR(256)"/>
+            <column name="status" type="VARCHAR(256)"/>
+            <column name="location_source" type="VARCHAR(256)"/>
+            <column name="mag_source" type="VARCHAR(256)"/>
+            <column name="region_id" type="VARCHAR(6)">
+                <constraints nullable="false" foreignKeyName="fk_earthquakedata_regions" references="regions(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

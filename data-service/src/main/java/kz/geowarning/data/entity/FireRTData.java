@@ -31,8 +31,9 @@ public class FireRTData {
     private String bright_ti5;
     private String frp;
     private String daynight;
-    @Column(name = "region_id", nullable = false)
-    private String regionId;
+    @ManyToOne
+    @JoinColumn(name = "region_id")
+    private Region regionId;
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "firertdata_seq")
     @SequenceGenerator(name = "firertdata_seq", allocationSize = 1, sequenceName = "firertdata_seq")
