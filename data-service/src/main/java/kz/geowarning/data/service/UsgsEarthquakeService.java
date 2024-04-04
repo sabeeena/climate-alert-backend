@@ -45,7 +45,7 @@ public class UsgsEarthquakeService {
 
     private UsgsService usgsService;
 
-    // It is now precise for now, will change to the valid one later
+    // It is not precise for now, will change to the valid one later
     private final String maxlatitude = "55.744785", minlatitude = "41.003595",
                          maxlongitude = "86.676809", minlongitude = "45.631890";
 
