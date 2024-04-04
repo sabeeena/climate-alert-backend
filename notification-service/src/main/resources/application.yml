@@ -1,0 +1,56 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: notification
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: update
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: AVNS_bmkQTY2BB21V77w1WnX
+    username: doadmin
+    url: jdbc:postgresql://kazgeowarning-do-user-16008876-0.c.db.ondigitalocean.com:25060/defaultdb?currentSchema=notification&sslmode=require
+  mail:
+    host: smtp.yandex.ru
+    port: 587
+    username: warningkz@yandex.ru
+    password: digndpxxoxbfgvga
+    from: warningkz@yandex.ru
+    protocol: smtp
+    tls: true
+    default-encoding: UTF-8
+    mime.charset: utf8
+    debug: true
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true
+      ssl.protocols: TLSv1.2
+      ssl.trust: smtp.yandex.ru
+
+eureka:
+  instance:
+    leaseRenewalIntervalInSeconds: 0
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+      registerWithEureka: true
+    enabled: true
+
+# Logging configuration
+logging:
+  level:
+    com.netflix.discovery.shared.resolver.aws.ConfigClusterResolver: WARN
+
+
+application:
+  link:
+    verification-link: http://localhost:8083/api/auth/authorize/confirm/
+java:
+  util:
+    logging:
+      ConsoleHandler:
+        level: ALL
