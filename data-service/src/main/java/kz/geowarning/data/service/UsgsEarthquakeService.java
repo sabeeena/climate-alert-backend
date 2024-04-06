@@ -5,6 +5,7 @@ import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
 import kz.geowarning.data.entity.EarthquakeData;
 import kz.geowarning.data.entity.Region;
+import kz.geowarning.data.entity.dto.EarthquakeDTO;
 import kz.geowarning.data.repository.EarthquakeDataRepository;
 import kz.geowarning.data.repository.RegionRepository;
 import kz.geowarning.data.service.retrofit.UsgsService;
@@ -23,8 +24,11 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,7 +107,7 @@ public class UsgsEarthquakeService {
 
                 if (i == 0 || i == 12) {
                     ZonedDateTime time = ZonedDateTime.parse(val.toString(), DateTimeFormatter.ISO_DATE_TIME);
-                    field.set(earthquakeData, time);
+                    field.set(earthquakeData, time.withZoneSameInstant(ZoneId.systemDefault()));
                 } else {
                     field.set(earthquakeData, val.toString());
                 }
@@ -123,6 +127,22 @@ public class UsgsEarthquakeService {
 
     private void saveData(List<EarthquakeData> data) {
         earthquakeDataRepository.saveAll(data);
+    }
+
+    public List<EarthquakeData> getByFilter(EarthquakeDTO earthquakeDTO) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd 00:00:00");
+        earthquakeDTO.setRegionId(earthquakeDTO.getRegionId() == null ? "0" : earthquakeDTO.getRegionId());
+        earthquakeDTO.setLatitude(earthquakeDTO.getLatitude() == null ? "0" : earthquakeDTO.getLatitude());
+        earthquakeDTO.setLongitude(earthquakeDTO.getLongitude() == null ? "0" : earthquakeDTO.getLongitude());
+        earthquakeDTO.setDateFrom(earthquakeDTO.getDateFrom() == null ? LocalDateTime.now().minus(1, ChronoUnit.MONTHS).format(formatter) : earthquakeDTO.getDateFrom());
+        earthquakeDTO.setDateTo(earthquakeDTO.getDateTo() == null ? LocalDateTime.now().format(formatter) : earthquakeDTO.getDateTo());
+        earthquakeDTO.setMagnitudeFrom(earthquakeDTO.getMagnitudeFrom() == null ? "0" : earthquakeDTO.getMagnitudeFrom());
+        earthquakeDTO.setMagnitudeTo(earthquakeDTO.getMagnitudeTo() == null ? "0" : earthquakeDTO.getMagnitudeTo());
+        earthquakeDTO.setDepthFrom(earthquakeDTO.getDepthFrom() == null ? "0" : earthquakeDTO.getDepthFrom());
+        earthquakeDTO.setDepthTo(earthquakeDTO.getDepthTo() == null ? "0" : earthquakeDTO.getDepthTo());
+
+        return earthquakeDataRepository.findByFilter(earthquakeDTO);
     }
 
 }
