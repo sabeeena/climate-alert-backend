@@ -156,11 +156,11 @@ public class AssignService {
         if (check(FireRealTimeReport.class, Long.parseLong(assign.getEntityId())) &&
                 FireRealTimeReport.class.toString().substring(FireRealTimeReport.class.toString().lastIndexOf(".") + 1).equals(assign.getEntityType())) {
             FireRealTimeReport fireRealTimeReport = fireRealTimeReportRepository.findById(Long.parseLong(assign.getEntityId())).orElseThrow(null);
-            if (Objects.equals(assignment.getName(), "Согласовать")) {
+            if (Objects.equals(assignment.getName(), "Approve")) {
                 fireRealTimeReport.setApprovalComment(comment);
                 Status status = statusRepository.findById(3L).orElse(null);
                 fireRealTimeReport.setStatus(status);
-            } else if (Objects.equals(assignment.getName(), "Корректировка")) {
+            } else if (Objects.equals(assignment.getName(), "Correction")) {
                 fireRealTimeReport.setApprovalComment(comment);
                 Status status = statusRepository.findById(4L).orElse(null);
                 fireRealTimeReport.setStatus(status);

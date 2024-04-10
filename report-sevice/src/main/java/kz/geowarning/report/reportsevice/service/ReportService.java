@@ -50,9 +50,6 @@ public class ReportService {
         if (lang.equals("ru")) {
             compileReport = JasperCompileManager.compileReport(resourceLoader.getResource(fireRealTimeOverall).getInputStream());
         }
-//        else {
-//            compileReport = JasperCompileManager.compileReport(resourceLoader.getResource(DENIAL_ACT_COUNTING_COMMITTEE_KZ).getInputStream());
-//        }
         InputStream imgInputStream = resourceLoader.getResource(coatOfArms).getInputStream();
         Map<String, Object> parameters = new HashMap<>();
         Connection conn = DriverManager.getConnection(databaseUrl, databaseLogin, databasePassword);

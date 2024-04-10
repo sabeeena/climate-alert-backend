@@ -21,7 +21,8 @@ public class ReportController {
 
     @GetMapping("/fire-real-time-overall")
     public ResponseEntity<?> realTimeOverall(@RequestParam Long reportId,
-                                                   @RequestParam String lang, @RequestParam String type) throws JRException, SQLException, IOException, IllegalAccessException {
+                                                   @RequestParam String lang, @RequestParam String type) throws JRException,
+                                                                        SQLException, IOException, IllegalAccessException {
         byte[] bytes = reportService.exportReportFireRealTimeOverall(reportId, lang);
         ByteArrayResource resource = new ByteArrayResource(bytes);
 

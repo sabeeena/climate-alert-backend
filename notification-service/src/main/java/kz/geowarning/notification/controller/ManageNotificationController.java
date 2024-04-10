@@ -22,8 +22,8 @@ public class ManageNotificationController {
 
 
     @GetMapping("/alert")
-    public ResponseEntity<List<AlertNotification>> getAllAlertNotifications() {
-        List<AlertNotification> alertNotifications = manageNotificationService.getAllAlertNotifications();
+    public ResponseEntity<List<AlertNotification>> getAllAlertNotifications(@RequestParam String email) {
+        List<AlertNotification> alertNotifications = manageNotificationService.getAllAlertNotifications(email);
         return ResponseEntity.ok(alertNotifications);
     }
 

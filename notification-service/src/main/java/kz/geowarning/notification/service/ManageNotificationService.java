@@ -46,8 +46,8 @@ public class ManageNotificationService {
         reportNotificationRepository.save(reportNotification);
     }
 
-    public List<AlertNotification> getAllAlertNotifications() {
-        return alertNotificationRepository.findAll();
+    public List<AlertNotification> getAllAlertNotifications(String email) {
+        return alertNotificationRepository.findByReceiverEmail(email);
     }
 
     public List<ReportNotification> getAllReportNotifications() {

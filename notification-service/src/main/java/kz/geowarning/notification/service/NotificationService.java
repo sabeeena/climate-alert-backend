@@ -209,9 +209,9 @@ public class NotificationService {
     private String generateReportSubjectAdmin(String type) {
         String message = "empty something is wrong";
 
-        if(Objects.equals(type, "Согласовать")){
+        if(Objects.equals(type, "Approve")){
             return "Успешное согласование репорта.\n";
-        } else if(Objects.equals(type, "Корректировка")) {
+        } else if(Objects.equals(type, "Correction")) {
             return "Возврат на корректировку репорта.\n";
         }
 
@@ -221,14 +221,14 @@ public class NotificationService {
     public String generateReportMessageAdmin(String type, ReportNotificationDTO reportNotificationDTO){
         String message = "empty something is wrong";
 
-        if(Objects.equals(type, "Согласовать")){
+        if(Objects.equals(type, "Approve")){
             message = "Хочу сообщить, что отчет был успешно согласован от имени администратора.\n";
-        } else if(Objects.equals(type, "Корректировка")) {
+        } else if(Objects.equals(type, "Correction")) {
             message = "Хочу сообщить, что отчет был отправлен на корректировку.\n";
         }
         ReportNotification reportNotification = new ReportNotification();
-        reportNotification.setReceiverEmail(reportNotificationDTO.getReceiverEmail());
-        reportNotification.setSenderEmail(reportNotificationDTO.getSenderEmail());
+        reportNotification.setSenderEmail(reportNotificationDTO.getReceiverEmail());
+        reportNotification.setReceiverEmail(reportNotificationDTO.getSenderEmail());
         reportNotification.setText(message);
         reportNotification.setTypeStatus("согласование");
         reportNotification.setReportType(reportNotificationDTO.getReportType());
