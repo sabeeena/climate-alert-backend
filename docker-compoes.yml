@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  data-service:
+    build: data-service/.
+    restart: on-failure
+    ports:
+      - 8084:8084
+  news-service:
+    build: news-service/.
+    restart: on-failure
+    ports:
+      - 8058:8058
+  notification-service:
+    build: notification-service/.
+    restart: on-failure
+    ports:
+      - 8083:8083
+  report-service:
+    build: report-service/.
+    restart: on-failure
+    ports:
+      - 8086:8086
+  auth-service:
+    build: auth-service/.
+    restart: on-failure
+    ports:
+      - 8011:8011
+    environment:
+      DATA_SERVICE: http://data-service:8084
+      REPORT_SERVICE: http://report-service:8086
+      NEWS_SERVICE: http://news-service:8058
+      NOTIFICATION_SERVICE: http://notication-service:8083
