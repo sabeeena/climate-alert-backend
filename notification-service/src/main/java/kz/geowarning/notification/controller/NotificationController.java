@@ -1,6 +1,5 @@
 package kz.geowarning.notification.controller;
 
-import kz.geowarning.common.api.NotificationClient;
 import kz.geowarning.notification.dto.ForecastNotificationContentDTO;
 import kz.geowarning.notification.dto.RealTimeNotificationContentDTO;
 import kz.geowarning.notification.dto.ReportNotificationDTO;
@@ -18,7 +17,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping(RestConstants.BASE_REST + "/service")
-public class NotificationController implements NotificationClient {
+public class NotificationController {
 
     private final NotificationService service;
 

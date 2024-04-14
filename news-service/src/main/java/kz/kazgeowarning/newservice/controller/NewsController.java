@@ -1,6 +1,7 @@
 package kz.kazgeowarning.newservice.controller;
 
 import kz.kazgeowarning.newservice.entity.News;
+import kz.kazgeowarning.newservice.entity.NewsFilterDTO;
 import kz.kazgeowarning.newservice.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,16 @@ public class NewsController {
     @GetMapping
     public List<News> getAllNews() {
         return newsService.getAllNews();
+    }
+
+    @GetMapping("/get-two-last-news")
+    public List<News> geTwoLastNews() {
+        return newsService.getTwoLastNews();
+    }
+
+    @PostMapping("/search")
+    public List<News> searchByDate(@RequestBody NewsFilterDTO newsDTO) {
+        return newsService.searchByDate(newsDTO);
     }
 
     @GetMapping("/{id}")

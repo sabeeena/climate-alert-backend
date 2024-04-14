@@ -1,6 +1,5 @@
 package kz.geowarning.notification.service;
 
-import kz.geowarning.common.exceptions.NotFoundException;
 import kz.geowarning.notification.dto.NotificationDTO;
 import kz.geowarning.notification.dto.ReportNotificationDTO;
 import kz.geowarning.notification.entity.AlertNotification;
@@ -30,17 +29,17 @@ public class ManageNotificationService {
         reportNotificationRepository.deleteById(id);
     }
 
-    public void markAlertAsSeen(Long id) throws NotFoundException {
+    public void markAlertAsSeen(Long id) throws RuntimeException {
         AlertNotification alertNotification = alertNotificationRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Alert Notification not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Alert Notification not found with id: " + id));
 
         alertNotification.setSeen(true);
         alertNotificationRepository.save(alertNotification);
     }
 
-    public void markReportAsSeen(Long id) throws NotFoundException {
+    public void markReportAsSeen(Long id) throws RuntimeException {
         ReportNotification reportNotification = reportNotificationRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Report Notification not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Report Notification not found with id: " + id));
 
         reportNotification.setSeen(true);
         reportNotificationRepository.save(reportNotification);
@@ -92,12 +91,12 @@ public class ManageNotificationService {
         return notifications;
     }
 
-    public NotificationDTO getReportNotificationById(Long id, String notificationType) throws NotFoundException {
+    public NotificationDTO getReportNotificationById(Long id, String notificationType) throws RuntimeException {
         ReportNotification reportNotification = null;
         AlertNotification alertNotification = null;
         if (Objects.equals(notificationType, "report")){
             reportNotification = reportNotificationRepository.findById(id)
-                    .orElseThrow(() -> new NotFoundException("Report Notification not found with id: " + id));
+                    .orElseThrow(() -> new RuntimeException("Report Notification not found with id: " + id));
             NotificationDTO dto = new NotificationDTO();
             dto.setId(reportNotification.getId());
             dto.setReceiverEmail(reportNotification.getReceiverEmail());
@@ -111,7 +110,7 @@ public class ManageNotificationService {
             return dto;
         } else {
             alertNotification = alertNotificationRepository.findById(id)
-                    .orElseThrow(() -> new NotFoundException("Report Notification not found with id: " + id));
+                    .orElseThrow(() -> new RuntimeException("Report Notification not found with id: " + id));
             NotificationDTO dto = new NotificationDTO();
             dto.setId(alertNotification.getId());
             dto.setReceiverEmail(alertNotification.getReceiverEmail());

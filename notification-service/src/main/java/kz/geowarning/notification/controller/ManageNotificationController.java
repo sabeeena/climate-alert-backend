@@ -1,6 +1,5 @@
 package kz.geowarning.notification.controller;
 
-import kz.geowarning.common.exceptions.NotFoundException;
 import kz.geowarning.notification.dto.NotificationDTO;
 import kz.geowarning.notification.entity.AlertNotification;
 import kz.geowarning.notification.entity.ReportNotification;
@@ -40,7 +39,7 @@ public class ManageNotificationController {
     }
 
     @GetMapping("/get-by-id")
-    public NotificationDTO getReportNotificationById(@RequestParam Long id, String notificationType) throws NotFoundException {
+    public NotificationDTO getReportNotificationById(@RequestParam Long id, String notificationType) throws RuntimeException, RuntimeException {
         return ResponseEntity.ok(manageNotificationService.getReportNotificationById(id, notificationType)).getBody();
     }
 
@@ -60,14 +59,14 @@ public class ManageNotificationController {
 
     // Mark alert as seen by ID
     @PutMapping("/alert/seen/{id}")
-    public ResponseEntity<String> markAlertAsSeen(@PathVariable Long id) throws NotFoundException {
+    public ResponseEntity<String> markAlertAsSeen(@PathVariable Long id) throws RuntimeException {
         manageNotificationService.markAlertAsSeen(id);
         return ResponseEntity.ok("Alert Notification marked as seen");
     }
 
     // Mark report as seen by ID
     @PutMapping("/report/seen/{id}")
-    public ResponseEntity<String> markReportAsSeen(@PathVariable Long id) throws NotFoundException {
+    public ResponseEntity<String> markReportAsSeen(@PathVariable Long id) throws RuntimeException {
         manageNotificationService.markReportAsSeen(id);
         return ResponseEntity.ok("Report Notification marked as seen");
     }
