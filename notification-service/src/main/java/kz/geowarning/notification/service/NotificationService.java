@@ -1,19 +1,24 @@
 package kz.geowarning.notification.service;
 
+import com.google.firebase.messaging.FirebaseMessagingException;
 import kz.geowarning.notification.dto.ForecastNotificationContentDTO;
 import kz.geowarning.notification.dto.RealTimeNotificationContentDTO;
 import kz.geowarning.notification.dto.ReportNotificationDTO;
 import kz.geowarning.notification.entity.AlertNotification;
+import kz.geowarning.notification.entity.MobileDeviceToken;
 import kz.geowarning.notification.entity.ReportNotification;
 import kz.geowarning.notification.repository.AlertNotificationRepository;
+import kz.geowarning.notification.repository.MobileDeviceTokenRepository;
 import kz.geowarning.notification.repository.ReportNotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -24,23 +29,46 @@ public class NotificationService {
 
     @Value("${application.link.verification-link}")
     private String verificationLink;
-
     @Autowired
     private AlertNotificationRepository alertNotificationRepository;
-
     @Autowired
     private ReportNotificationRepository reportNotificationRepository;
+    @Autowired
+    private PushNotificationService pushNotificationService;
+    @Autowired
+    private MobileDeviceTokenRepository mobileDeviceTokenRepository;
 
-    public void notifyWarning(String warningType, String userEmail, String region, String dangerPossibility) throws MessagingException {
-        iEmailService.sendMail(userEmail, generateWarningSubject(region, dangerPossibility), generateWarningMessage(region, userEmail, warningType, dangerPossibility));
+    public void notifyWarning(String warningType, String userEmail, String region, String dangerPossibility) throws MessagingException, IOException, FirebaseMessagingException {
+        String body = generateWarningMessage(region, userEmail, warningType, dangerPossibility);
+        iEmailService.sendMail(userEmail, generateWarningSubject(region, dangerPossibility), body);
+        sendNotificationMobile(userEmail, body);
     }
 
-    public void notifyRealtime(RealTimeNotificationContentDTO contentDTO) throws MessagingException {
-        iEmailService.sendMail(contentDTO.getEmail(), generateWarningSubjectRealtime(contentDTO), generateWarningMessageRealTime(contentDTO));
+    public void sendNotificationMobile(String userEmail, String body) throws IOException, FirebaseMessagingException {
+        List<MobileDeviceToken> mobileDeviceTokens = mobileDeviceTokenRepository.findAll();
+        for(MobileDeviceToken mobileDeviceToken: mobileDeviceTokens) {
+            if(Objects.equals(mobileDeviceToken.getUserEmail(), userEmail)) {
+                pushNotificationService.sendPushNotification(
+                        mobileDeviceToken.getDeviceToken(),
+                        "Kazgeowarning",
+                        body
+                );
+            }
+
+        }
+//        pushNotificationService.sendMobileNotification();
     }
 
-    public void notifyForecast(ForecastNotificationContentDTO contentDTO) throws MessagingException {
+    public void notifyRealtime(RealTimeNotificationContentDTO contentDTO) throws MessagingException, IOException, FirebaseMessagingException {
+        String body = generateWarningMessageRealTime(contentDTO);
+        iEmailService.sendMail(contentDTO.getEmail(), generateWarningSubjectRealtime(contentDTO), body);
+        sendNotificationMobile(contentDTO.getEmail(), body);
+    }
+
+    public void notifyForecast(ForecastNotificationContentDTO contentDTO) throws MessagingException, IOException, FirebaseMessagingException {
+        String body = generateWarningMessageForecast(contentDTO);
         iEmailService.sendMail(contentDTO.getEmail(), generateWarningSubjectForecast(contentDTO), generateWarningMessageForecast(contentDTO));
+        sendNotificationMobile(contentDTO.getEmail(), body);
     }
 
     public String generateWarningMessage(String region, String userEmail, String warningType, String dangerPossibility){
@@ -93,11 +121,25 @@ public class NotificationService {
         message += "Команда <b>KazGeoWarning!</b><br><br>";
         message += "</span>";
 
+
+        String saveMessage = currentDateTimeString + ". ";
+        saveMessage += "Уважаемый(ая) " + contentDTO.getFirstName() + " " + contentDTO.getLastName() + ", ";
+        saveMessage += "За последний час возле " + contentDTO.getLocationName() + " было обнаружено " + contentDTO.getCount() + " пожаров. ";
+        saveMessage += "Приблизительные местоположения: ";
+        for (String row : contentDTO.getFireOccurrences()) {
+            saveMessage += row + " ";
+        }
+        saveMessage += "Если у вас есть какие-либо вопросы или требуется дополнительная информация, пожалуйста, ";
+        saveMessage += "свяжитесь с нашей службой поддержки. ";
+        saveMessage += "С уважением, ";
+        saveMessage += "Команда KazGeoWarning! ";
+
+
         AlertNotification alertNotification = new AlertNotification();
         alertNotification.setReceiverEmail(contentDTO.getEmail());
         alertNotification.setSenderEmail("KazGeoWarning");
         alertNotification.setWarningType("real-time fire");
-        alertNotification.setText(message);
+        alertNotification.setText(saveMessage);
         alertNotification.setSeen(false);
         alertNotificationRepository.save(alertNotification);
         return message;
@@ -125,11 +167,20 @@ public class NotificationService {
         message += "Команда <b>KazGeoWarning!</b><br><br>";
         message += "</span>";
 
+
+        String saveMessage = currentDateTimeString + ".  ";
+        saveMessage += "Уважаемый(ая) " + contentDTO.getFirstName() + " " + contentDTO.getLastName() + ", ";
+        saveMessage += "В пределах региона " + contentDTO.getLocationName() + " был обнаружен уровень опасности: " + contentDTO.getLevel() + ".  ";
+        saveMessage += "Если у вас есть какие-либо вопросы или требуется дополнительная информация, пожалуйста, ";
+        saveMessage += "свяжитесь с нашей службой поддержки.  ";
+        saveMessage += "С уважением, ";
+        saveMessage += "Команда KazGeoWarning!  ";
+
         AlertNotification alertNotification = new AlertNotification();
         alertNotification.setReceiverEmail(contentDTO.getEmail());
         alertNotification.setSenderEmail("KazGeoWarning");
         alertNotification.setWarningType("forecast fire");
-        alertNotification.setText(message);
+        alertNotification.setText(saveMessage);
         alertNotification.setSeen(false);
         alertNotificationRepository.save(alertNotification);
         return message;
@@ -238,12 +289,16 @@ public class NotificationService {
         return message;
     }
 
-    public void reportNotify(ReportNotificationDTO reportNotificationDTO) throws MessagingException {
+    public void reportNotify(ReportNotificationDTO reportNotificationDTO) throws MessagingException, IOException, FirebaseMessagingException {
         if (reportNotificationDTO.isSenderAdmin()) {
-            iEmailService.sendMail(reportNotificationDTO.getReceiverEmail(), generateReportSubjectAdmin(reportNotificationDTO.getTypeStatus()), generateReportMessageAdmin(reportNotificationDTO.getTypeStatus(), reportNotificationDTO));
+            String body = generateReportMessageAdmin(reportNotificationDTO.getTypeStatus(), reportNotificationDTO);
+            iEmailService.sendMail(reportNotificationDTO.getReceiverEmail(), generateReportSubjectAdmin(reportNotificationDTO.getTypeStatus()), body);
+            sendNotificationMobile(reportNotificationDTO.getReceiverEmail(), body);
         }
         else {
+            String body = generateReportMessage(reportNotificationDTO);
             iEmailService.sendMail(reportNotificationDTO.getReceiverEmail(), generateReportSubject(), generateReportMessage(reportNotificationDTO));
+            sendNotificationMobile(reportNotificationDTO.getReceiverEmail(), body);
         }
     }
 }

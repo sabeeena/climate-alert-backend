@@ -1,16 +1,21 @@
 package kz.geowarning.notification.controller;
 
+import com.google.firebase.messaging.FirebaseMessagingException;
+import kz.geowarning.notification.dto.DeviceTokenDTO;
 import kz.geowarning.notification.dto.NotificationDTO;
 import kz.geowarning.notification.entity.AlertNotification;
+import kz.geowarning.notification.entity.MobileDeviceToken;
 import kz.geowarning.notification.entity.ReportNotification;
 import kz.geowarning.notification.repository.AlertNotificationRepository;
 import kz.geowarning.notification.repository.ReportNotificationRepository;
 import kz.geowarning.notification.service.ManageNotificationService;
+import kz.geowarning.notification.service.PushNotificationService;
 import kz.geowarning.notification.util.RestConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -18,12 +23,23 @@ import java.util.List;
 public class ManageNotificationController {
     @Autowired
     private ManageNotificationService manageNotificationService;
+    @Autowired
+    private PushNotificationService pushNotificationService;
 
 
     @GetMapping("/alert")
     public ResponseEntity<List<AlertNotification>> getAllAlertNotifications(@RequestParam String email) {
         List<AlertNotification> alertNotifications = manageNotificationService.getAllAlertNotifications(email);
         return ResponseEntity.ok(alertNotifications);
+    }
+
+    @PostMapping("/save-device-token")
+    public ResponseEntity<MobileDeviceToken> saveToken(@RequestBody DeviceTokenDTO deviceTokenDTO) {
+        return ResponseEntity.ok(pushNotificationService.saveToken(deviceTokenDTO));
+    }
+    @PostMapping("/send-mobile-notification")
+    public ResponseEntity<?> sendMobileNotification() throws FirebaseMessagingException, IOException {
+        return ResponseEntity.ok(pushNotificationService.sendMobileNotification());
     }
 
     @GetMapping("/report")
