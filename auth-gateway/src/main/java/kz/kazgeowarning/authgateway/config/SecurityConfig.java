@@ -65,6 +65,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/oauth2/**",
                         "/api/news/**",
                         "/api/public/**",
+                        "/api/notification/service/save-device-token",
+                        "/api/notification/service/send-mobile-notification",
                         "/api/data/RTData/**",
                         "/api/data/RTData/getByFilter",
                         "/api/data/ForecastData/**"
