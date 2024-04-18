@@ -31,14 +31,6 @@ spring:
       ssl.protocols: TLSv1.2
       ssl.trust: smtp.yandex.ru
 
-eureka:
-  instance:
-    leaseRenewalIntervalInSeconds: 0
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka
-      registerWithEureka: true
-    enabled: true
 
 # Logging configuration
 logging:
