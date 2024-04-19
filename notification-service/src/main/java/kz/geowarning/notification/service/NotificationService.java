@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -99,6 +100,7 @@ public class NotificationService {
         alertNotification.setSeen(false);
         alertNotification.setRegion(region);
         alertNotification.setDangerPossibility(dangerPossibility);
+        alertNotification.setSentTime(LocalDateTime.now());
         alertNotificationRepository.save(alertNotification);
         return message;
     }
@@ -141,6 +143,7 @@ public class NotificationService {
         alertNotification.setWarningType("real-time fire");
         alertNotification.setText(saveMessage);
         alertNotification.setSeen(false);
+        alertNotification.setSentTime(LocalDateTime.now());
         alertNotificationRepository.save(alertNotification);
         return message;
     }
@@ -182,6 +185,7 @@ public class NotificationService {
         alertNotification.setWarningType("forecast fire");
         alertNotification.setText(saveMessage);
         alertNotification.setSeen(false);
+        alertNotification.setSentTime(LocalDateTime.now());
         alertNotificationRepository.save(alertNotification);
         return message;
     }
@@ -253,6 +257,7 @@ public class NotificationService {
         reportNotification.setReportType(reportNotificationDTO.getReportType());
         reportNotification.setReportId(reportNotificationDTO.getReportId());
         reportNotification.setSeen(false);
+        reportNotification.setSentTime(LocalDateTime.now());
         reportNotificationRepository.save(reportNotification);
         return message;
     }
@@ -285,6 +290,7 @@ public class NotificationService {
         reportNotification.setReportType(reportNotificationDTO.getReportType());
         reportNotification.setReportId(reportNotificationDTO.getReportId());
         reportNotification.setSeen(false);
+        reportNotification.setSentTime(LocalDateTime.now());
         reportNotificationRepository.save(reportNotification);
         return message;
     }

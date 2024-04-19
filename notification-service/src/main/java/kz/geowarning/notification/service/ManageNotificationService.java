@@ -9,9 +9,8 @@ import kz.geowarning.notification.repository.ReportNotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 public class ManageNotificationService {
@@ -70,6 +69,7 @@ public class ManageNotificationService {
             dto.setDangerPossibility(alert.getDangerPossibility());
             dto.setSeen(alert.isSeen());
             dto.setNotificationType("alert");
+            dto.setSentTime(alert.getSentTime());
             notifications.add(dto);
         });
 
@@ -85,8 +85,28 @@ public class ManageNotificationService {
             dto.setReportId(report.getReportId());
             dto.setSeen(report.isSeen());
             dto.setNotificationType("report");
+            dto.setSentTime(report.getSentTime());
             notifications.add(dto);
         });
+
+        Comparator<NotificationDTO> comparator = new Comparator<NotificationDTO>() {
+            @Override
+            public int compare(NotificationDTO n1, NotificationDTO n2) {
+                LocalDateTime time1 = n1.getSentTime();
+                LocalDateTime time2 = n2.getSentTime();
+                if (time1 == null && time2 == null) {
+                    return 0; // Оба времени равны (оба null)
+                } else if (time1 == null) {
+                    return 1; // n1 после n2, так как time1 null
+                } else if (time2 == null) {
+                    return -1; // n2 после n1, так как time2 null
+                } else {
+                    return time2.compareTo(time1);
+                }
+            }
+        };
+
+        Collections.sort(notifications, comparator);
 
         return notifications;
     }
@@ -106,6 +126,7 @@ public class ManageNotificationService {
             dto.setReportType(reportNotification.getReportType());
             dto.setReportId(reportNotification.getReportId());
             dto.setSeen(reportNotification.isSeen());
+            dto.setSentTime(reportNotification.getSentTime());
             dto.setNotificationType("report");
             return dto;
         } else {
@@ -119,6 +140,7 @@ public class ManageNotificationService {
             dto.setRegion(alertNotification.getRegion());
             dto.setDangerPossibility(alertNotification.getDangerPossibility());
             dto.setSeen(alertNotification.isSeen());
+            dto.setSentTime(alertNotification.getSentTime());
             dto.setNotificationType("alert");
             return dto;
         }

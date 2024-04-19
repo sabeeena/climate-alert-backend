@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -25,4 +27,5 @@ public class AlertNotification {
     private String warningType;
     private String region;
     private String dangerPossibility;
+    private LocalDateTime sentTime;
 }

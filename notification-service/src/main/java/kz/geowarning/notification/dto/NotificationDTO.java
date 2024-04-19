@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -22,4 +25,5 @@ public class NotificationDTO {
     private Long reportId;
     private boolean seen;
     private String notificationType;
+    private LocalDateTime sentTime;
 }
