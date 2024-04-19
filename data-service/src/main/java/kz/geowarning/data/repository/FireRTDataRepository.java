@@ -38,12 +38,12 @@ public interface FireRTDataRepository extends JpaRepository<FireRTData, Long> {
             "(CAST(:#{#fireDataDTO.latitude} AS DECIMAL) - 0.270) <= CAST(data.firertdata.latitude AS DECIMAL)) " +
             "AND (:#{#fireDataDTO.latitude} = '0' OR " +
             "CAST(data.firertdata.latitude AS DECIMAL) <= " +
-            "CAST(:#{#fireDataDTO.latitude} AS DECIMAL)) " +
+            "(CAST(:#{#fireDataDTO.latitude} AS DECIMAL)) + 0.270) " +
             "AND (:#{#fireDataDTO.longitude} = '0' OR " +
             "(CAST(:#{#fireDataDTO.longitude} AS DECIMAL) - 0.270) <= CAST(data.firertdata.longitude AS DECIMAL)) " +
             "AND (:#{#fireDataDTO.longitude} = '0' OR " +
             "CAST(data.firertdata.longitude AS DECIMAL) <= " +
-            "CAST(:#{#fireDataDTO.longitude} AS DECIMAL)) " +
+            "(CAST(:#{#fireDataDTO.longitude} AS DECIMAL)) + 0.270) " +
             "AND (:#{#fireDataDTO.regionId} = '0' OR " +
             "CAST(:#{#fireDataDTO.regionId} AS VARCHAR) = data.firertdata.region_id) " +
             "AND (:#{#fireDataDTO.confidence} = '0' OR " +

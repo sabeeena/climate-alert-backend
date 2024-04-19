@@ -20,17 +20,17 @@ public interface ForecastFireRepository extends JpaRepository<ForecastFireData, 
             "sin(radians(CAST(s.latitude AS DECIMAL))))) AS distance " +
             "FROM data.forecastfiredata " +
             "JOIN data.stations s ON data.forecastfiredata.station_id = s.id " +
-//            "WHERE (:#{#fireDataDTO.latitude} = '0' OR " +
-//            "(CAST(:#{#fireDataDTO.latitude} AS DECIMAL) - 0.270) <= CAST(s.latitude AS DECIMAL)) " +
-//            "AND (:#{#fireDataDTO.latitude} = '0' OR " +
-//            "CAST(s.latitude AS DECIMAL) <= " +
-//            "CAST(:#{#fireDataDTO.latitude} AS DECIMAL)) " +
-//            "AND (:#{#fireDataDTO.longitude} = '0' OR " +
-//            "(CAST(:#{#fireDataDTO.longitude} AS DECIMAL) - 0.270) <= CAST(s.longitude AS DECIMAL)) " +
-//            "AND (:#{#fireDataDTO.longitude} = '0' OR " +
-//            "CAST(s.longitude AS DECIMAL) <= " +
-//            "CAST(:#{#fireDataDTO.longitude} AS DECIMAL)) " +
-            "WHERE (:#{#fireDataDTO.regionId} = '0' OR " +
+            "WHERE (:#{#fireDataDTO.latitude} = '0' OR " +
+            "(CAST(:#{#fireDataDTO.latitude} AS DECIMAL) - 0.270) <= CAST(s.latitude AS DECIMAL)) " +
+            "AND (:#{#fireDataDTO.latitude} = '0' OR " +
+            "CAST(s.latitude AS DECIMAL) <= " +
+            "(CAST(:#{#fireDataDTO.latitude} AS DECIMAL)) + 0.270) " +
+            "AND (:#{#fireDataDTO.longitude} = '0' OR " +
+            "(CAST(:#{#fireDataDTO.longitude} AS DECIMAL) - 0.270) <= CAST(s.longitude AS DECIMAL)) " +
+            "AND (:#{#fireDataDTO.longitude} = '0' OR " +
+            "CAST(s.longitude AS DECIMAL) <= " +
+            "(CAST(:#{#fireDataDTO.longitude} AS DECIMAL)) + 0.270) " +
+            "AND (:#{#fireDataDTO.regionId} = '0' OR " +
             "CAST(:#{#fireDataDTO.regionId} AS VARCHAR) = s.region_id) " +
             "AND (:#{#fireDataDTO.dateFrom} = '0' OR " +
             "data.forecastfiredata.time >= CAST(:#{#fireDataDTO.dateFrom} AS TIMESTAMP)) " +
