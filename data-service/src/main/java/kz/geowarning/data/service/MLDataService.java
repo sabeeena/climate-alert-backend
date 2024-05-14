@@ -60,12 +60,18 @@ public class MLDataService {
     }
 
     public ForecastFireData getForecastByStation(String stationId) throws Exception {
-        LocalDateTime currentDate = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime hourAgo = now.minusHours(1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter hourFormatter = DateTimeFormatter.ofPattern("HH");
 
-        List<WeatherData> weather = weatherDataService.getHourlyDataByStationId(new WeatherDTO(stationId, currentDate.format(formatter),
-                                                                    currentDate.format(formatter), currentDate.format(hourFormatter)));
+        List<WeatherData> weather = weatherDataService.getHourlyDataByStationId(new WeatherDTO(stationId, hourAgo.format(formatter),
+                hourAgo.format(formatter), now.format(hourFormatter)));
+
+        if (weather.isEmpty()) {
+            weather = weatherDataService.getHourlyDataByStationId(new WeatherDTO(stationId, hourAgo.format(formatter),
+                    hourAgo.format(formatter), hourAgo.format(hourFormatter)));
+        }
 
         if (weather.isEmpty()) {
             throw new Exception("Couldn't Retrieve Weather Data For The Station");
@@ -78,14 +84,14 @@ public class MLDataService {
 
         if (!response.isSuccessful()) {
             throw new IOException(response.errorBody() != null
-                    ? response.errorBody().string() : "Unknown error");
+                    ? response.errorBody().string() : "ML Service Unavailable");
         }
 
         ResponseBody responseBody = response.body();
         String dangerLevel = responseBody.string();
         WeatherData weatherData = weatherRepository.save(weather.get(0));
 
-        return new ForecastFireData(null, stationsRepository.getReferenceById(stationId), weatherData, dangerLevel, dateFormat.parse(dateFormat.format(new Date())));
+        return new ForecastFireData(null, stationsRepository.getStationById(stationId).get(), weatherData, dangerLevel, dateFormat.parse(dateFormat.format(new Date())));
     }
 
     public ForecastFireData saveForecastByStation(String stationId) throws Exception {
