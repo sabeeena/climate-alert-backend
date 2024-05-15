@@ -12,6 +12,7 @@ import kz.geowarning.notification.repository.MobileDeviceTokenRepository;
 import kz.geowarning.notification.repository.ReportNotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -38,6 +39,18 @@ public class NotificationService {
     private PushNotificationService pushNotificationService;
     @Autowired
     private MobileDeviceTokenRepository mobileDeviceTokenRepository;
+    @Autowired
+    private SMSService smsService;
+
+    public ResponseEntity sendSMSNotification(String recipient, String text) {
+        try {
+            return ResponseEntity.ok()
+                    .body(smsService.sendSMSMessage(recipient, text));
+        } catch (IOException e) {
+            return ResponseEntity.badRequest()
+                    .body("Year of birth cannot be in the future");
+        }
+    }
 
     public void notifyWarning(String warningType, String userEmail, String region, String dangerPossibility) throws MessagingException, IOException, FirebaseMessagingException {
         String body = generateWarningMessage(region, userEmail, warningType, dangerPossibility);

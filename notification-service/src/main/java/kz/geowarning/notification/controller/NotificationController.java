@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
-import java.util.List;
 
 @RestController
 @Slf4j
@@ -79,6 +78,12 @@ public class NotificationController {
             log.error("Error occurred while verifying email: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Email verification failed.");
         }
+    }
+
+    @SneakyThrows
+    @PostMapping("/sendSms")
+    public ResponseEntity sendSMS(@RequestParam String recipient, String text) {
+        return service.sendSMSNotification(recipient, text);
     }
 }
 //http://localhost:8083/api/notification/service/notify-warning?warningType=earthquake&userEmail=adilbayevameruert@gmail.com&region=almaty&dangerPossibility=123

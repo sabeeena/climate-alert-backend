@@ -46,3 +46,8 @@ java:
     logging:
       ConsoleHandler:
         level: ALL
+
+api:
+  mobizon:
+    url: ${MOBIZON_URL:https://api.mobizon.kz/service/}
+    key: ${MOBIZON_API_KEY:kz57d3aa7bbdb4dc91cdb118b3efd2d55ca08be8a73c6d6e3c1af60909b2fb1d1b330f}
