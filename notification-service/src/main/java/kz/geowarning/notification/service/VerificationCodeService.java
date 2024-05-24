@@ -25,7 +25,7 @@ public class VerificationCodeService {
                 LocalDateTime.now().minus(20, ChronoUnit.MINUTES));
     }
 
-    public Optional<VerificationCode> getActiveCode(String phoneNumber) {
+    public List<VerificationCode> getActiveCode(String phoneNumber) {
         return verificationCodeRepository.findActiveCodeByPhone(phoneNumber);
     }
 

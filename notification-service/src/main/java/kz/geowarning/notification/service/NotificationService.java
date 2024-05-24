@@ -13,12 +13,14 @@ import kz.geowarning.notification.repository.MobileDeviceTokenRepository;
 import kz.geowarning.notification.repository.ReportNotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -61,21 +63,29 @@ public class NotificationService {
         }
     }
 
-    public void sendVerificationCode(String phoneNumber) {
+    public ResponseEntity<String> sendVerificationCode(String phoneNumber) throws Exception {
         verificationCodeService.disableAllOverdueCodesByPhone(phoneNumber);
         String code;
         if (verificationCodeService.getActiveCode(phoneNumber).isEmpty()) {
             code = generateCode();
+            VerificationCode verificationCode = new VerificationCode();
+            verificationCode.setPhoneNumber(phoneNumber);
+            verificationCode.setCode(code);
+            verificationCode.setCreateDate(LocalDateTime.now());
+            verificationCode.setActive(true);
+            verificationCodeService.saveVerificationCode(verificationCode);
         } else {
-            code = verificationCodeService.getActiveCode(phoneNumber).get().getCode();
+            VerificationCode activeCode = verificationCodeService.getActiveCode(phoneNumber).get(0);
+            if (Duration.between(activeCode.getCreateDate(), LocalDateTime.now()).toMinutes() < 2) {
+                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                        .body("Too many requests. Please wait 2 minutes before trying again.");
+            }
+            activeCode.setCreateDate(LocalDateTime.now());
+            verificationCodeService.saveVerificationCode(activeCode);
+            code = activeCode.getCode();
         }
-        VerificationCode verificationCode = new VerificationCode();
-        verificationCode.setPhoneNumber(phoneNumber);
-        verificationCode.setCode(code);
-        verificationCode.setCreateDate(LocalDateTime.now());
-        verificationCode.setActive(true);
-        verificationCodeService.saveVerificationCode(verificationCode);
         sendSMSNotification(phoneNumber, code + ". This is your verification code on KazGeoWarning. Don't share it.");
+        return ResponseEntity.ok("Verification code sent.");
     }
 
     private String generateCode() {

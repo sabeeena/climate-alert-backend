@@ -31,5 +31,5 @@ public interface VerificationCodeRepository extends JpaRepository<VerificationCo
     @Query("SELECT v FROM VerificationCode v " +
             "WHERE v.phoneNumber = :phoneNumber " +
             "AND v.isActive = true")
-    Optional<VerificationCode> findActiveCodeByPhone(String phoneNumber);
+    List<VerificationCode> findActiveCodeByPhone(String phoneNumber);
 }

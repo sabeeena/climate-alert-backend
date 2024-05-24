@@ -88,9 +88,8 @@ public class NotificationController {
     }
 
     @PostMapping("/sendSMSCode")
-    public ResponseEntity<String> sendSMSVerificationCode(@RequestParam String phoneNumber) {
-        service.sendVerificationCode(phoneNumber);
-        return ResponseEntity.ok("Verification code sent.");
+    public ResponseEntity<String> sendSMSVerificationCode(@RequestParam String phoneNumber) throws Exception {
+        return service.sendVerificationCode(phoneNumber);
     }
 
     @SneakyThrows
