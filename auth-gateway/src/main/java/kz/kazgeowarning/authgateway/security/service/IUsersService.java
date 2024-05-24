@@ -18,6 +18,7 @@ public interface IUsersService {
     Pageable pageable(Map<String, String> params);
     User createOrUpdateUser(ClientsDTO clientDTO);
     User findUserByUsername(String username) throws DataAccessException;
+    User findUserByPhone(String phoneNum) throws DataAccessException;
     User findBySignupToken(String token) throws DataAccessException;
     User findUserById(Long id) throws DataAccessException;
     Optional<User> findUserByEmail(String id) throws DataAccessException;

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -84,6 +85,18 @@ public class NotificationController {
     @PostMapping("/sendSms")
     public ResponseEntity sendSMS(@RequestParam String recipient, String text) {
         return service.sendSMSNotification(recipient, text);
+    }
+
+    @PostMapping("/sendSMSCode")
+    public ResponseEntity<String> sendSMSVerificationCode(@RequestParam String phoneNumber) {
+        service.sendVerificationCode(phoneNumber);
+        return ResponseEntity.ok("Verification code sent.");
+    }
+
+    @SneakyThrows
+    @PostMapping("/checkVerificationCode")
+    public ResponseEntity<String> checkVerificationCode(@RequestBody Map<String, String> params) {
+        return ResponseEntity.ok(service.checkVerificationCode(params.get("phoneNumber"), params.get("code")));
     }
 }
 //http://localhost:8083/api/notification/service/notify-warning?warningType=earthquake&userEmail=adilbayevameruert@gmail.com&region=almaty&dangerPossibility=123

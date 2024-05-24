@@ -7,6 +7,7 @@ import kz.geowarning.notification.dto.ReportNotificationDTO;
 import kz.geowarning.notification.entity.AlertNotification;
 import kz.geowarning.notification.entity.MobileDeviceToken;
 import kz.geowarning.notification.entity.ReportNotification;
+import kz.geowarning.notification.entity.VerificationCode;
 import kz.geowarning.notification.repository.AlertNotificationRepository;
 import kz.geowarning.notification.repository.MobileDeviceTokenRepository;
 import kz.geowarning.notification.repository.ReportNotificationRepository;
@@ -19,9 +20,7 @@ import javax.mail.MessagingException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 @Service
@@ -41,6 +40,8 @@ public class NotificationService {
     private MobileDeviceTokenRepository mobileDeviceTokenRepository;
     @Autowired
     private SMSService smsService;
+    @Autowired
+    private VerificationCodeService verificationCodeService;
 
     public ResponseEntity sendSMSNotification(String recipient, String text) {
         try {
@@ -48,8 +49,39 @@ public class NotificationService {
                     .body(smsService.sendSMSMessage(recipient, text));
         } catch (IOException e) {
             return ResponseEntity.badRequest()
-                    .body("Year of birth cannot be in the future");
+                    .body("SMS service is temporarily unavailable");
         }
+    }
+
+    public String checkVerificationCode(String phoneNumber, String code) {
+        if (verificationCodeService.checkVerificationCode(phoneNumber, code).isPresent()) {
+            return "Valid";
+        } else {
+            return "Not Valid";
+        }
+    }
+
+    public void sendVerificationCode(String phoneNumber) {
+        verificationCodeService.disableAllOverdueCodesByPhone(phoneNumber);
+        String code;
+        if (verificationCodeService.getActiveCode(phoneNumber).isEmpty()) {
+            code = generateCode();
+        } else {
+            code = verificationCodeService.getActiveCode(phoneNumber).get().getCode();
+        }
+        VerificationCode verificationCode = new VerificationCode();
+        verificationCode.setPhoneNumber(phoneNumber);
+        verificationCode.setCode(code);
+        verificationCode.setCreateDate(LocalDateTime.now());
+        verificationCode.setActive(true);
+        verificationCodeService.saveVerificationCode(verificationCode);
+        sendSMSNotification(phoneNumber, code + ". This is your verification code on KazGeoWarning. Don't share it.");
+    }
+
+    private String generateCode() {
+        Random random = new Random();
+        int code = 100000 + random.nextInt(900000);
+        return String.valueOf(code);
     }
 
     public void notifyWarning(String warningType, String userEmail, String region, String dangerPossibility) throws MessagingException, IOException, FirebaseMessagingException {

@@ -59,6 +59,10 @@ public class UsersService implements IUsersService {
         return usersRepository.findAll();
     }
 
+    public User save(User user) {
+        return usersRepository.save(user);
+    }
+
     public List<User> findAllEmailRecipients() throws DataAccessException {
         return usersRepository.findAllEmailRecipients();
     }
@@ -182,6 +186,11 @@ public class UsersService implements IUsersService {
     @Override
     public User findUserByUsername(String username) throws DataAccessException {
         return usersRepository.findByEmail(username).orElseThrow(() -> new ResourceNotFoundException(User.class, username));
+    }
+
+    @Override
+    public User findUserByPhone(String phoneNum) {
+        return usersRepository.findByPhone(phoneNum).orElseThrow(() -> new ResourceNotFoundException(User.class, phoneNum));
     }
 
     @Override

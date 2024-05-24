@@ -169,3 +169,7 @@ ribbon:
   ReadTimeout: 60000
 approve:
   url: ${APPROVE_URL:https://localhost:8011}
+
+internal:
+  url:
+    notification: ${NOTIFICATION_URL:http://localhost:8083}

@@ -10,6 +10,7 @@ import kz.kazgeowarning.authgateway.repository.SessionRepository;
 import kz.kazgeowarning.authgateway.repository.UserRepository;
 import kz.kazgeowarning.authgateway.security.service.TokenService;
 import kz.kazgeowarning.authgateway.security.service.impl.UsersService;
+import kz.kazgeowarning.authgateway.service.SMSService;
 import kz.kazgeowarning.authgateway.service.SMTPService;
 import kz.kazgeowarning.authgateway.util.PageableCustom;
 import kz.kazgeowarning.authgateway.util.error.ErrorCode;
@@ -44,6 +45,7 @@ public class AuthController {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository usersRepository;
     private final SMTPService iEmailService;
+    private final SMSService smsService;
     public static final String PRIVATE_URL = "/private/user";
     public static final String PUBLIC_URL = "/public/user";
 
@@ -274,6 +276,11 @@ public class AuthController {
 
         return ResponseEntity.ok(usersService.create(signUpUser));
 
+    }
+
+    @PostMapping(PUBLIC_URL + "/v1/verify/phone")
+    public ResponseEntity<String> verifyPhone(@RequestParam String phone, String code) {
+        return smsService.verifyEmail(phone, code);
     }
 
     @PostMapping("/reset/{token}")
