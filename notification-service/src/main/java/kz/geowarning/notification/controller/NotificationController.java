@@ -1,5 +1,6 @@
 package kz.geowarning.notification.controller;
 
+import io.swagger.annotations.ApiOperation;
 import kz.geowarning.notification.dto.ForecastNotificationContentDTO;
 import kz.geowarning.notification.dto.RealTimeNotificationContentDTO;
 import kz.geowarning.notification.dto.ReportNotificationDTO;
@@ -26,6 +27,7 @@ public class NotificationController {
     }
 
     @SneakyThrows
+    @ApiOperation(value = "Notify Warning", notes = "I don't remember when it's used honestly, this rest is probably deprecated.")
     @PostMapping("/notify-warning")
     public ResponseEntity notifyWarning(@RequestParam String warningType, String userEmail, String region, String dangerPossibility) {
         try {
@@ -44,6 +46,13 @@ public class NotificationController {
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
+        return ResponseEntity.ok().build();
+    }
+
+    @SneakyThrows
+    @PostMapping("/notify-fire-sms")
+    public ResponseEntity notifySMSFireRealtime(@RequestBody RealTimeNotificationContentDTO contentDTO) {
+        service.notifySMSFireRealtime(contentDTO);
         return ResponseEntity.ok().build();
     }
 

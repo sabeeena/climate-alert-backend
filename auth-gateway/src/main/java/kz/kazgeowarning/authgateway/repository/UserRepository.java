@@ -36,4 +36,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select c from User c where c.active = true and c.notifyEmail = true and c.email is not null and c.locationId is not null")
     List<User> findAllEmailRecipients();
 
+    @Query("select c from User c where c.phoneNumber is not null and c.notifySms = true")
+    List<User> findAllSMSReceivers();
 }

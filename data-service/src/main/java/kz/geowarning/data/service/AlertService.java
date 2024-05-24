@@ -46,6 +46,7 @@ public class AlertService {
 
     public void alertRecipientsRealtime() throws JSONException, IOException {
         sendRealtimeNotificationsToRecipients(getRecipientsFromAuthService());
+        sendRealtimeNotificationsToRecipients(getSMSReceiversFromAuthService());
     }
 
     public void alertRecipientsForecast() throws JSONException, ParseException {
@@ -105,6 +106,34 @@ public class AlertService {
         }
     }
 
+    private void notifySMSRealtimeFires(String phoneNumber, String firstName, String lastName, String locationName,
+                                        String count, List<String> fireOccurrences) {
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("phoneNumber", phoneNumber);
+        requestBody.put("firstName", firstName);
+        requestBody.put("lastName", lastName);
+        requestBody.put("locationName", locationName);
+        requestBody.put("count", count);
+        requestBody.put("fireOccurrences", fireOccurrences);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
+
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(notificationUrl +
+                        "/api/notification/service/notify-fire-sms",
+                requestEntity,
+                String.class);
+
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            String responseBody = responseEntity.getBody();
+            System.out.println("Real-time Fire SMS Notification. Response from server: " + responseBody);
+        } else {
+            System.out.println("Real-time FIre SMS Notification. Error: " + responseEntity.getStatusCode());
+        }
+    }
+
     private void notifyWarningRealtime(String email, String firstName, String lastName, String locationName,
                                       String count, List<String> fireOccurrences) {
         Map<String, Object> requestBody = new HashMap<>();
@@ -114,6 +143,7 @@ public class AlertService {
         requestBody.put("locationName", locationName);
         requestBody.put("count", count);
         requestBody.put("fireOccurrences", fireOccurrences);
+        requestBody.put("phoneNumber", null);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -127,9 +157,9 @@ public class AlertService {
 
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
             String responseBody = responseEntity.getBody();
-            System.out.println("Real-time Notification. Response from server: " + responseBody);
+            System.out.println("Real-time Fire Email Notification. Response from server: " + responseBody);
         } else {
-            System.out.println("Real-time Notification. Error: " + responseEntity.getStatusCode());
+            System.out.println("Real-time Fire Email Notification. Error: " + responseEntity.getStatusCode());
         }
     }
 
@@ -138,6 +168,7 @@ public class AlertService {
             String firstName = (String) user.get("firstName");
             String lastName = (String) user.get("lastName");
             String email = (String) user.get("email");
+            String phoneNumber = (String) user.get("phoneNumber");
 
             Map<String, Object> locationMap = (Map<String, Object>) user.get("location");
             String locationName = (String) locationMap.get("name");
@@ -155,15 +186,50 @@ public class AlertService {
             dataDTO.setTimeTo(Time.valueOf(currentTime));
 
             List<FireRTData> firesList = fireRTDataService.getByFilter(dataDTO);
-            List<String> fireOccurences = new ArrayList<>();
+            List<String> fireOccurrences = new ArrayList<>();
             for (FireRTData fire : firesList) {
                 String formattedString = String.format("%s: %s.",
                         fire.getAcqTime(), bingLocationsService.getAddressInfoByCoordinates(fire.getLatitude(), fire.getLongitude()).getFormattedAddress());
-                fireOccurences.add(formattedString);
+                fireOccurrences.add(formattedString);
             }
-            if (!fireOccurences.isEmpty()) {
-                notifyWarningRealtime(email, firstName, lastName, locationName, String.valueOf(fireOccurences.size()), fireOccurences);
+            if (!fireOccurrences.isEmpty()) {
+                if (phoneNumber == null || phoneNumber.isEmpty()) {
+                    notifyWarningRealtime(email, firstName, lastName, locationName, String.valueOf(fireOccurrences.size()), fireOccurrences);
+                } else {
+                    notifySMSRealtimeFires(phoneNumber, firstName, lastName, locationName, String.valueOf(fireOccurrences.size()), fireOccurrences);
+                }
             }
+        }
+    }
+
+    private List<Map<String, Object>> getSMSReceiversFromAuthService() throws JSONException {
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(authUrl +
+                "/internal/api/public/user/v1/users/smsReceivers", String.class);
+        if (responseEntity.getStatusCode().is2xxSuccessful()) {
+            String responseBody = responseEntity.getBody();
+            JSONArray usersArray = new JSONArray(responseBody);
+
+            List<Map<String, Object>> users = new ArrayList<>();
+            for (int i = 0; i < usersArray.length(); i++) {
+                JSONObject userObject = usersArray.getJSONObject(i);
+                Map<String, Object> userMap = new HashMap<>();
+                userMap.put("id", userObject.getLong("id"));
+                userMap.put("firstName", userObject.getString("firstName"));
+                userMap.put("lastName", userObject.getString("lastName"));
+                userMap.put("phoneNumber", userObject.getString("phoneNumber"));
+
+                JSONObject locationObject = userObject.getJSONObject("locationId");
+                Map<String, Object> locationMap = new HashMap<>();
+                locationMap.put("id", locationObject.getLong("id"));
+                locationMap.put("name", locationObject.getString("name"));
+                locationMap.put("latitude", locationObject.getDouble("latitude"));
+                locationMap.put("longitude", locationObject.getDouble("longitude"));
+                userMap.put("location", locationMap);
+
+                users.add(userMap);
+            } return users;
+        } else {
+            return Collections.emptyList();
         }
     }
 

@@ -11,6 +11,7 @@ import kz.geowarning.notification.entity.VerificationCode;
 import kz.geowarning.notification.repository.AlertNotificationRepository;
 import kz.geowarning.notification.repository.MobileDeviceTokenRepository;
 import kz.geowarning.notification.repository.ReportNotificationRepository;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -72,15 +73,16 @@ public class NotificationService {
             verificationCode.setPhoneNumber(phoneNumber);
             verificationCode.setCode(code);
             verificationCode.setCreateDate(LocalDateTime.now());
+            verificationCode.setSendDate(LocalDateTime.now());
             verificationCode.setActive(true);
             verificationCodeService.saveVerificationCode(verificationCode);
         } else {
             VerificationCode activeCode = verificationCodeService.getActiveCode(phoneNumber).get(0);
-            if (Duration.between(activeCode.getCreateDate(), LocalDateTime.now()).toMinutes() < 2) {
+            if (Duration.between(activeCode.getSendDate(), LocalDateTime.now()).toMinutes() < 2) {
                 return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
                         .body("Too many requests. Please wait 2 minutes before trying again.");
             }
-            activeCode.setCreateDate(LocalDateTime.now());
+            activeCode.setSendDate(LocalDateTime.now());
             verificationCodeService.saveVerificationCode(activeCode);
             code = activeCode.getCode();
         }
@@ -119,6 +121,11 @@ public class NotificationService {
         String body = generateWarningMessageRealTime(contentDTO);
         iEmailService.sendMail(contentDTO.getEmail(), generateWarningSubjectRealtime(contentDTO), body);
         sendNotificationMobile(contentDTO.getEmail(), body);
+    }
+
+    public void notifySMSFireRealtime(RealTimeNotificationContentDTO contentDTO) {
+        String body = generateWarningMessageRealTime(contentDTO);
+        sendSMSNotification(contentDTO.getPhoneNumber(), Jsoup.parse(body).text());
     }
 
     public void notifyForecast(ForecastNotificationContentDTO contentDTO) throws MessagingException, IOException, FirebaseMessagingException {
@@ -178,7 +185,6 @@ public class NotificationService {
         message += "Команда <b>KazGeoWarning!</b><br><br>";
         message += "</span>";
 
-
         String saveMessage = currentDateTimeString + ". ";
         saveMessage += "Уважаемый(ая) " + contentDTO.getFirstName() + " " + contentDTO.getLastName() + ", ";
         saveMessage += "За последний час возле " + contentDTO.getLocationName() + " было обнаружено " + contentDTO.getCount() + " пожаров. ";
@@ -191,15 +197,17 @@ public class NotificationService {
         saveMessage += "С уважением, ";
         saveMessage += "Команда KazGeoWarning! ";
 
+        if (contentDTO.getPhoneNumber() == null || contentDTO.getPhoneNumber().isEmpty()) {
+            AlertNotification alertNotification = new AlertNotification();
+            alertNotification.setReceiverEmail(contentDTO.getEmail());
+            alertNotification.setSenderEmail("KazGeoWarning");
+            alertNotification.setWarningType("real-time fire");
+            alertNotification.setText(Jsoup.parse(saveMessage).text());
+            alertNotification.setSeen(false);
+            alertNotification.setSentTime(LocalDateTime.now());
+            alertNotificationRepository.save(alertNotification);
+        }
 
-        AlertNotification alertNotification = new AlertNotification();
-        alertNotification.setReceiverEmail(contentDTO.getEmail());
-        alertNotification.setSenderEmail("KazGeoWarning");
-        alertNotification.setWarningType("real-time fire");
-        alertNotification.setText(saveMessage);
-        alertNotification.setSeen(false);
-        alertNotification.setSentTime(LocalDateTime.now());
-        alertNotificationRepository.save(alertNotification);
         return message;
     }
 

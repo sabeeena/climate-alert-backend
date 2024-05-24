@@ -98,6 +98,11 @@ public class AuthController {
         return ResponseEntity.ok(usersService.findAllEmailRecipients());
     }
 
+    @GetMapping(PUBLIC_URL + "/v1/users/smsReceivers")
+    public ResponseEntity<List<User>> getAllSMSNotified() {
+        return ResponseEntity.ok(usersService.findAllSMSReceivers());
+    }
+
     @GetMapping(PUBLIC_URL + "/v1/users/role-employee")
     public ResponseEntity<List<User>> getUserEmployee() {
         return ResponseEntity.ok(usersService.findByEmployeeRole());
@@ -210,7 +215,7 @@ public class AuthController {
 
             String subject = "Подтверждение регистрации пользователя " + newUser.getEmail();
             String message = "<h2>Добрый день, " + newUser.getFirstName() + " " + newUser.getLastName() + "!</h2>" + "<br>" +
-                    "<h3>Благодарим за использавания нашим сайтом!<br>" +
+                    "<h3>Благодарим за использование нашего веб-сайта!<br>" +
                     "Вам необходимо подтвердить аккаунт, " +
                     "пройдя по ссылке "+url+"/internal/api/public/user/v1/confirm/" + newUser.getEmail() + "<h3><br>" +
                     "<h3>С уважением, команда KazGeoWarning<h3>";

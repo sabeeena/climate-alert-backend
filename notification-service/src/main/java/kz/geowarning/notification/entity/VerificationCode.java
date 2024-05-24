@@ -22,4 +22,5 @@ public class VerificationCode {
     private String code;
     private LocalDateTime createDate;
     private boolean isActive;
+    private LocalDateTime sendDate;
 }

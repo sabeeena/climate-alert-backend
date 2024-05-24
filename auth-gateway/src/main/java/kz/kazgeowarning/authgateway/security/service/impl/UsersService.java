@@ -67,6 +67,10 @@ public class UsersService implements IUsersService {
         return usersRepository.findAllEmailRecipients();
     }
 
+    public List<User> findAllSMSReceivers() {
+        return usersRepository.findAllSMSReceivers();
+    }
+
     @Override
     public Long getSizeEmployee() {
         return this.usersRepository.getTotalSizeEmployee();
