@@ -97,12 +97,6 @@ public class NotificationService {
         return String.valueOf(code);
     }
 
-    public void notifyWarning(String warningType, String userEmail, String region, String dangerPossibility) throws MessagingException, IOException, FirebaseMessagingException {
-        String body = generateWarningMessage(region, userEmail, warningType, dangerPossibility);
-        iEmailService.sendMail(userEmail, generateWarningSubject(region, dangerPossibility), body);
-        sendNotificationMobile(userEmail, body);
-    }
-
     public void sendNotificationMobile(String userEmail, String body) throws IOException, FirebaseMessagingException {
         List<MobileDeviceToken> mobileDeviceTokens = mobileDeviceTokenRepository.findAll();
         for(MobileDeviceToken mobileDeviceToken: mobileDeviceTokens) {
@@ -196,39 +190,6 @@ public class NotificationService {
             alertNotificationRepository.save(alertNotification);
         }
 
-        return message;
-    }
-
-    public String generateWarningMessage(String region, String userEmail, String warningType, String dangerPossibility){
-        String message = "Уважаемый пользователь," + userEmail + "\n\n";
-        message += "Мы обнаружили " + warningType + " с возможностью опасности " + dangerPossibility + "% ";
-        message += "Примите немедленные меры для обеспечения безопасности.\n";
-        message += "Если у вас есть какие-либо вопросы или требуется дополнительная информация, пожалуйста, ";
-        message += "свяжитесь с нашей службой поддержки.\n\n\n";
-        message += "С уважением,\n";
-        message += "Команда kazgeowarning!\n\n";
-
-//        message += "Құрметті пайдаланушы," + userEmail + "\n\n";
-//        message += "Біз ескерту түрі " + warningType + " қауіп ықтималдығы " + dangerPossibility + "% жарамдықтың мүмкіндігін анықтадық. ";
-//        message += "Егер сізде сұрауларыңыз немесе көмек қажет болса, алдыңғы көмек қызметімен байланысуыңызды сұраймыз.\n\n";
-//        message += "Сіздің " + "kazgeowarning" + " қомандасы!.\n\n\n";
-//
-//        message += "Dear user," + userEmail + "\n\n";
-//        message += "We have detected a " + warningType + " with a possibility of danger of " + dangerPossibility + "% ";
-//        message += "Please take immediate action to ensure safety. ";
-//        message += "If you have any questions or need further information, please contact our support team.\n\n";
-//        message += "Sincerely,\n";
-//        message += "The kazgeowarning team!";
-
-        AlertNotification alertNotification = new AlertNotification();
-        alertNotification.setReceiverEmail(userEmail);
-        alertNotification.setWarningType(warningType);
-        alertNotification.setText(message);
-        alertNotification.setSeen(false);
-        alertNotification.setRegion(region);
-        alertNotification.setDangerPossibility(dangerPossibility);
-        alertNotification.setSentTime(LocalDateTime.now());
-        alertNotificationRepository.save(alertNotification);
         return message;
     }
 

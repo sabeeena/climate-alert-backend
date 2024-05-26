@@ -28,18 +28,6 @@ public class NotificationController {
     }
 
     @SneakyThrows
-    @ApiOperation(value = "Notify Warning", notes = "I don't remember when it's used honestly, this rest is probably deprecated.")
-    @PostMapping("/notify-warning")
-    public ResponseEntity notifyWarning(@RequestParam String warningType, String userEmail, String region, String dangerPossibility) {
-        try {
-            service.notifyWarning(warningType, userEmail, region, dangerPossibility);
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
-        return ResponseEntity.ok().build();
-    }
-
-    @SneakyThrows
     @PostMapping("/notify-warning-realtime")
     public ResponseEntity notifyWarningRealtime(@RequestBody RealTimeNotificationContentDTO contentDTO) {
         try {
@@ -114,12 +102,6 @@ public class NotificationController {
             log.error("Error occurred while verifying email: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Email verification failed.");
         }
-    }
-
-    @SneakyThrows
-    @PostMapping("/sendSms")
-    public ResponseEntity sendSMS(@RequestParam String recipient, String text) {
-        return service.sendSMSNotification(recipient, text);
     }
 
     @PostMapping("/sendSMSCode")
