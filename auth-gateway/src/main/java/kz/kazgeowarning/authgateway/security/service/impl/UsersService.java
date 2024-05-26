@@ -158,6 +158,7 @@ public class UsersService implements IUsersService {
                     .imageUrl(userDto.getImageUrl())
                     .notifyEmail(userDto.isNotifyEmail())
                     .notifySms(userDto.isNotifySms())
+                    .languageCode(userDto.getLanguageCode().toUpperCase())
                     .loginType(UserLoginType.origin)
                     .active(true)
                     .password(bCryptPasswordEncoder.encode(userDto.getPassword()))
@@ -241,6 +242,7 @@ public class UsersService implements IUsersService {
             client.setLastName(client.getLastName());
             client.setEmail(userDto.getEmail());
             client.setImageUrl(userDto.getImageUrl());
+            client.setLanguageCode(userDto.getLanguageCode().toUpperCase());
             return usersRepository.save(client);
         } else {
             return null;

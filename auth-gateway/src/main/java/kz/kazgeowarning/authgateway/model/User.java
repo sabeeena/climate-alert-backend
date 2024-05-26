@@ -97,6 +97,9 @@ public class User {
     @Column(name = "notify_sms")
     private boolean notifySms=false;
 
+    @Column(name = "preferred_language")
+    private String languageCode;
+
     @JsonIgnore
     public String getPassword() {
         return password;

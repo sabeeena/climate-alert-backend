@@ -65,5 +65,7 @@ public class ClientsDTO {
     private boolean notifyEmail;
     @JsonProperty("notifySms")
     private boolean notifySms;
+    @JsonProperty("preferred_language")
+    private String languageCode;
 
 }
