@@ -173,7 +173,6 @@ public class NotificationService {
         Date currentDate = new Date();
         String currentDateTimeString = dateFormat.format(currentDate);
         String message = "";
-        String saveMessage = "";
 
         switch (contentDTO.getLanguage()) {
             case "RU":
@@ -187,16 +186,6 @@ public class NotificationService {
                 message += "С уважением,<br>";
                 message += "Команда <b>KazGeoWarning!</b><br><br>";
                 message += "</span>";
-
-                saveMessage += currentDateTimeString + ". ";
-                saveMessage += "Уважаемый(-ая) " + contentDTO.getFirstName() + " " + contentDTO.getLastName() + ", ";
-                saveMessage += "В пределах вашей локации было зафиксировано землетрясение в " + contentDTO.getTime()
-                        + " магнитудой в " + contentDTO.getMagnitude() + " баллов по шкале Рихтера"
-                        + ", установленный эпицентр - " + contentDTO.getLocationName() + ". ";
-                saveMessage += "Если у вас есть какие-либо вопросы или требуется дополнительная информация, пожалуйста, ";
-                saveMessage += "свяжитесь с нашей службой поддержки. ";
-                saveMessage += "С уважением, ";
-                saveMessage += "Команда KazGeoWarning! ";
                 break;
 
             case "KZ":
@@ -210,16 +199,6 @@ public class NotificationService {
                 message += "Құрметпен, <br>";
                 message += "<b>KazGeoWarning</b> командасы!<br><br>";
                 message += "</span>";
-
-                saveMessage += currentDateTimeString + ". ";
-                saveMessage += "Құрметті " + contentDTO.getFirstName() + " " + contentDTO.getLastName() + ", ";
-                saveMessage += "Сіздің орналасқан жеріңізде " + contentDTO.getTime()
-                        + " магнитудасы Рихтер шкаласы бойынша " + contentDTO.getMagnitude() + " жер сілкінісі тіркелді,"
-                        + " белгіленген жер сілкінісі - " + contentDTO.getLocationName() + " жерде болды. ";
-                saveMessage += "Егер сізде сұрақтар туындаса немесе қосымша ақпарат қажет болса, ";
-                saveMessage += "қолдау көрсету тобына хабарласыңыз. ";
-                saveMessage += "Құрметпен, ";
-                saveMessage += "KazGeoWarning командасы! ";
                 break;
 
             default:
@@ -233,25 +212,47 @@ public class NotificationService {
                 message += "Sincerely,<br>";
                 message += "<b>KazGeoWarning</b> team!<br><br>";
                 message += "</span>";
-
-                saveMessage += currentDateTimeString + ". ";
-                saveMessage += "Dear " + contentDTO.getFirstName() + " " + contentDTO.getLastName() + ", ";
-                saveMessage += "An earthquake was detected within your location at " + contentDTO.getTime()
-                        + " with a magnitude of " + contentDTO.getMagnitude() + " on the Richter scale"
-                        + ", the established epicenter was - " + contentDTO.getLocationName() + ". ";
-                saveMessage += "If you have any questions or require additional information, please ";
-                saveMessage += "contact our support team. ";
-                saveMessage += "Sincerely, ";
-                saveMessage += "KazGeoWarning team! ";
                 break;
         }
+
+        String saveMessageRu = currentDateTimeString + ". ";
+        saveMessageRu += "Уважаемый(-ая) " + contentDTO.getFirstName() + " " + contentDTO.getLastName() + ", ";
+        saveMessageRu += "В пределах вашей локации было зафиксировано землетрясение в " + contentDTO.getTime()
+                + " магнитудой в " + contentDTO.getMagnitude() + " баллов по шкале Рихтера"
+                + ", установленный эпицентр - " + contentDTO.getLocationName() + ". ";
+        saveMessageRu += "Если у вас есть какие-либо вопросы или требуется дополнительная информация, пожалуйста, ";
+        saveMessageRu += "свяжитесь с нашей службой поддержки. ";
+        saveMessageRu += "С уважением, ";
+        saveMessageRu += "Команда KazGeoWarning! ";
+
+        String saveMessageKz = currentDateTimeString + ". ";
+        saveMessageKz += "Құрметті " + contentDTO.getFirstName() + " " + contentDTO.getLastName() + ", ";
+        saveMessageKz += "Сіздің орналасқан жеріңізде " + contentDTO.getTime()
+                + " магнитудасы Рихтер шкаласы бойынша " + contentDTO.getMagnitude() + " жер сілкінісі тіркелді,"
+                + " белгіленген жер сілкінісі - " + contentDTO.getLocationName() + " жерде болды. ";
+        saveMessageKz += "Егер сізде сұрақтар туындаса немесе қосымша ақпарат қажет болса, ";
+        saveMessageKz += "қолдау көрсету тобына хабарласыңыз. ";
+        saveMessageKz += "Құрметпен, ";
+        saveMessageKz += "KazGeoWarning командасы! ";
+
+        String saveMessageEn = currentDateTimeString + ". ";
+        saveMessageEn += "Dear " + contentDTO.getFirstName() + " " + contentDTO.getLastName() + ", ";
+        saveMessageEn += "An earthquake was detected within your location at " + contentDTO.getTime()
+                + " with a magnitude of " + contentDTO.getMagnitude() + " on the Richter scale"
+                + ", the established epicenter was - " + contentDTO.getLocationName() + ". ";
+        saveMessageEn += "If you have any questions or require additional information, please ";
+        saveMessageEn += "contact our support team. ";
+        saveMessageEn += "Sincerely, ";
+        saveMessageEn += "KazGeoWarning team! ";
 
         if (contentDTO.getPhoneNumber() == null || contentDTO.getPhoneNumber().isEmpty()) {
             AlertNotification alertNotification = new AlertNotification();
             alertNotification.setReceiverEmail(contentDTO.getEmail());
             alertNotification.setSenderEmail("KazGeoWarning");
-            alertNotification.setWarningType("real-time fire");
-            alertNotification.setText(Jsoup.parse(saveMessage).text());
+            alertNotification.setWarningType("earthquake");
+            alertNotification.setTextRu(Jsoup.parse(saveMessageRu).text());
+            alertNotification.setTextKz(Jsoup.parse(saveMessageKz).text());
+            alertNotification.setTextEn(Jsoup.parse(saveMessageEn).text());
             alertNotification.setSeen(false);
             alertNotification.setSentTime(LocalDateTime.now());
             alertNotificationRepository.save(alertNotification);
@@ -265,7 +266,6 @@ public class NotificationService {
         Date currentDate = new Date();
         String currentDateTimeString = dateFormat.format(currentDate);
         String message = "";
-        String saveMessage = "";
 
         switch(contentDTO.getLanguage()) {
             case "RU":
@@ -281,18 +281,6 @@ public class NotificationService {
                 message += "С уважением,<br>";
                 message += "Команда <b>KazGeoWarning!</b><br><br>";
                 message += "</span>";
-
-                saveMessage += currentDateTimeString + ". ";
-                saveMessage += "Уважаемый(-ая) " + contentDTO.getFirstName() + " " + contentDTO.getLastName() + ", ";
-                saveMessage += "За последний час возле " + contentDTO.getLocationName() + " было обнаружено " + contentDTO.getCount() + " пожаров. ";
-                saveMessage += "Приблизительные местоположения: ";
-                for (String row : contentDTO.getFireOccurrences()) {
-                    saveMessage += row + " ";
-                }
-                saveMessage += "Если у вас есть какие-либо вопросы или требуется дополнительная информация, пожалуйста, ";
-                saveMessage += "свяжитесь с нашей службой поддержки. ";
-                saveMessage += "С уважением, ";
-                saveMessage += "Команда KazGeoWarning! ";
                 break;
 
             case "KZ":
@@ -308,18 +296,6 @@ public class NotificationService {
                 message += "Құрметпен,<br>";
                 message += "<b>KazGeoWarning</b> командасы!<br><br>";
                 message += "</span>";
-
-                saveMessage += currentDateTimeString + ". ";
-                saveMessage += "Құрметті " + contentDTO.getFirstName() + " " + contentDTO.getLastName() + ", ";
-                saveMessage += "Соңғы бір сағатта " + contentDTO.getLocationName() + " маңында " + contentDTO.getCount() + " өрт(-тер) анықталды. ";
-                saveMessage += "Шамамен орналасқан жерлер: ";
-                for (String row : contentDTO.getFireOccurrences()) {
-                    saveMessage += row + " ";
-                }
-                saveMessage += "Егер сізде сұрақтар туындаса немесе қосымша ақпарат қажет болса, ";
-                saveMessage += "қолдау көрсету тобына хабарласыңыз. ";
-                saveMessage += "Құрметпен, ";
-                saveMessage += "KazGeoWarning командасы! ";
                 break;
 
             default:
@@ -335,27 +311,53 @@ public class NotificationService {
                 message += "Sincerely,<br>";
                 message += "<b>KazGeoWarning</b> team!<br><br>";
                 message += "</span>";
-
-                saveMessage += currentDateTimeString + ". ";
-                saveMessage += "Dear " + contentDTO.getFirstName() + " " + contentDTO.getLastName() + ", ";
-                saveMessage += "Over the past hour, " + contentDTO.getCount() + " fire(-s) was/were detected near " + contentDTO.getLocationName() + ". ";
-                saveMessage += "Approximate locations: ";
-                for (String row : contentDTO.getFireOccurrences()) {
-                    saveMessage += row + " ";
-                }
-                saveMessage += "If you have any questions or require additional information, please ";
-                saveMessage += "contact our support team. ";
-                saveMessage += "Sincerely, ";
-                saveMessage += "KazGeoWarning team! ";
                 break;
         }
+
+        String saveMessageRu = currentDateTimeString + ". ";
+        saveMessageRu += "Уважаемый(-ая) " + contentDTO.getFirstName() + " " + contentDTO.getLastName() + ", ";
+        saveMessageRu += "За последний час возле " + contentDTO.getLocationName() + " было обнаружено " + contentDTO.getCount() + " пожаров. ";
+        saveMessageRu += "Приблизительные местоположения: ";
+        for (String row : contentDTO.getFireOccurrences()) {
+            saveMessageRu += row + " ";
+        }
+        saveMessageRu += "Если у вас есть какие-либо вопросы или требуется дополнительная информация, пожалуйста, ";
+        saveMessageRu += "свяжитесь с нашей службой поддержки. ";
+        saveMessageRu += "С уважением, ";
+        saveMessageRu += "Команда KazGeoWarning! ";
+
+        String saveMessageKz = currentDateTimeString + ". ";
+        saveMessageKz += "Құрметті " + contentDTO.getFirstName() + " " + contentDTO.getLastName() + ", ";
+        saveMessageKz += "Соңғы бір сағатта " + contentDTO.getLocationName() + " маңында " + contentDTO.getCount() + " өрт(-тер) анықталды. ";
+        saveMessageKz += "Шамамен орналасқан жерлер: ";
+        for (String row : contentDTO.getFireOccurrences()) {
+            saveMessageKz += row + " ";
+        }
+        saveMessageKz += "Егер сізде сұрақтар туындаса немесе қосымша ақпарат қажет болса, ";
+        saveMessageKz += "қолдау көрсету тобына хабарласыңыз. ";
+        saveMessageKz += "Құрметпен, ";
+        saveMessageKz += "KazGeoWarning командасы! ";
+
+        String saveMessageEn = currentDateTimeString + ". ";
+        saveMessageEn += "Dear " + contentDTO.getFirstName() + " " + contentDTO.getLastName() + ", ";
+        saveMessageEn += "Over the past hour, " + contentDTO.getCount() + " fire(-s) was/were detected near " + contentDTO.getLocationName() + ". ";
+        saveMessageEn += "Approximate locations: ";
+        for (String row : contentDTO.getFireOccurrences()) {
+            saveMessageEn += row + " ";
+        }
+        saveMessageEn += "If you have any questions or require additional information, please ";
+        saveMessageEn += "contact our support team. ";
+        saveMessageEn += "Sincerely, ";
+        saveMessageEn += "KazGeoWarning team! ";
 
         if (contentDTO.getPhoneNumber() == null || contentDTO.getPhoneNumber().isEmpty()) {
             AlertNotification alertNotification = new AlertNotification();
             alertNotification.setReceiverEmail(contentDTO.getEmail());
             alertNotification.setSenderEmail("KazGeoWarning");
             alertNotification.setWarningType("real-time fire");
-            alertNotification.setText(Jsoup.parse(saveMessage).text());
+            alertNotification.setTextRu(Jsoup.parse(saveMessageRu).text());
+            alertNotification.setTextKz(Jsoup.parse(saveMessageKz).text());
+            alertNotification.setTextEn(Jsoup.parse(saveMessageEn).text());
             alertNotification.setSeen(false);
             alertNotification.setSentTime(LocalDateTime.now());
             alertNotificationRepository.save(alertNotification);
@@ -402,15 +404,6 @@ public class NotificationService {
                 message += "С уважением,<br>";
                 message += "Команда <b>KazGeoWarning!</b><br><br>";
                 message += "</span>";
-
-
-                saveMessage = currentDateTimeString + ".  ";
-                saveMessage += "Уважаемый(-ая) " + contentDTO.getFirstName() + " " + contentDTO.getLastName() + ", ";
-                saveMessage += "В пределах региона " + contentDTO.getLocationName() + " был обнаружен уровень опасности: " + contentDTO.getLevel() + ".  ";
-                saveMessage += "Если у вас есть какие-либо вопросы или требуется дополнительная информация, пожалуйста, ";
-                saveMessage += "свяжитесь с нашей службой поддержки.  ";
-                saveMessage += "С уважением, ";
-                saveMessage += "Команда KazGeoWarning!  ";
                 break;
 
             case "KZ":
@@ -422,15 +415,6 @@ public class NotificationService {
                 message += "Құрметпен,<br>";
                 message += "<b>KazGeoWarning</b> командасы!<br><br>";
                 message += "</span>";
-
-
-                saveMessage = currentDateTimeString + ".  ";
-                saveMessage += "Құрметті " + contentDTO.getFirstName() + " " + contentDTO.getLastName() + ", ";
-                saveMessage += contentDTO.getLocationName() + " аумағында өрт қаупі деңгейі анықталды: " + contentDTO.getLevel() + ".  ";
-                saveMessage += "Егер сізде сұрақтар туындаса немесе қосымша ақпарат қажет болса, ";
-                saveMessage += "қолдау көрсету тобына хабарласыңыз.  ";
-                saveMessage += "Құрметпен, ";
-                saveMessage += "KazGeoWarning командасы!  ";
                 break;
 
             default:
@@ -442,24 +426,41 @@ public class NotificationService {
                 message += "Sincerely,<br>";
                 message += "<b>KazGeoWarning</b> team!<br><br>";
                 message += "</span>";
-
-
-                saveMessage = currentDateTimeString + ".  ";
-                saveMessage += "Dear " + contentDTO.getFirstName() + " " + contentDTO.getLastName() + ", ";
-                saveMessage += "Within the region of " + contentDTO.getLocationName() + ", a fire danger level was detected: " + contentDTO.getLevel() + ".  ";
-                saveMessage += "If you have any questions or require additional information, please ";
-                saveMessage += "contact our support team.  ";
-                saveMessage += "Sincerely, ";
-                saveMessage += "KazGeoWarning team!  ";
                 break;
         }
+
+        String saveMessageRu = currentDateTimeString + ".  ";
+        saveMessageRu += "Уважаемый(-ая) " + contentDTO.getFirstName() + " " + contentDTO.getLastName() + ", ";
+        saveMessageRu += "В пределах региона " + contentDTO.getLocationName() + " был обнаружен уровень опасности: " + contentDTO.getLevel() + ".  ";
+        saveMessageRu += "Если у вас есть какие-либо вопросы или требуется дополнительная информация, пожалуйста, ";
+        saveMessageRu += "свяжитесь с нашей службой поддержки.  ";
+        saveMessageRu += "С уважением, ";
+        saveMessageRu += "Команда KazGeoWarning!  ";
+
+        String saveMessageKz = currentDateTimeString + ".  ";
+        saveMessageKz += "Құрметті " + contentDTO.getFirstName() + " " + contentDTO.getLastName() + ", ";
+        saveMessageKz += contentDTO.getLocationName() + " аумағында өрт қаупі деңгейі анықталды: " + contentDTO.getLevel() + ".  ";
+        saveMessageKz += "Егер сізде сұрақтар туындаса немесе қосымша ақпарат қажет болса, ";
+        saveMessageKz += "қолдау көрсету тобына хабарласыңыз.  ";
+        saveMessageKz += "Құрметпен, ";
+        saveMessageKz += "KazGeoWarning командасы!  ";
+
+        String saveMessageEn = currentDateTimeString + ".  ";
+        saveMessageEn += "Dear " + contentDTO.getFirstName() + " " + contentDTO.getLastName() + ", ";
+        saveMessageEn += "Within the region of " + contentDTO.getLocationName() + ", a fire danger level was detected: " + contentDTO.getLevel() + ".  ";
+        saveMessageEn += "If you have any questions or require additional information, please ";
+        saveMessageEn += "contact our support team.  ";
+        saveMessageEn += "Sincerely, ";
+        saveMessageEn += "KazGeoWarning team!  ";
 
         if (contentDTO.getPhoneNumber() == null || contentDTO.getPhoneNumber().isEmpty()) {
             AlertNotification alertNotification = new AlertNotification();
             alertNotification.setReceiverEmail(contentDTO.getEmail());
             alertNotification.setSenderEmail("KazGeoWarning");
             alertNotification.setWarningType("forecast fire");
-            alertNotification.setText(Jsoup.parse(saveMessage).text());
+            alertNotification.setTextRu(Jsoup.parse(saveMessageRu).text());
+            alertNotification.setTextKz(Jsoup.parse(saveMessageKz).text());
+            alertNotification.setTextEn(Jsoup.parse(saveMessageEn).text());
             alertNotification.setSeen(false);
             alertNotification.setSentTime(LocalDateTime.now());
             alertNotificationRepository.save(alertNotification);

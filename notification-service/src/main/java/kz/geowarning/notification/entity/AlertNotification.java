@@ -22,10 +22,14 @@ public class AlertNotification {
     private String receiverEmail;
     private String senderEmail;
     @Column(length = 20000)
-    private String text;
+    private String textEn;
     private boolean seen = false;
     private String warningType;
     private String region;
     private String dangerPossibility;
     private LocalDateTime sentTime;
+    @Column(length = 20000)
+    private String textRu;
+    @Column(length = 20000)
+    private String textKz;
 }

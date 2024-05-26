@@ -6,8 +6,6 @@ import kz.geowarning.notification.dto.NotificationDTO;
 import kz.geowarning.notification.entity.AlertNotification;
 import kz.geowarning.notification.entity.MobileDeviceToken;
 import kz.geowarning.notification.entity.ReportNotification;
-import kz.geowarning.notification.repository.AlertNotificationRepository;
-import kz.geowarning.notification.repository.ReportNotificationRepository;
 import kz.geowarning.notification.service.ManageNotificationService;
 import kz.geowarning.notification.service.PushNotificationService;
 import kz.geowarning.notification.util.RestConstants;

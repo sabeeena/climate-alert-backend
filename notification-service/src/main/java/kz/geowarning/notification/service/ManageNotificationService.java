@@ -63,7 +63,7 @@ public class ManageNotificationService {
             NotificationDTO dto = new NotificationDTO();
             dto.setId(alert.getId());
             dto.setReceiverEmail(alert.getReceiverEmail());
-            dto.setText(alert.getText());
+            dto.setText(alert.getTextEn());
             dto.setType(alert.getWarningType());
             dto.setRegion(alert.getRegion());
             dto.setDangerPossibility(alert.getDangerPossibility());
@@ -135,7 +135,7 @@ public class ManageNotificationService {
             NotificationDTO dto = new NotificationDTO();
             dto.setId(alertNotification.getId());
             dto.setReceiverEmail(alertNotification.getReceiverEmail());
-            dto.setText(alertNotification.getText());
+            dto.setText(alertNotification.getTextEn());
             dto.setType(alertNotification.getWarningType());
             dto.setRegion(alertNotification.getRegion());
             dto.setDangerPossibility(alertNotification.getDangerPossibility());
