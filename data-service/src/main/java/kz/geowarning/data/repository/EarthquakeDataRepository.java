@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface EarthquakeDataRepository extends JpaRepository<EarthquakeData, Long> {
@@ -40,4 +41,5 @@ public interface EarthquakeDataRepository extends JpaRepository<EarthquakeData, 
                 "(CAST(:#{#eqDTO.dateTo} AS TIMESTAMP) >= CAST(data.earthquakedata.time AS TIMESTAMP))) ")
     List<EarthquakeData> findByFilter(@Param("eqDTO")EarthquakeDTO earthquakeDTO);
 
+    Optional<EarthquakeData> findByUsgsId(String id);
 }

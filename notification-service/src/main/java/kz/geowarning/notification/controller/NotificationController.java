@@ -1,6 +1,7 @@
 package kz.geowarning.notification.controller;
 
 import io.swagger.annotations.ApiOperation;
+import kz.geowarning.notification.dto.EarthquakeNotificationDTO;
 import kz.geowarning.notification.dto.ForecastNotificationContentDTO;
 import kz.geowarning.notification.dto.RealTimeNotificationContentDTO;
 import kz.geowarning.notification.dto.ReportNotificationDTO;
@@ -71,6 +72,24 @@ public class NotificationController {
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
+        return ResponseEntity.ok().build();
+    }
+
+    @SneakyThrows
+    @PostMapping("/notify-email-earthquake")
+    public ResponseEntity notifyEmailEarthquake(@RequestBody EarthquakeNotificationDTO contentDTO) {
+        try {
+            service.notifyEarthquake(contentDTO);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @SneakyThrows
+    @PostMapping("/notify-sms-earthquake")
+    public ResponseEntity notifySMSEarthquake(@RequestBody EarthquakeNotificationDTO contentDTO) {
+        service.notifySMSEarthquake(contentDTO);
         return ResponseEntity.ok().build();
     }
 

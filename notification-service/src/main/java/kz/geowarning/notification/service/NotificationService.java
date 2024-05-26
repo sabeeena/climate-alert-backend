@@ -1,6 +1,7 @@
 package kz.geowarning.notification.service;
 
 import com.google.firebase.messaging.FirebaseMessagingException;
+import kz.geowarning.notification.dto.EarthquakeNotificationDTO;
 import kz.geowarning.notification.dto.ForecastNotificationContentDTO;
 import kz.geowarning.notification.dto.RealTimeNotificationContentDTO;
 import kz.geowarning.notification.dto.ReportNotificationDTO;
@@ -137,6 +138,65 @@ public class NotificationService {
         String body = generateWarningMessageForecast(contentDTO);
         iEmailService.sendMail(contentDTO.getEmail(), generateWarningSubjectForecast(contentDTO), generateWarningMessageForecast(contentDTO));
         sendNotificationMobile(contentDTO.getEmail(), body);
+    }
+
+    public void notifyEarthquake(EarthquakeNotificationDTO contentDTO) throws IOException, FirebaseMessagingException, MessagingException {
+        String body = generateEarthquakeMessage(contentDTO);
+        iEmailService.sendMail(contentDTO.getEmail(), generateEarthquakeSubject(contentDTO), generateEarthquakeMessage(contentDTO));
+        sendNotificationMobile(contentDTO.getEmail(), body);
+    }
+
+    public void notifySMSEarthquake(EarthquakeNotificationDTO contentDTO) {
+        String body = generateEarthquakeMessage(contentDTO);
+        sendSMSNotification(contentDTO.getPhoneNumber(), Jsoup.parse(body).text());
+    }
+
+    private String generateEarthquakeSubject(EarthquakeNotificationDTO contentDTO) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date currentDate = new Date();
+        String currentDateTimeString = dateFormat.format(currentDate);
+        String subject = "Зафиксировано землетрясение в " + currentDateTimeString + " в " + contentDTO.getLocationName() + ".\n";
+        return subject;
+    }
+
+    private String generateEarthquakeMessage(EarthquakeNotificationDTO contentDTO) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date currentDate = new Date();
+        String currentDateTimeString = dateFormat.format(currentDate);
+
+        String message = "<span style=\"font-family: Arial; font-size: 16px;\"><u>" + currentDateTimeString + "</u><br><br><br>";
+        message += "Уважаемый(ая) <b>" + contentDTO.getFirstName() + " " + contentDTO.getLastName() + "</b>, <br>";
+        message += "В пределах вашей локации было зафиксировано землетрясение в <b>" + contentDTO.getTime()
+                + "</b> магнитудой в <b>" + contentDTO.getMagnitude() + "</b> баллов по шкале Рихтера"
+                + ", установленный эпицентр - <b>" + contentDTO.getLocationName() + "</b>.<br><br><br>";
+        message += "Если у вас есть какие-либо вопросы или требуется дополнительная информация, пожалуйста, ";
+        message += "свяжитесь с нашей службой поддержки.<br><br>";
+        message += "С уважением,<br>";
+        message += "Команда <b>KazGeoWarning!</b><br><br>";
+        message += "</span>";
+
+        String saveMessage = currentDateTimeString + ". ";
+        saveMessage += "Уважаемый(ая) " + contentDTO.getFirstName() + " " + contentDTO.getLastName() + ", ";
+        saveMessage += "В пределах вашей локации было зафиксировано землетрясение в " + contentDTO.getTime()
+                + " магнитудой в " + contentDTO.getMagnitude() + " баллов по шкале Рихтера"
+                + ", установленный эпицентр - " + contentDTO.getLocationName() + ". ";
+        saveMessage += "Если у вас есть какие-либо вопросы или требуется дополнительная информация, пожалуйста, ";
+        saveMessage += "свяжитесь с нашей службой поддержки. ";
+        saveMessage += "С уважением, ";
+        saveMessage += "Команда KazGeoWarning! ";
+
+        if (contentDTO.getPhoneNumber() == null || contentDTO.getPhoneNumber().isEmpty()) {
+            AlertNotification alertNotification = new AlertNotification();
+            alertNotification.setReceiverEmail(contentDTO.getEmail());
+            alertNotification.setSenderEmail("KazGeoWarning");
+            alertNotification.setWarningType("real-time fire");
+            alertNotification.setText(Jsoup.parse(saveMessage).text());
+            alertNotification.setSeen(false);
+            alertNotification.setSentTime(LocalDateTime.now());
+            alertNotificationRepository.save(alertNotification);
+        }
+
+        return message;
     }
 
     public String generateWarningMessage(String region, String userEmail, String warningType, String dangerPossibility){

@@ -13,6 +13,7 @@ import lombok.SneakyThrows;
 import okhttp3.ResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import retrofit2.Call;
@@ -47,6 +48,9 @@ public class UsgsEarthquakeService {
     @Autowired
     private BingLocationsService bingLocationsService;
 
+    @Autowired
+    private AlertService alertService;
+
     private UsgsService usgsService;
 
     // It is not precise for now, will change to the valid one later
@@ -63,8 +67,7 @@ public class UsgsEarthquakeService {
         usgsService = retrofit.create(UsgsService.class);
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    public void getDataAndSave(String starttime, String endtime) throws IOException, CsvException, IllegalAccessException {
+    public void getDataAndSave(String starttime, String endtime) throws IOException, CsvException, IllegalAccessException, JSONException {
         List<EarthquakeData> data = covertDataToObject(getData(starttime, endtime));
         if (!data.isEmpty()) {
             saveData(data);
@@ -125,8 +128,18 @@ public class UsgsEarthquakeService {
         return dataList;
     }
 
-    private void saveData(List<EarthquakeData> data) {
-        earthquakeDataRepository.saveAll(data);
+    private void saveData(List<EarthquakeData> data) throws JSONException {
+        for (EarthquakeData earthquake : data) {
+            if (earthquakeDataRepository.findByUsgsId(earthquake.getUsgsId()).isPresent()) {
+                // if exists, update data
+                earthquake.setId(earthquakeDataRepository.findByUsgsId(earthquake.getUsgsId()).get().getId());
+                earthquakeDataRepository.save(earthquake);
+            } else {
+                earthquakeDataRepository.save(earthquake);
+                // as soon as new data arrives, send notification
+                alertService.alertRecipientsEarthquake(earthquake);
+            }
+        }
     }
 
     public List<EarthquakeData> getByFilter(EarthquakeDTO earthquakeDTO) {

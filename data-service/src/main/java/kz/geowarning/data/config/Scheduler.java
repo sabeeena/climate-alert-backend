@@ -54,9 +54,9 @@ public class Scheduler {
     }
 
     @Scheduled(fixedRateString = "60000")
-    public void updateEarthquakeData() throws IOException, CsvException, IllegalAccessException {
+    public void updateEarthquakeData() throws IOException, CsvException, IllegalAccessException, JSONException {
         ZonedDateTime currentTime = ZonedDateTime.now();
-        ZonedDateTime starttime = currentTime.minus(1, ChronoUnit.MINUTES);
+        ZonedDateTime starttime = currentTime.minus(60, ChronoUnit.MINUTES);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
         earthquakeService.getDataAndSave(starttime.format(formatter), null);
 //        earthquakeService.getDataAndSave(null, currentTime.format(formatter));

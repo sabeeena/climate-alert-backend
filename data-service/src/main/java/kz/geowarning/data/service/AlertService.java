@@ -1,9 +1,11 @@
 package kz.geowarning.data.service;
 
+import kz.geowarning.data.entity.EarthquakeData;
 import kz.geowarning.data.entity.FireRTData;
 import kz.geowarning.data.entity.ForecastFireData;
 import kz.geowarning.data.entity.dto.FireDataDTO;
 import kz.geowarning.data.entity.dto.ForecastDTO;
+import kz.geowarning.data.util.LocationUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
@@ -17,6 +19,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -54,6 +57,39 @@ public class AlertService {
         sendForecastNotificationsToRecipients(getSMSReceiversFromAuthService());
     }
 
+    public void alertRecipientsEarthquake(EarthquakeData earthquakeData) throws JSONException {
+        sendEarthquakeNotifications(getRecipientsFromAuthService(), earthquakeData);
+        sendEarthquakeNotifications(getSMSReceiversFromAuthService(), earthquakeData);
+    }
+
+    private void sendEarthquakeNotifications(List<Map<String, Object>> recipients, EarthquakeData earthquakeData) {
+        for (Map<String, Object> user : recipients) {
+            String firstName = (String) user.get("firstName");
+            String lastName = (String) user.get("lastName");
+            String email = (String) user.get("email");
+            String phoneNumber = (String) user.get("phoneNumber");
+
+            Map<String, Object> locationMap = (Map<String, Object>) user.get("location");
+            String latitude = String.valueOf(locationMap.get("latitude"));
+            String longitude = String.valueOf(locationMap.get("longitude"));
+
+            // The range is approximate, taken that 9 magnitude earthquake can cause damage to
+            // structures in areas over 1000 km across where people live.
+            if (LocationUtil.isWithinRange(Double.parseDouble(latitude), Double.parseDouble(longitude),
+                    Double.parseDouble(earthquakeData.getLatitude()), Double.parseDouble(earthquakeData.getLongitude()),
+                    1000)) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                if (phoneNumber == null || phoneNumber.isEmpty()) {
+                    notifyEarthquakeEmail(email, firstName, lastName, earthquakeData.getPlace(), earthquakeData.getMag(),
+                            dateFormat.format(earthquakeData.getTime()));
+                } else {
+                    notifyEarthquakeSMS(phoneNumber, firstName, lastName, earthquakeData.getPlace(), earthquakeData.getMag(),
+                            dateFormat.format(earthquakeData.getTime()));
+                }
+            }
+        }
+    }
+
     private void sendForecastNotificationsToRecipients(List<Map<String, Object>> recipients) throws ParseException {
         for (Map<String, Object> user : recipients) {
             String firstName = (String) user.get("firstName");
@@ -82,6 +118,63 @@ public class AlertService {
                     notifySMSForecastFires(phoneNumber, firstName, lastName, locationName, forecastList.get(0).getDangerLevel());
                 }
             }
+        }
+    }
+
+    private void notifyEarthquakeEmail(String email, String firstName, String lastName, String locationName,
+                                       String magnitude, String time) {
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("phoneNumber", null);
+        requestBody.put("email", email);
+        requestBody.put("firstName", firstName);
+        requestBody.put("lastName", lastName);
+        requestBody.put("locationName", locationName);
+        requestBody.put("magnitude", magnitude);
+        requestBody.put("time", time);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
+
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(notificationUrl +
+                        "/api/notification/service/notify-email-earthquake",
+                requestEntity,
+                String.class);
+
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            String responseBody = responseEntity.getBody();
+            System.out.println("Earthquake Notification. Response from server: " + responseBody);
+        } else {
+            System.out.println("Earthquake Notification. Error: " + responseEntity.getStatusCode());
+        }
+    }
+
+    private void notifyEarthquakeSMS(String phoneNumber, String firstName, String lastName, String locationName,
+                                     String magnitude, String time) {
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("phoneNumber", phoneNumber);
+        requestBody.put("firstName", firstName);
+        requestBody.put("lastName", lastName);
+        requestBody.put("locationName", locationName);
+        requestBody.put("magnitude", magnitude);
+        requestBody.put("time", time);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
+
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(notificationUrl +
+                        "/api/notification/service/notify-sms-earthquake",
+                requestEntity,
+                String.class);
+
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            String responseBody = responseEntity.getBody();
+            System.out.println("Earthquake SMS Notification. Response from server: " + responseBody);
+        } else {
+            System.out.println("Earthquake SMS Notification. Error: " + responseEntity.getStatusCode());
         }
     }
 
