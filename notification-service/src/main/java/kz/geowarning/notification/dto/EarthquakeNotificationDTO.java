@@ -17,4 +17,5 @@ public class EarthquakeNotificationDTO {
     private String locationName;
     private String magnitude;
     private String time;
+    private String language;
 }

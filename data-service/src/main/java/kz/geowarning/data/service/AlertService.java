@@ -68,6 +68,7 @@ public class AlertService {
             String lastName = (String) user.get("lastName");
             String email = (String) user.get("email");
             String phoneNumber = (String) user.get("phoneNumber");
+            String languageCode = (String) user.get("languageCode");
 
             Map<String, Object> locationMap = (Map<String, Object>) user.get("location");
             String latitude = String.valueOf(locationMap.get("latitude"));
@@ -81,10 +82,10 @@ public class AlertService {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 if (phoneNumber == null || phoneNumber.isEmpty()) {
                     notifyEarthquakeEmail(email, firstName, lastName, earthquakeData.getPlace(), earthquakeData.getMag(),
-                            dateFormat.format(earthquakeData.getTime()));
+                            dateFormat.format(earthquakeData.getTime()), languageCode);
                 } else {
                     notifyEarthquakeSMS(phoneNumber, firstName, lastName, earthquakeData.getPlace(), earthquakeData.getMag(),
-                            dateFormat.format(earthquakeData.getTime()));
+                            dateFormat.format(earthquakeData.getTime()), languageCode);
                 }
             }
         }
@@ -96,6 +97,7 @@ public class AlertService {
             String lastName = (String) user.get("lastName");
             String email = (String) user.get("email");
             String phoneNumber = (String) user.get("phoneNumber");
+            String language = (String) user.get("languageCode");
 
             Map<String, Object> locationMap = (Map<String, Object>) user.get("location");
             String locationName = (String) locationMap.get("name");
@@ -113,16 +115,18 @@ public class AlertService {
             List<ForecastFireData> forecastList = mlDataService.getByFilter(forecastDTO);
             if (!forecastList.isEmpty()) {
                 if (phoneNumber == null || phoneNumber.isEmpty()) {
-                    notifyWarningForecast(email, firstName, lastName, locationName, forecastList.get(0).getDangerLevel());
+                    notifyWarningForecast(email, firstName, lastName, locationName,
+                            forecastList.get(0).getDangerLevel(), language);
                 } else {
-                    notifySMSForecastFires(phoneNumber, firstName, lastName, locationName, forecastList.get(0).getDangerLevel());
+                    notifySMSForecastFires(phoneNumber, firstName, lastName, locationName,
+                            forecastList.get(0).getDangerLevel(), language);
                 }
             }
         }
     }
 
     private void notifyEarthquakeEmail(String email, String firstName, String lastName, String locationName,
-                                       String magnitude, String time) {
+                                       String magnitude, String time, String language) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("phoneNumber", null);
         requestBody.put("email", email);
@@ -131,6 +135,7 @@ public class AlertService {
         requestBody.put("locationName", locationName);
         requestBody.put("magnitude", magnitude);
         requestBody.put("time", time);
+        requestBody.put("language", language);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -151,7 +156,7 @@ public class AlertService {
     }
 
     private void notifyEarthquakeSMS(String phoneNumber, String firstName, String lastName, String locationName,
-                                     String magnitude, String time) {
+                                     String magnitude, String time, String language) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("phoneNumber", phoneNumber);
         requestBody.put("firstName", firstName);
@@ -159,6 +164,7 @@ public class AlertService {
         requestBody.put("locationName", locationName);
         requestBody.put("magnitude", magnitude);
         requestBody.put("time", time);
+        requestBody.put("language", language);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -179,7 +185,7 @@ public class AlertService {
     }
 
     private void notifyWarningForecast(String email, String firstName, String lastName,
-                                       String locationName, String dangerLevel) {
+                                       String locationName, String dangerLevel, String language) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("phoneNumber", null);
         requestBody.put("email", email);
@@ -187,6 +193,7 @@ public class AlertService {
         requestBody.put("lastName", lastName);
         requestBody.put("locationName", locationName);
         requestBody.put("level", dangerLevel);
+        requestBody.put("language", language);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -207,13 +214,14 @@ public class AlertService {
     }
 
     private void notifySMSForecastFires(String phoneNumber, String firstName, String lastName,
-                                        String locationName, String dangerLevel) {
+                                        String locationName, String dangerLevel, String language) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("phoneNumber", phoneNumber);
         requestBody.put("firstName", firstName);
         requestBody.put("lastName", lastName);
         requestBody.put("locationName", locationName);
         requestBody.put("level", dangerLevel);
+        requestBody.put("languageCode", language);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -234,7 +242,7 @@ public class AlertService {
     }
 
     private void notifySMSRealtimeFires(String phoneNumber, String firstName, String lastName, String locationName,
-                                        String count, List<String> fireOccurrences) {
+                                        String count, List<String> fireOccurrences, String language) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("phoneNumber", phoneNumber);
         requestBody.put("firstName", firstName);
@@ -242,6 +250,7 @@ public class AlertService {
         requestBody.put("locationName", locationName);
         requestBody.put("count", count);
         requestBody.put("fireOccurrences", fireOccurrences);
+        requestBody.put("languageCode", language);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -262,7 +271,7 @@ public class AlertService {
     }
 
     private void notifyWarningRealtime(String email, String firstName, String lastName, String locationName,
-                                      String count, List<String> fireOccurrences) {
+                                      String count, List<String> fireOccurrences, String language) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("email", email);
         requestBody.put("firstName", firstName);
@@ -271,6 +280,7 @@ public class AlertService {
         requestBody.put("count", count);
         requestBody.put("fireOccurrences", fireOccurrences);
         requestBody.put("phoneNumber", null);
+        requestBody.put("language", language);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -296,6 +306,7 @@ public class AlertService {
             String lastName = (String) user.get("lastName");
             String email = (String) user.get("email");
             String phoneNumber = (String) user.get("phoneNumber");
+            String language = (String) user.get("languageCode");
 
             Map<String, Object> locationMap = (Map<String, Object>) user.get("location");
             String locationName = (String) locationMap.get("name");
@@ -321,9 +332,11 @@ public class AlertService {
             }
             if (!fireOccurrences.isEmpty()) {
                 if (phoneNumber == null || phoneNumber.isEmpty()) {
-                    notifyWarningRealtime(email, firstName, lastName, locationName, String.valueOf(fireOccurrences.size()), fireOccurrences);
+                    notifyWarningRealtime(email, firstName, lastName, locationName,
+                            String.valueOf(fireOccurrences.size()), fireOccurrences, language);
                 } else {
-                    notifySMSRealtimeFires(phoneNumber, firstName, lastName, locationName, String.valueOf(fireOccurrences.size()), fireOccurrences);
+                    notifySMSRealtimeFires(phoneNumber, firstName, lastName, locationName,
+                            String.valueOf(fireOccurrences.size()), fireOccurrences, language);
                 }
             }
         }
@@ -344,6 +357,7 @@ public class AlertService {
                 userMap.put("firstName", userObject.getString("firstName"));
                 userMap.put("lastName", userObject.getString("lastName"));
                 userMap.put("phoneNumber", userObject.getString("phoneNumber"));
+                userMap.put("languageCode", userObject.getString("languageCode"));
 
                 JSONObject locationObject = userObject.getJSONObject("locationId");
                 Map<String, Object> locationMap = new HashMap<>();
@@ -375,6 +389,7 @@ public class AlertService {
                 userMap.put("firstName", userObject.getString("firstName"));
                 userMap.put("lastName", userObject.getString("lastName"));
                 userMap.put("email", userObject.getString("email"));
+                userMap.put("languageCode", userObject.getString("languageCode"));
 
                 JSONObject locationObject = userObject.getJSONObject("locationId");
                 Map<String, Object> locationMap = new HashMap<>();

@@ -19,5 +19,6 @@ public class ForecastNotificationContentDTO {
     private String lastName;
     private String locationName;
     private String level;
+    private String language;
 
 }
