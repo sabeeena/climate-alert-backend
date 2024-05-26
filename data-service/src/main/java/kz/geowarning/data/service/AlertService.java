@@ -51,6 +51,7 @@ public class AlertService {
 
     public void alertRecipientsForecast() throws JSONException, ParseException {
         sendForecastNotificationsToRecipients(getRecipientsFromAuthService());
+        sendForecastNotificationsToRecipients(getSMSReceiversFromAuthService());
     }
 
     private void sendForecastNotificationsToRecipients(List<Map<String, Object>> recipients) throws ParseException {
@@ -58,6 +59,7 @@ public class AlertService {
             String firstName = (String) user.get("firstName");
             String lastName = (String) user.get("lastName");
             String email = (String) user.get("email");
+            String phoneNumber = (String) user.get("phoneNumber");
 
             Map<String, Object> locationMap = (Map<String, Object>) user.get("location");
             String locationName = (String) locationMap.get("name");
@@ -74,7 +76,11 @@ public class AlertService {
 
             List<ForecastFireData> forecastList = mlDataService.getByFilter(forecastDTO);
             if (!forecastList.isEmpty()) {
-                notifyWarningForecast(email, firstName, lastName, locationName, forecastList.get(0).getDangerLevel());
+                if (phoneNumber == null || phoneNumber.isEmpty()) {
+                    notifyWarningForecast(email, firstName, lastName, locationName, forecastList.get(0).getDangerLevel());
+                } else {
+                    notifySMSForecastFires(phoneNumber, firstName, lastName, locationName, forecastList.get(0).getDangerLevel());
+                }
             }
         }
     }
@@ -82,6 +88,7 @@ public class AlertService {
     private void notifyWarningForecast(String email, String firstName, String lastName,
                                        String locationName, String dangerLevel) {
         Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("phoneNumber", null);
         requestBody.put("email", email);
         requestBody.put("firstName", firstName);
         requestBody.put("lastName", lastName);
@@ -103,6 +110,33 @@ public class AlertService {
             System.out.println("Forecast Notification. Response from server: " + responseBody);
         } else {
             System.out.println("Forecast Notification. Error: " + responseEntity.getStatusCode());
+        }
+    }
+
+    private void notifySMSForecastFires(String phoneNumber, String firstName, String lastName,
+                                        String locationName, String dangerLevel) {
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("phoneNumber", phoneNumber);
+        requestBody.put("firstName", firstName);
+        requestBody.put("lastName", lastName);
+        requestBody.put("locationName", locationName);
+        requestBody.put("level", dangerLevel);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
+
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(notificationUrl +
+                        "/api/notification/service/notify-forecast-fire-sms",
+                requestEntity,
+                String.class);
+
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            String responseBody = responseEntity.getBody();
+            System.out.println("Forecast Fire SMS Notification. Response from server: " + responseBody);
+        } else {
+            System.out.println("Forecast FIre SMS Notification. Error: " + responseEntity.getStatusCode());
         }
     }
 

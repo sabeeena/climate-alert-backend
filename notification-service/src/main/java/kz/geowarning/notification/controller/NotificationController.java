@@ -57,6 +57,13 @@ public class NotificationController {
     }
 
     @SneakyThrows
+    @PostMapping("/notify-forecast-fire-sms")
+    public ResponseEntity notifySMSFireForecast(@RequestBody ForecastNotificationContentDTO contentDTO) {
+        service.notifySMSFireForecast(contentDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    @SneakyThrows
     @PostMapping("/notify-warning-forecast")
     public ResponseEntity notifyWarningForecast(@RequestBody ForecastNotificationContentDTO contentDTO) {
         try {

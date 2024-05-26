@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ForecastNotificationContentDTO {
 
+    private String phoneNumber;
     private String email;
     private String firstName;
     private String lastName;

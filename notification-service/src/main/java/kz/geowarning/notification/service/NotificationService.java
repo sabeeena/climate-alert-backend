@@ -128,6 +128,11 @@ public class NotificationService {
         sendSMSNotification(contentDTO.getPhoneNumber(), Jsoup.parse(body).text());
     }
 
+    public void notifySMSFireForecast(ForecastNotificationContentDTO contentDTO) {
+        String body = generateWarningMessageForecast(contentDTO);
+        sendSMSNotification(contentDTO.getPhoneNumber(), Jsoup.parse(body).text());
+    }
+
     public void notifyForecast(ForecastNotificationContentDTO contentDTO) throws MessagingException, IOException, FirebaseMessagingException {
         String body = generateWarningMessageForecast(contentDTO);
         iEmailService.sendMail(contentDTO.getEmail(), generateWarningSubjectForecast(contentDTO), generateWarningMessageForecast(contentDTO));
@@ -242,14 +247,17 @@ public class NotificationService {
         saveMessage += "С уважением, ";
         saveMessage += "Команда KazGeoWarning!  ";
 
-        AlertNotification alertNotification = new AlertNotification();
-        alertNotification.setReceiverEmail(contentDTO.getEmail());
-        alertNotification.setSenderEmail("KazGeoWarning");
-        alertNotification.setWarningType("forecast fire");
-        alertNotification.setText(saveMessage);
-        alertNotification.setSeen(false);
-        alertNotification.setSentTime(LocalDateTime.now());
-        alertNotificationRepository.save(alertNotification);
+        if (contentDTO.getPhoneNumber() == null || contentDTO.getPhoneNumber().isEmpty()) {
+            AlertNotification alertNotification = new AlertNotification();
+            alertNotification.setReceiverEmail(contentDTO.getEmail());
+            alertNotification.setSenderEmail("KazGeoWarning");
+            alertNotification.setWarningType("forecast fire");
+            alertNotification.setText(Jsoup.parse(saveMessage).text());
+            alertNotification.setSeen(false);
+            alertNotification.setSentTime(LocalDateTime.now());
+            alertNotificationRepository.save(alertNotification);
+        }
+
         return message;
     }
 
