@@ -231,7 +231,7 @@ public class NotificationService {
 
         String message = "<span style=\"font-family: Arial; font-size: 16px;\"><u>" + currentDateTimeString + "</u><br><br><br>";
         message += "Уважаемый(ая) <b>" + contentDTO.getFirstName() + " " + contentDTO.getLastName() + "</b>, <br>";
-        message += "В пределах региона <b>" + contentDTO.getLocationName() + "</b> был обнаружен уровень опасности: <b>" + contentDTO.getLevel() + "</b>.<br><br><br>";
+        message += "В пределах региона <b>" + contentDTO.getLocationName() + "</b> был обнаружен уровень пожарной опасности: <b>" + contentDTO.getLevel() + "</b>.<br><br><br>";
         message += "Если у вас есть какие-либо вопросы или требуется дополнительная информация, пожалуйста, ";
         message += "свяжитесь с нашей службой поддержки.<br><br>";
         message += "С уважением,<br>";
