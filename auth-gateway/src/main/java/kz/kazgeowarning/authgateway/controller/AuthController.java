@@ -288,6 +288,11 @@ public class AuthController {
         return smsService.verifyEmail(phone, code);
     }
 
+    @PostMapping(PUBLIC_URL + "/v1/update/phone")
+    public void updatePhone(@RequestParam String phone, String email) {
+        usersService.updatePhoneNumber(phone, email);
+    }
+
     @PostMapping("/reset/{token}")
     public ResponseEntity<User> resetPassword(@PathVariable(value = "token") String token, @RequestBody String password) throws InternalException {
         User signUpUser = usersService.findBySignupToken(token);

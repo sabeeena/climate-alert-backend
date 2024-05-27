@@ -2,9 +2,11 @@ package kz.kazgeowarning.authgateway.repository;
 
 import kz.kazgeowarning.authgateway.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,4 +40,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select c from User c where c.phoneNumber is not null and c.notifySms = true")
     List<User> findAllSMSReceivers();
+
+    @Modifying
+    @Transactional
+    @Query("update User c set c.phoneNumber = :phoneNumber where c.email = :email")
+    void updatePhoneNumberByEmail(String phoneNumber, String email);
 }

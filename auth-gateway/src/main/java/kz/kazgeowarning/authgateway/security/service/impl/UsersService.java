@@ -76,6 +76,10 @@ public class UsersService implements IUsersService {
         return this.usersRepository.getTotalSizeEmployee();
     }
 
+    public void updatePhoneNumber(String phoneNumber, String email) {
+        usersRepository.updatePhoneNumberByEmail(phoneNumber, email);
+    }
+
     @Override
     public Page<User> findAllUsersPaged(Map<String, String> params) {
         var pageable = pageable(params);
