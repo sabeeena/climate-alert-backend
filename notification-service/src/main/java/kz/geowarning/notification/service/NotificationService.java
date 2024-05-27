@@ -177,42 +177,39 @@ public class NotificationService {
 
         switch (contentDTO.getLanguage()) {
             case "RU":
-                message += "<span style=\"font-family: Arial; font-size: 16px;\"><u>" + currentDateTimeString + "</u><br><br><br>";
+                message += "<u>" + currentDateTimeString + "</u><br><br><br>";
                 message += "Уважаемый(-ая) <b>" + contentDTO.getFirstName() + " " + contentDTO.getLastName() + "</b>, <br>";
                 message += "В пределах вашей локации было зафиксировано землетрясение в <b>" + contentDTO.getTime()
                         + "</b> магнитудой в <b>" + contentDTO.getMagnitude() + "</b> баллов по шкале Рихтера"
-                        + ", установленный эпицентр - <b>" + contentDTO.getLocationName() + "</b>.<br><br><br>";
+                        + ", установленный эпицентр - <b>" + contentDTO.getLocationName() + "</b>.<br><br>";
                 message += "Если у вас есть какие-либо вопросы или требуется дополнительная информация, пожалуйста, ";
-                message += "свяжитесь с нашей службой поддержки.<br><br>";
+                message += "свяжитесь с нашей службой поддержки.<br><br><br>";
                 message += "С уважением,<br>";
-                message += "Команда <b>KazGeoWarning!</b><br><br>";
-                message += "</span>";
+                message += "Команда <b>KazGeoWarning!</b>";
                 break;
 
             case "KZ":
-                message += "<span style=\"font-family: Arial; font-size: 16px;\"><u>" + currentDateTimeString + "</u><br><br><br>";
+                message += "<u>" + currentDateTimeString + "</u><br><br><br>";
                 message += "Құрметті <b>" + contentDTO.getFirstName() + " " + contentDTO.getLastName() + "</b>, <br>";
                 message += "Сіздің орналасқан жеріңізде <b>" + contentDTO.getTime()
                         + "</b> магнитудасы Рихтер шкаласы бойынша <b>" + contentDTO.getMagnitude() + "</b> жер сілкінісі тіркелді,"
-                        + " белгіленген жер сілкінісі - <b>" + contentDTO.getLocationName() + "</b> жерде болды.<br><br><br>";
+                        + " белгіленген жер сілкінісі - <b>" + contentDTO.getLocationName() + "</b> жерде болды.<br><br>";
                 message += "Егер сізде сұрақтар туындаса немесе қосымша ақпарат қажет болса, ";
-                message += "қолдау көрсету тобына хабарласыңыз.<br><br>";
+                message += "қолдау көрсету тобына хабарласыңыз.<br><br><br>";
                 message += "Құрметпен, <br>";
-                message += "<b>KazGeoWarning</b> командасы!<br><br>";
-                message += "</span>";
+                message += "<b>KazGeoWarning</b> командасы!";
                 break;
 
             default:
-                message += "<span style=\"font-family: Arial; font-size: 16px;\"><u>" + currentDateTimeString + "</u><br><br><br>";
+                message += "<u>" + currentDateTimeString + "</u><br><br><br>";
                 message += "Dear <b>" + contentDTO.getFirstName() + " " + contentDTO.getLastName() + "</b>, <br>";
                 message += "An earthquake was detected within your location at <b>" + contentDTO.getTime()
                         + "</b> with a magnitude of <b>" + contentDTO.getMagnitude() + "</b> on the Richter scale"
-                        + ", the established epicenter was - <b>" + contentDTO.getLocationName() + "</b>.<br><br><br>";
+                        + ", the established epicenter was - <b>" + contentDTO.getLocationName() + "</b>.<br><br>";
                 message += "If you have any questions or require additional information, please ";
-                message += "contact our support team.<br><br>";
+                message += "contact our support team.<br><br><br>";
                 message += "Sincerely,<br>";
-                message += "<b>KazGeoWarning</b> team!<br><br>";
-                message += "</span>";
+                message += "<b>KazGeoWarning</b> team!";
                 break;
         }
 
@@ -270,48 +267,45 @@ public class NotificationService {
 
         switch(contentDTO.getLanguage()) {
             case "RU":
-                message += "<span style=\"font-family: Arial; font-size: 16px;\"><u>" + currentDateTimeString + "</u><br><br><br>";
+                message += "<u>" + currentDateTimeString + "</u><br><br><br>";
                 message += "Уважаемый(-ая) <b>" + contentDTO.getFirstName() + " " + contentDTO.getLastName() + "</b>, <br>";
                 message += "За последний час возле <b>" + contentDTO.getLocationName() + "</b> было обнаружено <b>" + contentDTO.getCount() + "</b> пожаров.<br><br>";
                 message += "<u>Приблизительные местоположения:</u><br>";
                 for (String row : contentDTO.getFireOccurrences()) {
                     message += row + "<br>";
                 }
-                message += "<br><br>Если у вас есть какие-либо вопросы или требуется дополнительная информация, пожалуйста, ";
-                message += "свяжитесь с нашей службой поддержки.<br><br>";
+                message += "<br>Если у вас есть какие-либо вопросы или требуется дополнительная информация, пожалуйста, ";
+                message += "свяжитесь с нашей службой поддержки.<br><br><br>";
                 message += "С уважением,<br>";
                 message += "Команда <b>KazGeoWarning!</b><br><br>";
-                message += "</span>";
                 break;
 
             case "KZ":
-                message += "<span style=\"font-family: Arial; font-size: 16px;\"><u>" + currentDateTimeString + "</u><br><br><br>";
+                message += "<u>" + currentDateTimeString + "</u><br><br><br>";
                 message += "Құрметті <b>" + contentDTO.getFirstName() + " " + contentDTO.getLastName() + "</b>, <br>";
                 message += "Соңғы бір сағатта <b>" + contentDTO.getLocationName() + "</b> маңында <b>" + contentDTO.getCount() + "</b> өрт(-тер) анықталды.<br><br>";
                 message += "<u>Шамамен орналасқан жерлер:</u><br>";
                 for (String row : contentDTO.getFireOccurrences()) {
                     message += row + "<br>";
                 }
-                message += "<br><br>Егер сізде сұрақтар туындаса немесе қосымша ақпарат қажет болса, ";
-                message += "қолдау көрсету тобына хабарласыңыз.<br><br>";
+                message += "<br>Егер сізде сұрақтар туындаса немесе қосымша ақпарат қажет болса, ";
+                message += "қолдау көрсету тобына хабарласыңыз.<br><br><br>";
                 message += "Құрметпен,<br>";
                 message += "<b>KazGeoWarning</b> командасы!<br><br>";
-                message += "</span>";
                 break;
 
             default:
-                message += "<span style=\"font-family: Arial; font-size: 16px;\"><u>" + currentDateTimeString + "</u><br><br><br>";
+                message += "<u>" + currentDateTimeString + "</u><br><br><br>";
                 message += "Dear <b>" + contentDTO.getFirstName() + " " + contentDTO.getLastName() + "</b>, <br>";
                 message += "Over the past hour, <b>" + contentDTO.getCount() + "</b> fire(-s) was/were detected near <b>" + contentDTO.getLocationName() + "</b>.<br><br>";
                 message += "<u>Approximate locations:</u><br>";
                 for (String row : contentDTO.getFireOccurrences()) {
                     message += row + "<br>";
                 }
-                message += "<br><br>If you have any questions or require additional information, please ";
-                message += "contact our support team.<br><br>";
+                message += "<br>If you have any questions or require additional information, please ";
+                message += "contact our support team.<br><br><br>";
                 message += "Sincerely,<br>";
                 message += "<b>KazGeoWarning</b> team!<br><br>";
-                message += "</span>";
                 break;
         }
 
@@ -393,40 +387,36 @@ public class NotificationService {
         Date currentDate = new Date();
         String currentDateTimeString = dateFormat.format(currentDate);
         String message = "";
-        String saveMessage = "";
 
         switch(contentDTO.getLanguage()) {
             case "RU":
-                message = "<span style=\"font-family: Arial; font-size: 16px;\"><u>" + currentDateTimeString + "</u><br><br><br>";
+                message = "<u>" + currentDateTimeString + "</u><br><br><br>";
                 message += "Уважаемый(-ая) <b>" + contentDTO.getFirstName() + " " + contentDTO.getLastName() + "</b>, <br>";
-                message += "В пределах региона <b>" + contentDTO.getLocationName() + "</b> был обнаружен уровень пожарной опасности: <b>" + contentDTO.getLevel() + "</b>.<br><br><br>";
+                message += "В пределах региона <b>" + contentDTO.getLocationName() + "</b> был обнаружен уровень пожарной опасности: <b>" + contentDTO.getLevel() + "</b>. <br>";
                 message += "Если у вас есть какие-либо вопросы или требуется дополнительная информация, пожалуйста, ";
-                message += "свяжитесь с нашей службой поддержки.<br><br>";
+                message += "свяжитесь с нашей службой поддержки.<br><br><br>";
                 message += "С уважением,<br>";
-                message += "Команда <b>KazGeoWarning!</b><br><br>";
-                message += "</span>";
+                message += "Команда <b>KazGeoWarning!</b>";
                 break;
 
             case "KZ":
-                message = "<span style=\"font-family: Arial; font-size: 16px;\"><u>" + currentDateTimeString + "</u><br><br><br>";
+                message = "<u>" + currentDateTimeString + "</u><br><br><br>";
                 message += "Құрметті <b>" + contentDTO.getFirstName() + " " + contentDTO.getLastName() + "</b>, <br>";
-                message += "<b>" + contentDTO.getLocationName() + "</b> аумағында өрт қаупі деңгейі анықталды: <b>" + contentDTO.getLevel() + "</b>.<br><br><br>";
+                message += "<b>" + contentDTO.getLocationName() + "</b> аумағында өрт қаупі деңгейі анықталды: <b>" + contentDTO.getLevel() + "</b>. <br>";
                 message += "<br><br>Егер сізде сұрақтар туындаса немесе қосымша ақпарат қажет болса, ";
-                message += "қолдау көрсету тобына хабарласыңыз.<br><br>";
+                message += "қолдау көрсету тобына хабарласыңыз.<br><br><br>";
                 message += "Құрметпен,<br>";
-                message += "<b>KazGeoWarning</b> командасы!<br><br>";
-                message += "</span>";
+                message += "<b>KazGeoWarning</b> командасы!";
                 break;
 
             default:
-                message = "<span style=\"font-family: Arial; font-size: 16px;\"><u>" + currentDateTimeString + "</u><br><br><br>";
+                message = "<u>" + currentDateTimeString + "</u><br><br><br>";
                 message += "Dear <b>" + contentDTO.getFirstName() + " " + contentDTO.getLastName() + "</b>, <br>";
-                message += "Within the region of <b>" + contentDTO.getLocationName() + "</b>, a fire danger level was detected: <b>" + contentDTO.getLevel() + "</b>.<br><br><br>";
+                message += "Within the region of <b>" + contentDTO.getLocationName() + "</b>, a fire danger level was detected: <b>" + contentDTO.getLevel() + "</b>. <br>";
                 message += "If you have any questions or require additional information, please ";
-                message += "contact our support team.<br><br>";
+                message += "contact our support team.<br><br><br>";
                 message += "Sincerely,<br>";
-                message += "<b>KazGeoWarning</b> team!<br><br>";
-                message += "</span>";
+                message += "<b>KazGeoWarning</b> team!";
                 break;
         }
 
