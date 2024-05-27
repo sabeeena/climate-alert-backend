@@ -1,5 +1,6 @@
-# climate-alert-backend
+# KazGeoWarning Backend
 
-Auth Swagger: http://localhost:8082/swagger-ui/#/
+This project incorporates various resources aimed to ensure the alerting of the citizens of the Republic of Kazakhstan.
+The code is protected by copyright.
 
-Eureka: http://localhost:8761
+Authors: <b>Yesniyazova Sabina, Adilbayeva Meruyert</b>
