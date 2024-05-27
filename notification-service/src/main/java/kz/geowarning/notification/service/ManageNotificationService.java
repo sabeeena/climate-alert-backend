@@ -52,7 +52,7 @@ public class ManageNotificationService {
         return reportNotificationRepository.findAll();
     }
 
-    public List<NotificationDTO> getAllNotifications(String email) {
+    public List<NotificationDTO> getAllNotifications(String email, String language) {
         List<NotificationDTO> notifications = new ArrayList<>();
 
         List<AlertNotification> alertNotifications = alertNotificationRepository.findByReceiverEmail(email);
@@ -63,7 +63,15 @@ public class ManageNotificationService {
             NotificationDTO dto = new NotificationDTO();
             dto.setId(alert.getId());
             dto.setReceiverEmail(alert.getReceiverEmail());
-            dto.setText(alert.getTextEn());
+            if (language == null || language.isEmpty()) {
+                dto.setText(alert.getTextEn());
+            } else if (language.equalsIgnoreCase("RU")) {
+                dto.setText(alert.getTextRu());
+            } else if (language.equalsIgnoreCase("KZ")) {
+                dto.setText(alert.getTextKz());
+            } else {
+                dto.setText(alert.getTextEn());
+            }
             dto.setType(alert.getWarningType());
             dto.setRegion(alert.getRegion());
             dto.setDangerPossibility(alert.getDangerPossibility());
@@ -111,7 +119,7 @@ public class ManageNotificationService {
         return notifications;
     }
 
-    public NotificationDTO getReportNotificationById(Long id, String notificationType) throws RuntimeException {
+    public NotificationDTO getReportNotificationById(Long id, String notificationType, String language) throws RuntimeException {
         ReportNotification reportNotification = null;
         AlertNotification alertNotification = null;
         if (Objects.equals(notificationType, "report")){
@@ -135,7 +143,15 @@ public class ManageNotificationService {
             NotificationDTO dto = new NotificationDTO();
             dto.setId(alertNotification.getId());
             dto.setReceiverEmail(alertNotification.getReceiverEmail());
-            dto.setText(alertNotification.getTextEn());
+            if (language == null || language.isEmpty()) {
+                dto.setText(alertNotification.getTextEn());
+            } else if (language.toUpperCase().equals("RU")) {
+                dto.setText(alertNotification.getTextRu());
+            } else if (language.toUpperCase().equals("KZ")) {
+                dto.setText(alertNotification.getTextKz());
+            } else {
+                dto.setText(alertNotification.getTextEn());
+            }
             dto.setType(alertNotification.getWarningType());
             dto.setRegion(alertNotification.getRegion());
             dto.setDangerPossibility(alertNotification.getDangerPossibility());

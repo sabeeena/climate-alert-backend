@@ -47,14 +47,14 @@ public class ManageNotificationController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<NotificationDTO>> getAllNotifications(@RequestParam String email) {
-        List<NotificationDTO> notifications = manageNotificationService.getAllNotifications(email);
+    public ResponseEntity<List<NotificationDTO>> getAllNotifications(@RequestParam String email, String language) {
+        List<NotificationDTO> notifications = manageNotificationService.getAllNotifications(email, language);
         return ResponseEntity.ok(notifications);
     }
 
     @GetMapping("/get-by-id")
-    public NotificationDTO getReportNotificationById(@RequestParam Long id, String notificationType) throws RuntimeException, RuntimeException {
-        return ResponseEntity.ok(manageNotificationService.getReportNotificationById(id, notificationType)).getBody();
+    public NotificationDTO getReportNotificationById(@RequestParam Long id, String notificationType, String language) throws RuntimeException, RuntimeException {
+        return ResponseEntity.ok(manageNotificationService.getReportNotificationById(id, notificationType, language)).getBody();
     }
 
     // Delete alert by ID
