@@ -393,7 +393,7 @@ public class NotificationService {
                 message = "<u>" + currentDateTimeString + "</u><br><br><br>";
                 message += "Уважаемый(-ая) <b>" + contentDTO.getFirstName() + " " + contentDTO.getLastName() + "</b>, <br>";
                 message += "В пределах региона <b>" + contentDTO.getLocationName() + "</b> был обнаружен уровень пожарной опасности: <b>" + contentDTO.getLevel() + "</b>. <br>";
-                message += "Если у вас есть какие-либо вопросы или требуется дополнительная информация, пожалуйста, ";
+                message += "<br>Если у вас есть какие-либо вопросы или требуется дополнительная информация, пожалуйста, ";
                 message += "свяжитесь с нашей службой поддержки.<br><br><br>";
                 message += "С уважением,<br>";
                 message += "Команда <b>KazGeoWarning!</b>";
@@ -403,7 +403,7 @@ public class NotificationService {
                 message = "<u>" + currentDateTimeString + "</u><br><br><br>";
                 message += "Құрметті <b>" + contentDTO.getFirstName() + " " + contentDTO.getLastName() + "</b>, <br>";
                 message += "<b>" + contentDTO.getLocationName() + "</b> аумағында өрт қаупі деңгейі анықталды: <b>" + contentDTO.getLevel() + "</b>. <br>";
-                message += "<br><br>Егер сізде сұрақтар туындаса немесе қосымша ақпарат қажет болса, ";
+                message += "<br>Егер сізде сұрақтар туындаса немесе қосымша ақпарат қажет болса, ";
                 message += "қолдау көрсету тобына хабарласыңыз.<br><br><br>";
                 message += "Құрметпен,<br>";
                 message += "<b>KazGeoWarning</b> командасы!";
@@ -413,7 +413,7 @@ public class NotificationService {
                 message = "<u>" + currentDateTimeString + "</u><br><br><br>";
                 message += "Dear <b>" + contentDTO.getFirstName() + " " + contentDTO.getLastName() + "</b>, <br>";
                 message += "Within the region of <b>" + contentDTO.getLocationName() + "</b>, a fire danger level was detected: <b>" + contentDTO.getLevel() + "</b>. <br>";
-                message += "If you have any questions or require additional information, please ";
+                message += "<br>If you have any questions or require additional information, please ";
                 message += "contact our support team.<br><br><br>";
                 message += "Sincerely,<br>";
                 message += "<b>KazGeoWarning</b> team!";
