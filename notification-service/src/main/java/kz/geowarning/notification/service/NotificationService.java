@@ -248,9 +248,17 @@ public class NotificationService {
             alertNotification.setSeen(false);
             alertNotification.setSentTime(LocalDateTime.now());
             alertNotificationRepository.save(alertNotification);
+            return message;
+        } else {
+            switch (contentDTO.getLanguage()) {
+                case "RU":
+                    return saveMessageRu;
+                case "KZ":
+                    return saveMessageKz;
+                default:
+                    return saveMessageEn;
+            }
         }
-
-        return message;
     }
 
     public String generateWarningMessageRealTime(RealTimeNotificationContentDTO contentDTO) {
@@ -344,9 +352,17 @@ public class NotificationService {
             alertNotification.setSeen(false);
             alertNotification.setSentTime(LocalDateTime.now());
             alertNotificationRepository.save(alertNotification);
+            return message;
+        } else {
+            switch (contentDTO.getLanguage()) {
+                case "RU":
+                    return saveMessageRu;
+                case "KZ":
+                    return saveMessageKz;
+                default:
+                    return saveMessageEn;
+            }
         }
-
-        return message;
     }
 
     public String generateWarningSubjectRealtime(RealTimeNotificationContentDTO contentDTO) {
@@ -437,9 +453,17 @@ public class NotificationService {
             alertNotification.setSeen(false);
             alertNotification.setSentTime(LocalDateTime.now());
             alertNotificationRepository.save(alertNotification);
+            return message;
+        } else {
+            switch (contentDTO.getLanguage()) {
+                case "RU":
+                    return saveMessageRu;
+                case "KZ":
+                    return saveMessageKz;
+                default:
+                    return saveMessageEn;
+            }
         }
-
-        return message;
     }
 
     public String generateWarningSubjectForecast(ForecastNotificationContentDTO contentDTO) {
