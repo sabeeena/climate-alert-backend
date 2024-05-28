@@ -76,8 +76,8 @@ public class WeatherDataService {
         Response<ResponseBody> response = retrofitCall.execute();
 
         if (!response.isSuccessful()) {
-            throw new IOException(response.errorBody() != null
-                    ? response.errorBody().string() : "Unknown error");
+            System.out.println("Couldn't Retrieve Weather Data For The Station");
+            return null;
         }
 
         ResponseBody responseBody = response.body();

@@ -74,7 +74,8 @@ public class MLDataService {
         }
 
         if (weather.isEmpty()) {
-            throw new Exception("Couldn't Retrieve Weather Data For The Station");
+            System.out.println("Couldn't Retrieve Weather Data For The Station");
+            return null;
         }
 
         Call<ResponseBody> retrofitCall = mlService.getForecastByWeather(weather.get(0).getDwpt(), weather.get(0).getPres(),
@@ -95,7 +96,12 @@ public class MLDataService {
     }
 
     public ForecastFireData saveForecastByStation(String stationId) throws Exception {
-        return forecastFireRepository.save(getForecastByStation(stationId));
+        ForecastFireData data = getForecastByStation(stationId);
+        if (data == null) {
+            return null;
+        } else {
+            return forecastFireRepository.save(data);
+        }
     }
 
     public List<ForecastFireData> getByFilter(ForecastDTO fireDataDTO) throws ParseException {
