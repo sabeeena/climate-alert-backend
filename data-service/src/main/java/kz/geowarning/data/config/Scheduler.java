@@ -36,7 +36,7 @@ public class Scheduler {
         egovFireReportService.getDataAndSave();
     }
 
-    @Scheduled(fixedRateString = "600000")// every hour
+    @Scheduled(cron = "0 0 */1 * * *")// every hour
     public void updateFireForecasts() throws Exception {
         for (Station station : stationsRepository.getAllStations()) {
             mlDataService.saveForecastByStation(station.getId());
