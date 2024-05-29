@@ -5,6 +5,9 @@ import kz.geowarning.data.entity.dto.EarthquakeDTO;
 import kz.geowarning.data.service.UsgsEarthquakeService;
 import kz.geowarning.data.util.RestConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,4 +25,11 @@ public class EarthquakeDataController {
         return earthquakeService.getByFilter(earthquakeDTO);
     }
 
+    @PostMapping(RestConstants.REST_EARTHQUAKE_DATA + "/download")
+    public ResponseEntity<byte[]> downloadEarthquakesByFilter(@RequestBody EarthquakeDTO earthquakeDTO) {
+        byte[] csvBytes = earthquakeService.convertToCsv(earthquakeDTO);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=usgs_earthquake_data.csv");
+        return new ResponseEntity<>(csvBytes, headers, HttpStatus.OK);
+    }
 }

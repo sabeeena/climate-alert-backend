@@ -2,6 +2,7 @@ package kz.geowarning.data.service;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
 import kz.geowarning.data.entity.EarthquakeData;
 import kz.geowarning.data.entity.Region;
@@ -22,7 +23,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import javax.annotation.PostConstruct;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
@@ -156,6 +159,52 @@ public class UsgsEarthquakeService {
         earthquakeDTO.setDepthTo(earthquakeDTO.getDepthTo() == null ? "0" : earthquakeDTO.getDepthTo());
 
         return earthquakeDataRepository.findByFilter(earthquakeDTO);
+    }
+
+    public byte[] convertToCsv(EarthquakeDTO earthquakeDTO) {
+        List<EarthquakeData> earthquakeDataList = getByFilter(earthquakeDTO);
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream();
+             CSVWriter writer = new CSVWriter(new OutputStreamWriter(out))) {
+
+            String[] header = {
+                    "id", "time", "latitude", "longitude", "depth", "mag", "mag_type", "nst", "gap",
+                    "dmin", "rms", "net", "usgs_id", "updated", "place", "type", "horizontal_error",
+                    "depth_error", "mag_error", "mag_nst", "status", "location_source", "mag_source"};
+            writer.writeNext(header);
+
+            for (EarthquakeData earthquakeData : earthquakeDataList) {
+                String[] data = {
+                        String.valueOf(earthquakeData.getId()),
+                        String.valueOf(earthquakeData.getTime()),
+                        earthquakeData.getLatitude(),
+                        earthquakeData.getLongitude(),
+                        earthquakeData.getDepth(),
+                        earthquakeData.getMag(),
+                        earthquakeData.getMagType(),
+                        earthquakeData.getNst(),
+                        earthquakeData.getGap(),
+                        earthquakeData.getDmin(),
+                        earthquakeData.getRms(),
+                        earthquakeData.getNet(),
+                        earthquakeData.getUsgsId(),
+                        String.valueOf(earthquakeData.getUpdated()),
+                        earthquakeData.getPlace(),
+                        earthquakeData.getType(),
+                        earthquakeData.getHorizontalError(),
+                        earthquakeData.getDepthError(),
+                        earthquakeData.getMagError(),
+                        earthquakeData.getMagNst(),
+                        earthquakeData.getStatus(),
+                        earthquakeData.getLocationSource(),
+                        earthquakeData.getMagSource()
+                };
+                writer.writeNext(data);
+            }
+            writer.flush();
+            return out.toByteArray();
+        } catch (Exception e) {
+            throw new RuntimeException("Error while converting to CSV", e);
+        }
     }
 
 }

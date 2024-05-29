@@ -6,6 +6,9 @@ import kz.geowarning.data.entity.dto.FireDataDTO;
 import kz.geowarning.data.service.FireRTDataService;
 import kz.geowarning.data.util.RestConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -46,5 +49,13 @@ public class FireRTDataController {
     @PostMapping(RestConstants.REST_RT_DATA + "/getByFilter")
     public List<FireRTData> getFiresByFilter(@RequestBody FireDataDTO fireDataDTO) {
         return fireRTDataService.getByFilter(fireDataDTO);
+    }
+
+    @PostMapping(RestConstants.REST_RT_DATA + "/download")
+    public ResponseEntity<byte[]> downloadFiresByFilter(@RequestBody FireDataDTO fireDataDTO) {
+        byte[] csvBytes = fireRTDataService.convertToCsv(fireDataDTO);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=firms_fire_data.csv");
+        return new ResponseEntity<>(csvBytes, headers, HttpStatus.OK);
     }
 }

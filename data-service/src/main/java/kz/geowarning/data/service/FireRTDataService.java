@@ -2,6 +2,7 @@ package kz.geowarning.data.service;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
 import kz.geowarning.data.entity.FireRTData;
 import kz.geowarning.data.entity.Region;
@@ -21,7 +22,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import javax.annotation.PostConstruct;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.lang.reflect.Field;
 import java.sql.Date;
@@ -184,5 +187,44 @@ public class FireRTDataService {
         fireDataDTO.setConfidence(fireDataDTO.getConfidence() == null ? "0" : fireDataDTO.getConfidence());
 
         return fireRTDataRepository.findByFilter(fireDataDTO);
+    }
+
+    public byte[] convertToCsv(FireDataDTO fireDataDTO) {
+        List<FireRTData> fireRTDataList = getByFilter(fireDataDTO);
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream();
+             CSVWriter writer = new CSVWriter(new OutputStreamWriter(out))) {
+
+            String[] header = {
+                    "id", "country_id", "latitude", "longitude", "bright_ti4", "scan", "track",
+                    "acq_date", "acq_time", "satellite", "instrument", "confidence", "version",
+                    "bright_ti5", "frp", "daynight"};
+            writer.writeNext(header);
+
+            for (FireRTData fire : fireRTDataList) {
+                String[] data = {
+                        String.valueOf(fire.getId()),
+                        fire.getCountry_id(),
+                        fire.getLatitude(),
+                        fire.getLongitude(),
+                        fire.getBright_ti4(),
+                        fire.getScan(),
+                        fire.getTrack(),
+                        String.valueOf(fire.getAcqDate()),
+                        String.valueOf(fire.getAcqTime()),
+                        fire.getSatellite(),
+                        fire.getInstrument(),
+                        fire.getConfidence(),
+                        fire.getVersion(),
+                        fire.getBright_ti5(),
+                        fire.getFrp(),
+                        fire.getDaynight()
+                };
+                writer.writeNext(data);
+            }
+            writer.flush();
+            return out.toByteArray();
+        } catch (Exception e) {
+            throw new RuntimeException("Error while converting to CSV", e);
+        }
     }
 }
