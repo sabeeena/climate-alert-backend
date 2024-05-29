@@ -5,7 +5,6 @@ import kz.geowarning.data.entity.Station;
 import kz.geowarning.data.repository.StationsRepository;
 import kz.geowarning.data.service.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -44,12 +43,12 @@ public class Scheduler {
     }
 
     @Scheduled(cron = "0 0 */1 * * *")
-    public void sendRealtimeAlert() throws JSONException, IOException {
+    public void sendRealtimeAlert() throws Exception, IOException {
         alertService.alertRecipientsRealtime();
     }
 
     @Scheduled(cron = "0 0 */1 * * *")
-    public void sendForecastAlert() throws JSONException, ParseException {
+    public void sendForecastAlert() throws Exception, ParseException {
         alertService.alertRecipientsForecast();
     }
 
