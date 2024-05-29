@@ -41,6 +41,17 @@ public class FireRealTimeController {
     public ResponseEntity<?> getAll(@RequestParam Long reportId) {
         return ResponseEntity.ok(fireService.getFireRealTimeF1(reportId));
     }
+
+    @GetMapping("/get-all/approved")
+    public ResponseEntity<?> getAllApproved() {
+        return ResponseEntity.ok(fireService.getAllApproved());
+    }
+
+    @GetMapping("/get-one/approved")
+    public ResponseEntity<?> getOneApproved(@RequestParam Long reportId) {
+        return ResponseEntity.ok(fireService.getOneApproved(reportId));
+    }
+
     @DeleteMapping("/delete/fire-real-time")
     public void deleteReport(@RequestParam Long reportId) {
         fireService.deleteFireRealTimeReport(reportId);

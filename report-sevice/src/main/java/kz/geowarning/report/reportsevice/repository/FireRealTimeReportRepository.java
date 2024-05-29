@@ -19,4 +19,7 @@ public interface FireRealTimeReportRepository extends JpaRepository<FireRealTime
             "                       and public.fire_real_time_report.firertdata_id = public.editor.report_id\n" +
             "                       and email =:email")
     List<FireRealTimeReport> findByYearAndMonth(Integer year, Integer month, String email);
+
+    @Query(nativeQuery = true, value = "select * from fire_real_time_report where status_id=3")
+    List<FireRealTimeReport> findByStatusApproved();
 }

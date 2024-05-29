@@ -3,12 +3,10 @@ package kz.geowarning.report.reportsevice.service;
 import kz.geowarning.report.reportsevice.dto.ApprovalRequest;
 import kz.geowarning.report.reportsevice.dto.AssignmentDTO;
 import kz.geowarning.report.reportsevice.dto.ReportNotificationDTO;
-import kz.geowarning.report.reportsevice.entity.Agreement;
-import kz.geowarning.report.reportsevice.entity.Assignment;
-import kz.geowarning.report.reportsevice.entity.FireRealTimeReport;
-import kz.geowarning.report.reportsevice.entity.Status;
+import kz.geowarning.report.reportsevice.entity.*;
 import kz.geowarning.report.reportsevice.repository.AssignmentRepository;
 import kz.geowarning.report.reportsevice.repository.FireRealTimeReportRepository;
+import kz.geowarning.report.reportsevice.repository.PublishReportsRepository;
 import kz.geowarning.report.reportsevice.repository.StatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +25,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -38,6 +37,8 @@ public class AssignService {
     
     @Autowired
     private AssignmentRepository assignmentRepository;
+    @Autowired
+    private PublishReportsRepository publishReportsRepository;
 
     @Value("${notification}")
     private String notification;
@@ -160,6 +161,13 @@ public class AssignService {
                 fireRealTimeReport.setApprovalComment(comment);
                 Status status = statusRepository.findById(3L).orElse(null);
                 fireRealTimeReport.setStatus(status);
+                if(approvalRequest.isPublish()) {
+                    PublishReports publishReports = new PublishReports();
+                    publishReports.setTitle(approvalRequest.getTitle());
+                    publishReports.setReportId(Long.parseLong(assignment.getEntityId()));
+                    publishReports.setPublishedDate(new Date());
+                    publishReportsRepository.save(publishReports);
+                }
             } else if (Objects.equals(assignment.getName(), "Correction")) {
                 fireRealTimeReport.setApprovalComment(comment);
                 Status status = statusRepository.findById(4L).orElse(null);

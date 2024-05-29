@@ -23,6 +23,8 @@ public class FireService {
     private FireRealTimeVegetationInformationRepository fireRealTimeVegetationInformationRepository;
     @Autowired
     private EditorRepository editorRepository;
+    @Autowired
+    private PublishReportsRepository publishReportsRepository;
 
     @Autowired
     private StatusRepository statusRepository;
@@ -174,5 +176,13 @@ public class FireService {
             return fireRealTimeEconomicDamageReportRepository.findById(reportId).get();
         }
         return null;
+    }
+
+    public List<PublishReports> getAllApproved() {
+        return publishReportsRepository.findAll();
+    }
+
+    public PublishReports getOneApproved(Long reportId) {
+        return publishReportsRepository.findByReportId(reportId);
     }
 }
