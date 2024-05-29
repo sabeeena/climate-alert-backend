@@ -3,12 +3,12 @@ server:
 
 spring:
   application:
-    name: auth-gateway
+    name: news-service
   datasource:
     driver-class-name: org.postgresql.Driver
-    password: AVNS_bmkQTY2BB21V77w1WnX
-    username: doadmin
-    url: jdbc:postgresql://kazgeowarning-do-user-16008876-0.c.db.ondigitalocean.com:25060/defaultdb?currentSchema=news&sslmode=require
+    password: ${DB_PASSWORD:AVNS_bmkQTY2BB21V77w1WnX}
+    username: ${DB_USER:doadmin}
+    url: ${DB_URL:jdbc:postgresql://kazgeowarning-do-user-16008876-0.c.db.ondigitalocean.com:25060/defaultdb?currentSchema=news&sslmode=require}
   jmx:
     enabled: false
   jpa:
