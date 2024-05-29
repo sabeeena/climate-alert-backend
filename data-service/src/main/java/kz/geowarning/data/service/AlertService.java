@@ -8,7 +8,6 @@ import kz.geowarning.data.entity.dto.ForecastDTO;
 import kz.geowarning.data.util.LocationUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
-import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -47,17 +46,17 @@ public class AlertService {
         this.mlDataService = mlDataService;
     }
 
-    public void alertRecipientsRealtime() throws JSONException, IOException {
+    public void alertRecipientsRealtime() throws Exception, IOException {
         sendRealtimeNotificationsToRecipients(getRecipientsFromAuthService());
         sendRealtimeNotificationsToRecipients(getSMSReceiversFromAuthService());
     }
 
-    public void alertRecipientsForecast() throws JSONException, ParseException {
+    public void alertRecipientsForecast() throws Exception, ParseException {
         sendForecastNotificationsToRecipients(getRecipientsFromAuthService());
         sendForecastNotificationsToRecipients(getSMSReceiversFromAuthService());
     }
 
-    public void alertRecipientsEarthquake(EarthquakeData earthquakeData) throws JSONException {
+    public void alertRecipientsEarthquake(EarthquakeData earthquakeData) throws Exception {
         sendEarthquakeNotifications(getRecipientsFromAuthService(), earthquakeData);
         sendEarthquakeNotifications(getSMSReceiversFromAuthService(), earthquakeData);
     }
@@ -342,7 +341,7 @@ public class AlertService {
         }
     }
 
-    private List<Map<String, Object>> getSMSReceiversFromAuthService() throws JSONException {
+    private List<Map<String, Object>> getSMSReceiversFromAuthService() throws Exception {
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(authUrl +
                 "/internal/api/public/user/v1/users/smsReceivers", String.class);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
@@ -374,7 +373,7 @@ public class AlertService {
         }
     }
 
-    private List<Map<String, Object>> getRecipientsFromAuthService() throws JSONException {
+    private List<Map<String, Object>> getRecipientsFromAuthService() throws Exception {
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(authUrl +
                 "/internal/api/public/user/v1/users/emailRecipients", String.class);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
