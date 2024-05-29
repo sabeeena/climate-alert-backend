@@ -53,7 +53,7 @@ public class Scheduler {
     }
 
     @Scheduled(fixedRateString = "60000")
-    public void updateEarthquakeData() throws IOException, CsvException, IllegalAccessException, JSONException {
+    public void updateEarthquakeData() throws IOException, CsvException, IllegalAccessException, Exception {
         ZonedDateTime currentTime = ZonedDateTime.now();
         ZonedDateTime starttime = currentTime.minus(60, ChronoUnit.MINUTES);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
