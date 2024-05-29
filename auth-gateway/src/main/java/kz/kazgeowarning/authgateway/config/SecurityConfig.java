@@ -69,6 +69,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/notification/service/send-mobile-notification",
                         "/api/data/RTData/**",
                         "/api/data/RTData/getByFilter",
+                        "/report/get-all/approved",
+                        "/report/get-one/approved",
+                        "/report/fire-real-time-overall",
                         "/api/data/ForecastData/**"
                 ).permitAll()
                 .anyRequest().authenticated()
