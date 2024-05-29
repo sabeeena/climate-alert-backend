@@ -67,7 +67,7 @@ public class UsgsEarthquakeService {
         usgsService = retrofit.create(UsgsService.class);
     }
 
-    public void getDataAndSave(String starttime, String endtime) throws IOException, CsvException, IllegalAccessException, JSONException {
+    public void getDataAndSave(String starttime, String endtime) throws IOException, CsvException, IllegalAccessException, Exception {
         List<EarthquakeData> data = covertDataToObject(getData(starttime, endtime));
         if (!data.isEmpty()) {
             saveData(data);
@@ -128,7 +128,7 @@ public class UsgsEarthquakeService {
         return dataList;
     }
 
-    private void saveData(List<EarthquakeData> data) throws JSONException {
+    private void saveData(List<EarthquakeData> data) throws Exception {
         for (EarthquakeData earthquake : data) {
             if (earthquakeDataRepository.findByUsgsId(earthquake.getUsgsId()).isPresent()) {
                 // if exists, update data
