@@ -581,13 +581,15 @@ public class NotificationService {
     public void reportNotify(ReportNotificationDTO reportNotificationDTO) throws MessagingException, IOException, FirebaseMessagingException {
         if (reportNotificationDTO.isSenderAdmin()) {
             String body = generateReportMessageAdmin(reportNotificationDTO.getTypeStatus(), reportNotificationDTO);
-            iEmailService.sendMail(reportNotificationDTO.getReceiverEmail(), generateReportSubjectAdmin(reportNotificationDTO.getTypeStatus()), body);
             sendNotificationMobile(reportNotificationDTO.getReceiverEmail(), body);
+            iEmailService.sendMail(reportNotificationDTO.getReceiverEmail(), generateReportSubjectAdmin(reportNotificationDTO.getTypeStatus()), body);
+
         }
         else {
             String body = generateReportMessage(reportNotificationDTO);
-            iEmailService.sendMail(reportNotificationDTO.getReceiverEmail(), generateReportSubject(), generateReportMessage(reportNotificationDTO));
             sendNotificationMobile(reportNotificationDTO.getReceiverEmail(), body);
+            iEmailService.sendMail(reportNotificationDTO.getReceiverEmail(), generateReportSubject(), generateReportMessage(reportNotificationDTO));
+
         }
     }
 }
