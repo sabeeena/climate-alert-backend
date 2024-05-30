@@ -214,7 +214,7 @@ public class AuthController {
             String signupToken = "testSignup";
 
             String subject = "Подтверждение регистрации пользователя " + newUser.getEmail();
-            String message = "<h2>Добрый день, " + newUser.getFirstName() + " " + newUser.getLastName() + "!</h2>" + "<br>" +
+            String message = "<h2>Добрый день, " + newUser.getLastName() + " " + newUser.getFirstName() + " " + newUser.getMiddleName() + "!</h2>" + "<br>" +
                     "<h3>Благодарим за использование нашего веб-сайта!<br>" +
                     "Вам необходимо подтвердить аккаунт, " +
                     "пройдя по ссылке "+url+"/internal/api/public/user/v1/confirm/" + newUser.getEmail() + "<h3><br>" +
