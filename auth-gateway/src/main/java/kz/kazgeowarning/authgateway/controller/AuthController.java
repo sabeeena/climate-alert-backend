@@ -237,6 +237,36 @@ public class AuthController {
         }
     }
 
+    @PostMapping(PUBLIC_URL + "/v1/signup2")
+    public ResponseEntity<?> signUpNoEmail(@RequestBody @Valid User newUser) throws InternalException, MessagingException {
+        try {
+            EmailValidator emailValidator = new EmailValidator();
+            if (!emailValidator.validate(newUser.getEmail())) {
+                throw new InternalException(ErrorCode.ErrorCodes.INVALID_EMAIL_FORMAT, "Неверный e-mail формат.");
+            }
+
+            if (usersRepository.getByEmailAndActive(newUser.getEmail(), true) != null) {
+                throw new InternalException(ErrorCode.ErrorCodes.EMAIL_EXIST, "Такой e-mail уже существует.");
+            }
+            // String signupToken = usersService.sendEmailConfirmLink(new UserDTO(newUser));
+            String signupToken = "testSignup";
+
+            newUser.setSignupToken(signupToken);
+            // шифровать пароль
+            newUser.setPassword(newUser.getPassword() == null ? bCryptPasswordEncoder.encode("12345")
+                    : bCryptPasswordEncoder.encode(newUser.getPassword()));
+
+            // Активность пользователя
+            newUser.setActive(true);
+            newUser.setApproved(true);
+            newUser.setRegisterDate(new Timestamp(new Date().getTime()));
+            usersService.create(newUser);
+            return ResponseEntity.ok(newUser);
+        } catch (InternalException exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getMessage());
+        }
+    }
+
     @PostMapping(value = "/reset-password")
     public ResponseEntity<String> resetPassword(@RequestBody final String email) throws InternalException {
         User user = usersRepository.getByEmailAndActive(email, true);
