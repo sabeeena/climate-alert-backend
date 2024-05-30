@@ -217,7 +217,7 @@ public class AuthController {
             String message = "<h2>Добрый день, " + newUser.getLastName() + " " + newUser.getFirstName() + " " + newUser.getMiddleName() + "!</h2>" + "<br>" +
                     "<h3>Благодарим за использование нашего веб-сайта!<br>" +
                     "Вам необходимо подтвердить аккаунт, " +
-                    "пройдя по ссылке "+url+"/internal/api/public/user/v1/confirm/" + newUser.getEmail() + "<h3><br>" +
+                    "пройдя по ссылке "+"http://209.38.202.141:8011/internal/api/public/user/v1/confirm/" + newUser.getEmail() + "<h3><br>" +
                     "<h3>С уважением, команда KazGeoWarning<h3>";
             iEmailService.sendMail(newUser.getEmail(), subject, message);
 

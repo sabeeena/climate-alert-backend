@@ -183,6 +183,7 @@ public class UsersService implements IUsersService {
             user.setNotifySms(userDto.isNotifySms());
             user.setRole(userDto.getRole());
             user.setLoginType(user.getLoginType());
+            user.setLocationId(location);
             user.setActive(true);
             //user.setCity(userDto.getCity());
             user.setLocationId(location);
