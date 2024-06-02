@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @RestController
@@ -19,6 +22,14 @@ public class EarthquakeDataController {
 
     @Autowired
     private UsgsEarthquakeService earthquakeService;
+
+    @PostMapping(RestConstants.REST_EARTHQUAKE_DATA + "/save")
+    public void getDataAndSave () throws Exception {
+        ZonedDateTime currentTime = ZonedDateTime.now();
+        ZonedDateTime starttime = currentTime.minus(30, ChronoUnit.DAYS);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
+        earthquakeService.getDataAndSave(starttime.format(formatter), null);
+    }
 
     @PostMapping(RestConstants.REST_EARTHQUAKE_DATA + "/getByFilter")
     public List<EarthquakeData> getFiresByFilter(@RequestBody EarthquakeDTO earthquakeDTO) {
