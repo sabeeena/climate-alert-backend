@@ -36,7 +36,9 @@ import java.time.format.DateTimeFormatter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class FireRTDataService {
@@ -57,6 +59,9 @@ public class FireRTDataService {
 
     @Autowired
     private BingLocationsService bingLocationsService;
+
+    @Autowired
+    private RegionDetectionService regionDetectionService;
 
     @PostConstruct
     public void init() {
@@ -88,6 +93,21 @@ public class FireRTDataService {
         CSVReader csvReader = new CSVReaderBuilder(stringReader).build();
 
         return csvReader.readAll();
+    }
+
+    public List<String[]> getAreaData(String bbox, int days) throws IOException, CsvException {
+
+        Call<ResponseBody> call = nasaService.getAreaData(nasaApiKey, bbox, days);
+        Response<ResponseBody> response = call.execute();
+
+        if (!response.isSuccessful()) {
+            throw new IOException("NASA FIRMS error: " + response.code());
+        }
+
+        String csv = response.body().string();
+        CSVReader reader = new CSVReaderBuilder(new StringReader(csv)).build();
+
+        return reader.readAll();
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -149,6 +169,67 @@ public class FireRTDataService {
 
     public void getDataAndSave() throws IOException, CsvException {
         saveAllData(getRTData());
+    }
+
+    public List<FireRTData> saveAllDataArea(List<String[]> data) throws IOException {
+
+        String[] header = data.remove(0);
+
+        Map<String, Integer> col = new HashMap<>();
+        for (int i = 0; i < header.length; i++) {
+            col.put(header[i], i);
+        }
+
+        List<FireRTData> list = new ArrayList<>();
+
+        for (String[] row : data) {
+
+            FireRTData f = new FireRTData();
+
+            f.setCountry_id("KAZ");
+
+            f.setLatitude(row[col.get("latitude")]);
+            f.setLongitude(row[col.get("longitude")]);
+            f.setBright_ti4(row[col.get("bright_ti4")]);
+            f.setScan(row[col.get("scan")]);
+            f.setTrack(row[col.get("track")]);
+
+            f.setAcqDate(Date.valueOf(row[col.get("acq_date")]));
+            String rawTime = row[col.get("acq_time")];
+            f.setAcqTime(Time.valueOf(parseFirTime(rawTime)));
+
+            f.setSatellite(row[col.get("satellite")]);
+            f.setInstrument(row[col.get("instrument")]);
+            f.setConfidence(row[col.get("confidence")]);
+            f.setVersion(row[col.get("version")]);
+            f.setBright_ti5(row[col.get("bright_ti5")]);
+            f.setFrp(row[col.get("frp")]);
+            f.setDaynight(row[col.get("daynight")]);
+
+            f.setSource("NASA"); // добавил автоматически
+
+            Region region = regionDetectionService.detectRegion(f.getLatitude(), f.getLongitude());
+            f.setRegionId(region);
+
+
+            list.add(f);
+        }
+
+        return fireRTDataRepository.saveAll(list);
+    }
+
+    private LocalTime parseFirTime(String raw) {
+        raw = raw.trim();
+        while (raw.length() < 4) raw = "0" + raw; // 750 -> 0750, 4 -> 0004
+        String hh = raw.substring(0, 2);
+        String mm = raw.substring(2, 4);
+        return LocalTime.of(Integer.parseInt(hh), Integer.parseInt(mm));
+    }
+
+
+
+    public void getDataAndSaveArea(String bbox, int days) throws IOException, CsvException {
+        System.out.println(saveAllDataArea(getAreaData(bbox, days)));
     }
 
     public List<FireRTData> getDataByDate(Date date) {

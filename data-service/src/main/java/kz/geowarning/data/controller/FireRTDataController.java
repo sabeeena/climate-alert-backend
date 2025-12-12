@@ -31,6 +31,16 @@ public class FireRTDataController {
         fireRTDataService.getDataAndSave();
     }
 
+    @PostMapping(RestConstants.REST_RT_DATA + "/save/area")
+    public void getAreaFireData(
+            @RequestParam("bbox") String bbox,
+            @RequestParam("days") int days
+    ) throws IOException, CsvException {
+
+         fireRTDataService.getDataAndSaveArea(bbox, days);
+    }
+
+
     @GetMapping(RestConstants.REST_RT_DATA + "/date/{date}")
     public List<FireRTData> getDataByDate(@PathVariable("date") Date date) {
         return fireRTDataService.getDataByDate(date);

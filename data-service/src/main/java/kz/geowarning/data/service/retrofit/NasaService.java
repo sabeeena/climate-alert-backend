@@ -12,4 +12,11 @@ public interface NasaService {
     @GET("country/csv/{apiKey}/VIIRS_SNPP_NRT/{countryCode}/{range}/{date}")
     Call<ResponseBody> getRTData(@Path("apiKey") String apiKey, @Path("countryCode") String countryCode,
                                  @Path("range") String range, @Path("date") String date);
+
+    @GET("area/csv/{mapKey}/VIIRS_SNPP_NRT/{bbox}/{days}")
+    Call<ResponseBody> getAreaData(
+            @Path("mapKey") String mapKey,
+            @Path("bbox") String bbox,
+            @Path("days") int days
+    );
 }
