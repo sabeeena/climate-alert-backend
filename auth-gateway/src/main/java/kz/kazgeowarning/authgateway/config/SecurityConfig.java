@@ -69,6 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/notification/service/send-mobile-notification",
                         "/api/data/RTData/**",
                         "/api/data/EarthquakeData/**",
+                        "/api/cameras/**",
                         "/report/get-all/approved",
                         "/report/get-one/approved",
                         "/report/fire-real-time-overall",
