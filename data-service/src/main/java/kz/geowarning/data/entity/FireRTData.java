@@ -1,6 +1,7 @@
 package kz.geowarning.data.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.sql.Time;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "firertdata")
+@Builder
 public class FireRTData {
     private String country_id;
     private String latitude;
@@ -38,4 +40,8 @@ public class FireRTData {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "firertdata_seq")
     @SequenceGenerator(name = "firertdata_seq", allocationSize = 1, sequenceName = "firertdata_seq")
     private Long id;
+
+    private String source;  // "NASA" / "CAMERA"
+
+    private Long cameraDetectionId;
 }
