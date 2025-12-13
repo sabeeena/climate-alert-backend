@@ -236,12 +236,12 @@ public class FireRTDataService {
         return fireRTDataRepository.findAllByAcqDate(date);
     }
 
-    public List<FireRTData> getDataByYearAndMonth(Integer year, Integer month, String email) {
+    public List<FireRTData> getDataByYearAndMonth(Integer year, Integer month, String email, String source) {
         if(email == null) {
             System.out.println("email is not null");
-            return fireRTDataRepository.findByYearAndMonthAndEmail(year, month, email);
+            return fireRTDataRepository.findByYearAndMonthAndEmail(year, month, email, source);
         } else {System.out.println("email is null");
-            return fireRTDataRepository.findByYearAndMonth(year, month);
+            return fireRTDataRepository.findByYearAndMonth(year, month, source);
         }
     }
 

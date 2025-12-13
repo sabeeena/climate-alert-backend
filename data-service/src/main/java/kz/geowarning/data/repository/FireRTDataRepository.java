@@ -19,12 +19,12 @@ public interface FireRTDataRepository extends JpaRepository<FireRTData, Long> {
             "         WHERE EXTRACT(YEAR FROM acq_date) =:year AND EXTRACT(month FROM acq_date) =:month\n" +
             "and data.firertdata.id = public.fire_real_time_report.firertdata_id\n" +
             "           and public.fire_real_time_report.id = public.editor.report_id\n" +
-            "           and email =:email", nativeQuery = true)
-    List<FireRTData> findByYearAndMonthAndEmail(Integer year, Integer month, String email);
+            "           and email =:email and source=:source", nativeQuery = true)
+    List<FireRTData> findByYearAndMonthAndEmail(Integer year, Integer month, String email, String source);
 
     @Query(nativeQuery = true, value = "SELECT data.firertdata.* from data.firertdata\n" +
-            "                     WHERE EXTRACT(YEAR FROM acq_date) =:year AND EXTRACT(month FROM acq_date) =:month")
-    List<FireRTData> findByYearAndMonth(Integer year, Integer month);
+            "                     WHERE EXTRACT(YEAR FROM acq_date) =:year AND EXTRACT(month FROM acq_date) =:month and source=:source")
+    List<FireRTData> findByYearAndMonth(Integer year, Integer month, String source);
 
     // Distance is calculated by using Haversine formula for sorting by the nearest
     @Query(nativeQuery = true, value = "SELECT data.firertdata.*, " +
