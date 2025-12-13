@@ -2,6 +2,7 @@ package kz.geowarning.data.entity;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import kz.geowarning.data.entity.dto.DetectionStatus;
 import lombok.*;
 
@@ -29,12 +30,10 @@ public class CameraDetection {
     @Enumerated(EnumType.STRING)
     private DetectionStatus status;
 
-    /**
-     * JSON-строка с bounding boxes от ML.
-     * Например: [{"x1":10,"y1":20,"x2":100,"y2":150}, ...]
-     */
     @Column(columnDefinition = "TEXT")
     private String bboxJson;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime createdAt;
+
 }

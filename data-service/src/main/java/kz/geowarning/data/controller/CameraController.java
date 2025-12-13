@@ -2,11 +2,14 @@ package kz.geowarning.data.controller;
 
 import kz.geowarning.data.entity.Camera;
 import kz.geowarning.data.entity.CameraDetection;
+import kz.geowarning.data.entity.CameraShot;
 import kz.geowarning.data.entity.dto.CameraCreateDTO;
+import kz.geowarning.data.entity.dto.CameraDetectionResponseDto;
 import kz.geowarning.data.entity.dto.CameraEventDTO;
 import kz.geowarning.data.entity.dto.DetectionStatus;
 import kz.geowarning.data.repository.CameraDetectionRepository;
 import kz.geowarning.data.service.CameraEventService;
+import kz.geowarning.data.service.CameraDetectionService;
 import kz.geowarning.data.service.CameraService;
 import kz.geowarning.data.service.DetectionAdminService;
 import kz.geowarning.data.service.MinioStorageService;
@@ -14,19 +17,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/cameras")
+@RequestMapping("/api/data/cameras")
 @RequiredArgsConstructor
 public class CameraController {
 
     private final CameraEventService cameraEventService;
     private final DetectionAdminService detectionAdminService;
-    private final CameraDetectionRepository detectionRepository;
     private final MinioStorageService minioStorageService;
     private final CameraService cameraService;
+    private final CameraDetectionService cameraDetectionService;
 
 
     @GetMapping("/ping")
@@ -39,20 +43,8 @@ public class CameraController {
         return cameraEventService.handleCameraEvent(request);
     }
 
-
-    @GetMapping("/detections")
-    public List<CameraDetection> listDetections(
-            @RequestParam(required = false) DetectionStatus status
-    ) {
-        if (status == null) {
-            return detectionRepository.findAll();
-        }
-        return detectionRepository.findByStatus(status);
-    }
-
-
     @PostMapping("/detections/{id}/confirm")
-    public CameraDetection confirmDetection(@PathVariable Long id) {
+    public CameraDetection confirmDetection(@PathVariable Long id) throws IOException {
         return detectionAdminService.confirmDetection(id);
     }
 
@@ -84,24 +76,26 @@ public class CameraController {
         }
     }
 
-
-
-    // Список камер
     @GetMapping
     public List<Camera> getAllCameras() {
         return cameraService.findAll();
     }
 
-    // Регистрация новой камеры
     @PostMapping
     public Camera createCamera(@RequestBody CameraCreateDTO dto) {
         return cameraService.create(dto);
     }
 
-    // Одна камера по id
-    @GetMapping("/{id}")
-    public Camera getCamera(@PathVariable Long id) {
-        return cameraService.getById(id);
+    @GetMapping("/camerashot/{id}")
+    public List<CameraShot> getCameraShots(@PathVariable Long id) {
+        return cameraService.getCameraShots(id);
+    }
+
+    @GetMapping("/cameradetections")
+    public List<CameraDetectionResponseDto> getDetections(
+            @RequestParam(required = false) DetectionStatus status
+    ) {
+        return cameraDetectionService.getDetections(status);
     }
 
 }

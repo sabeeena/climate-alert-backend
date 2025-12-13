@@ -9,5 +9,10 @@ import java.util.List;
 
 @Repository
 public interface CameraDetectionRepository extends JpaRepository<CameraDetection, Long> {
-    List<CameraDetection> findByStatus(DetectionStatus status);
+
+    List<CameraDetection> findAllByOrderByCreatedAtDesc();
+
+    List<CameraDetection> findByStatusOrderByCreatedAtDesc(
+            DetectionStatus status
+    );
 }

@@ -24,7 +24,8 @@ public class CameraShot {
 
     private LocalDateTime timestamp;
 
-    private String imageUrl; // MinIO URL
+    @Column(columnDefinition = "TEXT")
+    private String imageUrl;
 
     private String originalFilename;
 }
