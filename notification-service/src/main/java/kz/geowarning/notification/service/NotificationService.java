@@ -276,6 +276,11 @@ public class NotificationService {
                 for (String row : contentDTO.getFireOccurrences()) {
                     message += row + "<br>";
                 }
+                if (contentDTO.getImageUrl() != null) {
+                    message += "<img src=\"" + contentDTO.getImageUrl() + "\" "
+                            + "style=\"max-width:100%; border-radius:10px; "
+                            + "border:1px solid #e5e7eb; margin:12px 0;\" /><br>";
+                }
                 message += "<br>Если у вас есть какие-либо вопросы или требуется дополнительная информация, пожалуйста, ";
                 message += "свяжитесь с нашей службой поддержки.<br><br><br>";
                 message += "С уважением,<br>";
@@ -290,6 +295,11 @@ public class NotificationService {
                 for (String row : contentDTO.getFireOccurrences()) {
                     message += row + "<br>";
                 }
+                if (contentDTO.getImageUrl() != null) {
+                    message += "<img src=\"" + contentDTO.getImageUrl() + "\" "
+                            + "style=\"max-width:100%; border-radius:10px; "
+                            + "border:1px solid #e5e7eb; margin:12px 0;\" /><br>";
+                }
                 message += "<br>Егер сізде сұрақтар туындаса немесе қосымша ақпарат қажет болса, ";
                 message += "қолдау көрсету тобына хабарласыңыз.<br><br><br>";
                 message += "Құрметпен,<br>";
@@ -303,6 +313,11 @@ public class NotificationService {
                 message += "<u>Approximate locations:</u><br>";
                 for (String row : contentDTO.getFireOccurrences()) {
                     message += row + "<br>";
+                }
+                if (contentDTO.getImageUrl() != null) {
+                    message += "<img src=\"" + contentDTO.getImageUrl() + "\" "
+                            + "style=\"max-width:100%; border-radius:10px; "
+                            + "border:1px solid #e5e7eb; margin:12px 0;\" /><br>";
                 }
                 message += "<br>If you have any questions or require additional information, please ";
                 message += "contact our support team.<br><br><br>";
@@ -351,6 +366,7 @@ public class NotificationService {
             alertNotification.setTextEn(Jsoup.parse(saveMessageEn).text());
             alertNotification.setSeen(false);
             alertNotification.setSentTime(LocalDateTime.now());
+            alertNotification.setImageUrl(contentDTO.getImageUrl());
             alertNotificationRepository.save(alertNotification);
             return message;
         } else {

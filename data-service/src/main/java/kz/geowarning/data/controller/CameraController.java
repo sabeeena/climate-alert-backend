@@ -44,7 +44,7 @@ public class CameraController {
     }
 
     @PostMapping("/detections/{id}/confirm")
-    public CameraDetection confirmDetection(@PathVariable Long id) throws IOException {
+    public CameraDetection confirmDetection(@PathVariable Long id) throws Exception {
         return detectionAdminService.confirmDetection(id);
     }
 

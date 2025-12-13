@@ -32,4 +32,6 @@ public class AlertNotification {
     private String textRu;
     @Column(length = 20000)
     private String textKz;
+    @Column(length = 20000)
+    private String imageUrl;
 }

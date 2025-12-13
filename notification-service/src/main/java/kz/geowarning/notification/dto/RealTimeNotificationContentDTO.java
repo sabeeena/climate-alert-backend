@@ -21,4 +21,5 @@ public class RealTimeNotificationContentDTO {
     private List<String> fireOccurrences;
     private String phoneNumber;
     private String language;
+    private String imageUrl;
 }

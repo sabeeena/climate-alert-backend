@@ -299,6 +299,37 @@ public class AlertService {
         }
     }
 
+    public void notifyWarningRealtimeImageUrl(String email, String firstName, String lastName, String locationName,
+                                       String count, List<String> fireOccurrences, String language, String imageUrl) {
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("email", email);
+        requestBody.put("firstName", firstName);
+        requestBody.put("lastName", lastName);
+        requestBody.put("locationName", locationName);
+        requestBody.put("count", count);
+        requestBody.put("fireOccurrences", fireOccurrences);
+        requestBody.put("phoneNumber", null);
+        requestBody.put("language", language);
+        requestBody.put("imageUrl", imageUrl);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
+
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(notificationUrl +
+                        "/api/notification/service/notify-warning-realtime",
+                requestEntity,
+                String.class);
+
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            String responseBody = responseEntity.getBody();
+            System.out.println("Real-time Fire Email Notification. Response from server: " + responseBody);
+        } else {
+            System.out.println("Real-time Fire Email Notification. Error: " + responseEntity.getStatusCode());
+        }
+    }
+
     private void sendRealtimeNotificationsToRecipients(List<Map<String, Object>> recipients) throws IOException {
         for (Map<String, Object> user : recipients) {
             String firstName = (String) user.get("firstName");
@@ -373,7 +404,7 @@ public class AlertService {
         }
     }
 
-    private List<Map<String, Object>> getRecipientsFromAuthService() throws Exception {
+    public List<Map<String, Object>> getRecipientsFromAuthService() throws Exception {
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(authUrl +
                 "/internal/api/public/user/v1/users/emailRecipients", String.class);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
